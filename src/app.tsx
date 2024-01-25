@@ -1,8 +1,6 @@
 import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -19,21 +17,23 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  // const fetchUserInfo = async () => {
+  //   try {
+  //     const msg = await queryCurrentUser({
+  //       skipErrorHandler: true,
+  //     });
+  //     console.log(msg);
+  //     return { name: '123' };
+  //     // return msg.data;
+  //   } catch (error) {
+  //     console.log(error);
+  //     history.push(loginPath);
+  //   }
+  //   return undefined;
+  // };
   const fetchUserInfo = async () => {
-    try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      console.log(msg);
-      return { name: '123' };
-      // return msg.data;
-    } catch (error) {
-      console.log(error);
-      history.push(loginPath);
-    }
-    return undefined;
+    return { name: '1' };
   };
-  // const fetchUserInfo = async()=>{return {}}
   console.log(1);
   // 如果不是登录页面，执行
   const { location } = history;
@@ -52,7 +52,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState /*setInitialState*/ }) => {
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -70,6 +70,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
+        //TODO:bug
+        console.log(initialState?.currentUser);
+        console.log(location.pathname);
+        console.log(loginPath);
         history.push(loginPath);
       }
     },
@@ -110,7 +114,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return (
         <>
           {children}
-          {isDev && (
+          {/* {isDev && (
             <SettingDrawer
               disableUrlParams
               enableDarkTheme
@@ -122,7 +126,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 }));
               }}
             />
-          )}
+          )} */}
         </>
       );
     },

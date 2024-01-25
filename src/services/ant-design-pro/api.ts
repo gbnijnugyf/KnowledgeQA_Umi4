@@ -23,8 +23,6 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  console.log(body);
-  console.log(options);
   return request<API.LoginResult>('/api/login/account', {
     method: 'POST',
     headers: {
@@ -36,8 +34,6 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 
 export async function myLogin(body: API.LoginParams, options?: { [key: string]: any }) {
-  console.log(body);
-  console.log(options);
   return request<API.LoginResult>(BASEURL + '/login', {
     method: 'POST',
     headers: {
