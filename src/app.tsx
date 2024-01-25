@@ -24,12 +24,16 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      console.log(msg);
+      return { name: '123' };
+      // return msg.data;
     } catch (error) {
+      console.log(error);
       history.push(loginPath);
     }
     return undefined;
   };
+  // const fetchUserInfo = async()=>{return {}}
   console.log(1);
   // 如果不是登录页面，执行
   const { location } = history;
