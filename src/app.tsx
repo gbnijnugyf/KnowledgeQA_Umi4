@@ -1,4 +1,3 @@
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -16,17 +15,26 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
-    try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      return msg.data;
-    } catch (error) {
+    // try {
+    //   const msg = await queryCurrentUser({
+    //     skipErrorHandler: true,
+    //   });
+    //   console.log(1,msg)
+
+    //   return msg.data;
+    // } catch (error) {
+    //   console.log(error)
+    //   history.push(loginPath);
+    // }
+    if (localStorage.getItem('token') !== undefined) {
+    } else {
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果不是登录页面，执行
+  console.log(3);
+
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();

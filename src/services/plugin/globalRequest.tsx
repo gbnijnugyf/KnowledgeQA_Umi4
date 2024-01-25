@@ -33,7 +33,7 @@ async function GlobalAxios<T = any, D = any>(
       bloggerLoginCheck: localStorage.getItem('token') || '',
     };
   } else {
-    console.log('afterDoubleSlash:', afterDoubleSlash);
+    // console.log('afterDoubleSlash:', afterDoubleSlash);
     config.headers = {
       adminCheck: 'visitor',
       bloggerLoginCheck: localStorage.getItem('token') || '',

@@ -2,13 +2,25 @@ import { LoginForm } from '@/components/login/loginForm';
 import { ILoginForm, ILoginProps, titleName } from '@/services/plugin/globalInter';
 import { Service } from '@/services/plugin/globalRequest';
 import { LoginFormPage, ProConfigProvider, ProFormCheckbox } from '@ant-design/pro-components';
+import { history, useModel } from '@umijs/max';
 import { Tabs } from 'antd';
 import { useState } from 'react';
-import { history } from 'umi';
 type LoginType = 'student' | 'teacher';
 
 function Page() {
   const [loginType, setLoginType] = useState<LoginType>('student');
+  const { initialState, setInitialState } = useModel('@@initialState');
+  // const location = useLocation();
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+    console.log(userInfo);
+    if (userInfo) {
+      await setInitialState((s) => ({
+        ...s,
+        currentUser: userInfo,
+      }));
+    }
+  };
 
   const handleSubmit: (formData: any) => Promise<boolean | void> = async (values: ILoginForm) => {
     console.log(values, loginType);
@@ -17,12 +29,20 @@ function Page() {
       passWord: values.passWord,
       type: loginType === 'student' ? 0 : 1,
     };
-    Service.login(loginInfo).then((res) => {
+    const res = await Service.login(loginInfo);
+
+    if (res.data.status === 1) {
       console.log(res);
-      if (res.data.status === 1) {
-        history.push('/welcome');
-      }
-    });
+      localStorage.setItem('token', res.data.data);
+      await fetchUserInfo();
+      if (!history) return;
+      console.log(history);
+      history.push(history.location.pathname);
+      // const { query } = location;
+      // const { redirect } = query as { redirect: string };
+      // history.push(redirect || '/');
+      return;
+    }
   };
 
   return (
