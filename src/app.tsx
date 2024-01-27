@@ -1,4 +1,4 @@
-import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -52,9 +52,9 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState /*setInitialState*/ }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [<Question key="doc" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -70,10 +70,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*setInitialState*/ }
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
-        //TODO:bug
-        console.log(initialState?.currentUser);
-        console.log(location.pathname);
-        console.log(loginPath);
         history.push(loginPath);
       }
     },
@@ -131,6 +127,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*setInitialState*/ }
       );
     },
     ...initialState?.settings,
+    // defaultSettings
   };
 };
 

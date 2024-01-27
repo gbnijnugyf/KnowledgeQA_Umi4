@@ -1,7 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import { BASEURL } from '../plugin/globalInter';
+import { BASEURL, IReturn } from '../plugin/globalInter';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -34,7 +34,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 
 export async function myLogin(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>(BASEURL + '/login', {
+  return request<IReturn<string>>(BASEURL + '/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

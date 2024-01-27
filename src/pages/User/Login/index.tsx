@@ -399,25 +399,27 @@
 
 import { LoginForm } from '@/components/login/loginForm';
 import { myLogin } from '@/services/ant-design-pro/api';
-import { titleName } from '@/services/plugin/globalInter';
+import { IReturn, titleName } from '@/services/plugin/globalInter';
 import { LoginFormPage, ProConfigProvider, ProFormCheckbox } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Tabs, message } from 'antd';
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 type LoginType = 'student' | 'teacher';
 
 function Page() {
   const [loginTypeS, setLoginTypeS] = useState<LoginType>('teacher');
   const { initialState, setInitialState } = useModel('@@initialState');
   // const location = useLocation();
-  const fetchUserInfo = async () => {
+  const fetchUserInfoHere = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    console.log(userInfo);
     if (userInfo) {
-      await setInitialState((s) => ({
-        ...s,
-        currentUser: userInfo,
-      }));
+      flushSync(() => {
+        setInitialState((s) => ({
+          ...s,
+          currentUser: userInfo,
+        }));
+      });
     }
   };
 
@@ -427,18 +429,33 @@ function Page() {
       const userInfo = await initialState?.fetchUserInfo?.();
       console.log(userInfo);
       const type = loginTypeS;
-      const msg = await myLogin({ ...values, type });
+      const msg: IReturn<string> = await myLogin({ ...values, type });
       console.log(msg);
       if (msg.status === 1) {
         message.success('登录成功！');
-
-        await fetchUserInfo();
+        await fetchUserInfoHere();
         const urlParams = new URL(window.location.href).searchParams;
-        console.log(urlParams);
         history.push(urlParams.get('redirect') || '/');
         return;
       }
       console.log(msg);
+
+      // const userInfo = await initialState?.fetchUserInfo?.();
+      // console.log(userInfo);
+      // const type = loginTypeS;
+      // const msg = await login({ ...values, type });
+      // console.log(msg);
+      // if(msg.status === 'ok'){
+      //   message.success('登录成功！');
+      //   await fetchUserInfo();
+      //   const urlParams = new URL(window.location.href).searchParams;
+      //   console.log(urlParams);
+      //   console.log(urlParams.get('redirect') || '/')
+      //   history.push(urlParams.get('redirect') || '/welcome');
+      //   return;
+      // }
+      // console.log(msg);
+
       // 如果失败去设置用户错误信息
       // setUserLoginState(msg);
     } catch (error) {

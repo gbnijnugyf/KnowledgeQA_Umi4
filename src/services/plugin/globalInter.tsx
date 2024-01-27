@@ -5,3 +5,9 @@ export interface ILoginProps {
   passWord: string;
   type: 0 | 1;
 }
+
+export interface IReturn<T> {
+  data: T;
+  status: number;
+  msg: string;
+}
