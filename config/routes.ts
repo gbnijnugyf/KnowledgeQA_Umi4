@@ -27,6 +27,7 @@ export default [
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
+    access: 'adminRoute',
   },
   {
     path: '/admin',
