@@ -153,4 +153,7 @@ export default defineConfig({
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  //以下为electron打包所作配置
+  history: { type: 'hash' },
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
 });
