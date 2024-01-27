@@ -4,6 +4,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
+import { SwitchTheme } from './components/RightContent';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -54,7 +55,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ }) => {
   return {
-    actionsRender: () => [<Question key="doc" />],
+    actionsRender: () => [<Question key="doc" />, <SwitchTheme key="switchTheme" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
