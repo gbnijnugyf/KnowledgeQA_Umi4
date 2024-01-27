@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 import { BASEURL, IReturn } from '../plugin/globalInter';
+import token from '../plugin/token';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -9,6 +10,17 @@ export async function currentUser(options?: { [key: string]: any }) {
     data: API.CurrentUser;
   }>('/api/currentUser', {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+export async function myCurrentUser(options?: { [key: string]: any }) {
+  return request<{
+    data: API.CurrentUser;
+  }>(BASEURL + '/fetchUserInfo', {
+    method: 'GET',
+    headers: {
+      Authorization: token.get() || '',
+    },
     ...(options || {}),
   });
 }

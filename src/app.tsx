@@ -6,6 +6,7 @@ import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { SwitchTheme } from './components/RightContent';
 import { errorConfig } from './requestErrorConfig';
+import { myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -18,22 +19,19 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  // const fetchUserInfo = async () => {
-  //   try {
-  //     const msg = await queryCurrentUser({
-  //       skipErrorHandler: true,
-  //     });
-  //     console.log(msg);
-  //     return { name: '123' };
-  //     // return msg.data;
-  //   } catch (error) {
-  //     console.log(error);
-  //     history.push(loginPath);
-  //   }
-  //   return undefined;
-  // };
   const fetchUserInfo = async () => {
-    return { name: '1' };
+    try {
+      const msg = await queryCurrentUser({
+        skipErrorHandler: true,
+      });
+      console.log(msg.data);
+      return { name: msg.data.name, access: msg.data.access };
+      // return msg.data;
+    } catch (error) {
+      console.log(error);
+      history.push(loginPath);
+    }
+    return undefined;
   };
   console.log(1);
   // 如果不是登录页面，执行
