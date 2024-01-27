@@ -27,13 +27,12 @@ export default [
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
-    access: 'adminRoute',
   },
   {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
-    access: 'canAdmin',
+    access: 'adminRoute',
     routes: [
       {
         path: '/admin',

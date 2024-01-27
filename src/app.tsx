@@ -2,12 +2,12 @@ import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { Link, history } from '@umijs/max';
+import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { SwitchTheme } from './components/RightContent';
 import { errorConfig } from './requestErrorConfig';
 import { myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /**
@@ -92,14 +92,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ 
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
-      : [],
+    links: [
+      <a key="chaoxing" href="https://www.chaoxing.com/" target="_blank" rel="noreferrer">
+        <LinkOutlined />
+        <span>超星</span>
+      </a>,
+    ],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

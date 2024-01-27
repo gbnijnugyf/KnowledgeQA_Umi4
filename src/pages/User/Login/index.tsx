@@ -44,22 +44,6 @@ function Page() {
       }
       console.log(msg);
 
-      // const userInfo = await initialState?.fetchUserInfo?.();
-      // console.log(userInfo);
-      // const type = loginTypeS;
-      // const msg = await login({ ...values, type });
-      // console.log(msg);
-      // if(msg.status === 'ok'){
-      //   message.success('登录成功！');
-      //   await fetchUserInfo();
-      //   const urlParams = new URL(window.location.href).searchParams;
-      //   console.log(urlParams);
-      //   console.log(urlParams.get('redirect') || '/')
-      //   history.push(urlParams.get('redirect') || '/welcome');
-      //   return;
-      // }
-      // console.log(msg);
-
       // 如果失败去设置用户错误信息
       // setUserLoginState(msg);
     } catch (error) {
