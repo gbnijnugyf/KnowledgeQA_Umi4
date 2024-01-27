@@ -24,32 +24,39 @@ export default [
   },
   {
     path: '/welcome',
-    name: 'welcome',
+    name: '欢迎',
     icon: 'smile',
     component: './Welcome',
   },
   {
     path: '/admin',
-    name: 'admin',
+    name: '管理页',
     icon: 'crown',
     access: 'adminRoute',
     routes: [
       {
         path: '/admin',
-        redirect: '/admin/sub-page',
+        redirect: '/admin/knowledgeBase',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
+        path: '/admin/knowledgeBase',
+        name: '知识库',
         component: './Admin',
       },
     ],
   },
   {
-    name: 'list.table-list',
+    name: '问答',
+    icon: 'RobotOutlined',
+    path: '/QA',
+    component: './TableList',
+  },
+  {
+    name: '查看表格',
     icon: 'table',
     path: '/list',
     component: './TableList',
+    hideInMenu: true,
   },
   {
     path: '/',
