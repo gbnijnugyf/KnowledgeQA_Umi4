@@ -34,7 +34,7 @@ declare namespace API {
     pageSize?: number;
   };
 
-  type RuleListItem = {
+  type KnowledgeBaseListItem = {
     key?: number;
     disabled?: boolean;
     href?: string;
@@ -50,7 +50,7 @@ declare namespace API {
   };
 
   type RuleList = {
-    data?: RuleListItem[];
+    data?: KnowledgeBaseListItem[];
     /** 列表的内容总数 */
     total?: number;
     success?: boolean;

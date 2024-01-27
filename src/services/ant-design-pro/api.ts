@@ -44,7 +44,6 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
     ...(options || {}),
   });
 }
-
 export async function myLogin(body: API.LoginParams, options?: { [key: string]: any }) {
   return request<IReturn<string>>(BASEURL + '/login', {
     method: 'POST',
@@ -75,7 +74,28 @@ export async function rule(
   },
   options?: { [key: string]: any },
 ) {
+  console.log(params);
   return request<API.RuleList>('/api/rule', {
+    method: 'GET',
+    params: {
+      // ...params,
+    },
+    ...(options || {}),
+  });
+}
+export async function myGetKnowledgeBaseList(
+  params: {
+    // query
+    /** 当前的页码 */
+    current?: number;
+    /** 页面的容量 */
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  console.log(params);
+  //注意！需要后端返回总数total，成功success
+  return request<API.RuleList>(BASEURL + '/getKnowledgeBase', {
     method: 'GET',
     params: {
       ...params,
@@ -86,7 +106,7 @@ export async function rule(
 
 /** 更新规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
+  return request<API.KnowledgeBaseListItem>('/api/rule', {
     method: 'POST',
     data: {
       method: 'update',
@@ -97,7 +117,7 @@ export async function updateRule(options?: { [key: string]: any }) {
 
 /** 新建规则 POST /api/rule */
 export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
+  return request<API.KnowledgeBaseListItem>('/api/rule', {
     method: 'POST',
     data: {
       method: 'post',
