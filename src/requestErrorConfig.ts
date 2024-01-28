@@ -86,6 +86,7 @@ export const errorConfig: RequestConfig = {
   },
 
   // 请求拦截器
+  // TODO: 自定义拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
@@ -95,6 +96,7 @@ export const errorConfig: RequestConfig = {
   ],
 
   // 响应拦截器
+  // TODO: 自定义拦截器
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理

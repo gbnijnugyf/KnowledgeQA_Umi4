@@ -78,7 +78,7 @@ export async function rule(
   return request<API.RuleList>('/api/rule', {
     method: 'GET',
     params: {
-      // ...params,
+      ...params,
     },
     ...(options || {}),
   });
@@ -93,9 +93,8 @@ export async function myGetKnowledgeBaseList(
   },
   options?: { [key: string]: any },
 ) {
-  console.log(params);
   //注意！需要后端返回总数total，成功success
-  return request<API.RuleList>(BASEURL + '/getKnowledgeBase', {
+  return request<API.myList>(BASEURL + '/getKnowledgeBase', {
     method: 'GET',
     params: {
       ...params,
@@ -129,6 +128,15 @@ export async function addRule(options?: { [key: string]: any }) {
 /** 删除规则 DELETE /api/rule */
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      ...(options || {}),
+    },
+  });
+}
+export async function myRemoveRule(options?: { [key: string]: any }) {
+  return request<Record<string, any>>(BASEURL + '/delKnowledgeBase', {
     method: 'POST',
     data: {
       method: 'delete',

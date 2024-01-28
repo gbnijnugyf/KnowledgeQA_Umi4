@@ -55,6 +55,11 @@ declare namespace API {
     total?: number;
     success?: boolean;
   };
+  type myList = {
+    data: RuleList;
+    status: string;
+    msg: string;
+  };
 
   type FakeCaptcha = {
     code?: number;

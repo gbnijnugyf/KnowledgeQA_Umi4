@@ -1,4 +1,9 @@
-import { addRule, removeRule, rule, updateRule } from '@/services/ant-design-pro/api';
+import {
+  addRule,
+  myGetKnowledgeBaseList,
+  myRemoveRule,
+  updateRule,
+} from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
@@ -69,15 +74,16 @@ const handleRemove = async (selectedRows: API.KnowledgeBaseListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await removeRule({
+    const res = await myRemoveRule({
       key: selectedRows.map((row) => row.key),
     });
+    console.log(res);
     hide();
-    message.success('Deleted successfully and will refresh soon');
+    message.success('删除成功');
     return true;
   } catch (error) {
     hide();
-    message.error('Delete failed, please try again');
+    message.error('删除失败，请重试');
     return false;
   }
 };
@@ -212,9 +218,17 @@ const TableList: React.FC = () => {
             新增
           </Button>,
         ]}
-        request={rule}
+        // request={rule}
         //TODO: 修改请求方法
-        // request={myGetKnowledgeBaseList}
+        request={async (p, sorter, filter) => {
+          console.log(p, sorter, filter);
+          //参数p是分页参数
+          const res = await myGetKnowledgeBaseList(p);
+          // const res = await rule(p)
+          console.log(res.data);
+          return res.data;
+          // return res
+        }}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -226,11 +240,7 @@ const TableList: React.FC = () => {
         <FooterToolbar
           extra={
             <div>
-              Chosen <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> 项 &nbsp;&nbsp;
-              <span>
-                Total number of service calls{' '}
-                {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
-              </span>
+              选择 <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> 项
             </div>
           }
         >
@@ -241,9 +251,8 @@ const TableList: React.FC = () => {
               actionRef.current?.reloadAndRest?.();
             }}
           >
-            Batch deletion
+            删除
           </Button>
-          <Button type="primary">Batch approval</Button>
         </FooterToolbar>
       )}
       <ModalForm
