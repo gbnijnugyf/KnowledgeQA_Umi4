@@ -2,14 +2,12 @@ import { ProDescriptions, ProDescriptionsItemProps } from '@ant-design/pro-compo
 import { Drawer, Table } from 'antd';
 import { useEffect } from 'react';
 import {TableList} from './TableList';
+import { IHookFunc } from '@/services/plugin/globalInter';
 
-interface IDetailDrawerProps {
+export interface IDetailDrawerProps {
   key: number; //用于请求具体数据
   hook: {
-    open: {
-      value: boolean;
-      set: React.Dispatch<React.SetStateAction<boolean>>;
-    };
+    open: IHookFunc<boolean>;
   };
 }
 

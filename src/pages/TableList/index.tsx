@@ -1,7 +1,9 @@
+import { myGetKnowledgeBaseList } from '@/services/ant-design-pro/api';
 import { PageContainer } from '@ant-design/pro-components';
 import React, { useState } from 'react';
+import DetailDrawer from './components/DetailDrawer';
 import { NewForm } from './components/NewForm';
-import { TableList } from './components/TableList';
+import { ITableRequest, TableList } from './components/TableList';
 import { UpdateForm } from './components/UpdateForm';
 import { KnowledgeBase } from './tableData';
 
@@ -19,6 +21,13 @@ const TableForm: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
 
+  const resquest: ITableRequest = async (p, sorter, filter) => {
+    console.log(p, sorter, filter);
+    //参数p是分页参数
+    const res = await myGetKnowledgeBaseList(p);
+    // console.log('1', res.data);
+    return res.data;
+  };
   const columns = KnowledgeBase.getColumns({
     hooks: {
       openUpdate: {
@@ -42,6 +51,7 @@ const TableForm: React.FC = () => {
         component={{
           NewForm: NewForm,
           UpdateForm: UpdateForm,
+          DetailDrawer: DetailDrawer,
         }}
         hooks={{
           openCreate: {
@@ -61,7 +71,8 @@ const TableForm: React.FC = () => {
             set: setCurrentRow,
           },
         }}
-        data={{columns: columns}}
+        data={{ columns: columns }}
+        request={resquest}
       />
     </PageContainer>
   );

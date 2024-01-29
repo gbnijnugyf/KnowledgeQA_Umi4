@@ -1,15 +1,12 @@
-import {
-  addRule,
-  myGetKnowledgeBaseList,
-  myRemoveRule,
-  updateRule,
-} from '@/services/ant-design-pro/api';
+import { addRule, myRemoveRule, updateRule } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-components';
 import { FooterToolbar, ProTable } from '@ant-design/pro-components';
-import { Button, Input, message } from 'antd';
+import { Button, message } from 'antd';
+import { SortOrder } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react';
+import { IDetailDrawerProps } from './DetailDrawer';
 import { INewFormProps } from './NewForm';
 import type { FormValueType, IUpdateFormProps } from './UpdateForm';
 
@@ -81,20 +78,31 @@ const handleRemove = async (selectedRows: API.KnowledgeBaseListItem[]) => {
   }
 };
 
+export type ITableRequest = (
+  params: API.PageParams & {
+    pageSize?: number;
+    current?: number;
+    keyword?: string;
+  },
+  sort: Record<string, SortOrder>,
+  filter: Record<string, (string | number)[] | null>,
+) => Promise<Partial<RequestData<API.KnowledgeBaseListItem>>>;
 interface ITableList {
   component: {
     NewForm?: (props: INewFormProps) => React.JSX.Element;
     UpdateForm?: (props: IUpdateFormProps) => React.JSX.Element;
+    DetailDrawer?: (props: IDetailDrawerProps) => React.JSX.Element;
   };
   hooks: {
     openCreate?: IHookFunc<boolean>;
     openUpdate?: IHookFunc<boolean>;
     openDetail?: IHookFunc<boolean>;
-    setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem |undefined>;
+    setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem | undefined>;
   };
-  data:{
+  data: {
     columns: ProColumns<API.KnowledgeBaseListItem>[];
-  }
+  };
+  request: ITableRequest;
 }
 
 export function TableList(props: ITableList) {
@@ -120,89 +128,88 @@ export function TableList(props: ITableList) {
    * @zh-CN 国际化配置
    * */
 
-//   const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
-//     //TODO: 表格修改
-//     {
-//       title: '名称',
-//       dataIndex: 'name',
-//       tip: 'The rule name is the unique key',
-//       render: (dom, entity) => {
-//         // console.log(dom, entity);
-//         return (
-//           <a
-//             onClick={() => {
-//               setCurrentRow(entity);
-//               setShowDetail(true);
-//             }}
-//           >
-//             {dom}
-//           </a>
-//         );
-//       },
-//     },
-//     {
-//       title: '可见性',
-//       dataIndex: 'status',
-//       hideInForm: true,
-//       onFilter: true,
-//       valueEnum: {
-//         0: {
-//           text: '仅可问答',
-//           status: 'Default',
-//         },
-//         1: {
-//           text: '可见知识图谱',
-//           status: 'Processing',
-//         },
-//         2: {
-//           text: '所有可见',
-//           status: 'Success',
-//         },
-//         3: {
-//           text: '全不可见',
-//           status: 'Error',
-//         },
-//       },
-//     },
-//     {
-//       title: '最近更新时间',
-//       sorter: true,
-//       dataIndex: 'updatedAt',
-//       valueType: 'dateTime',
-//       renderFormItem: (item, { defaultRender, ...rest }, form) => {
-//         const status = form.getFieldValue('status');
-//         if (`${status}` === '0') {
-//           return false;
-//         }
-//         if (`${status}` === '3') {
-//           return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
-//         }
-//         return defaultRender(item);
-//       },
-//     },
-//     {
-//       title: '操作',
-//       dataIndex: 'option',
-//       valueType: 'option',
-//       render: (_, record) => [
-//         <a
-//           key="config"
-//           onClick={() => {
-//             handleUpdateModalOpen(true);
-//             setCurrentRow(record);
-//           }}
-//         >
-//           配置基本信息
-//         </a>,
-//         <a key="subscribeAlert" href="https://procomponents.ant.design/">
-//           订阅
-//         </a>,
-//       ],
-//     },
-//   ];
+  //   const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
+  //     //TODO: 表格修改
+  //     {
+  //       title: '名称',
+  //       dataIndex: 'name',
+  //       tip: 'The rule name is the unique key',
+  //       render: (dom, entity) => {
+  //         // console.log(dom, entity);
+  //         return (
+  //           <a
+  //             onClick={() => {
+  //               setCurrentRow(entity);
+  //               setShowDetail(true);
+  //             }}
+  //           >
+  //             {dom}
+  //           </a>
+  //         );
+  //       },
+  //     },
+  //     {
+  //       title: '可见性',
+  //       dataIndex: 'status',
+  //       hideInForm: true,
+  //       onFilter: true,
+  //       valueEnum: {
+  //         0: {
+  //           text: '仅可问答',
+  //           status: 'Default',
+  //         },
+  //         1: {
+  //           text: '可见知识图谱',
+  //           status: 'Processing',
+  //         },
+  //         2: {
+  //           text: '所有可见',
+  //           status: 'Success',
+  //         },
+  //         3: {
+  //           text: '全不可见',
+  //           status: 'Error',
+  //         },
+  //       },
+  //     },
+  //     {
+  //       title: '最近更新时间',
+  //       sorter: true,
+  //       dataIndex: 'updatedAt',
+  //       valueType: 'dateTime',
+  //       renderFormItem: (item, { defaultRender, ...rest }, form) => {
+  //         const status = form.getFieldValue('status');
+  //         if (`${status}` === '0') {
+  //           return false;
+  //         }
+  //         if (`${status}` === '3') {
+  //           return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
+  //         }
+  //         return defaultRender(item);
+  //       },
+  //     },
+  //     {
+  //       title: '操作',
+  //       dataIndex: 'option',
+  //       valueType: 'option',
+  //       render: (_, record) => [
+  //         <a
+  //           key="config"
+  //           onClick={() => {
+  //             handleUpdateModalOpen(true);
+  //             setCurrentRow(record);
+  //           }}
+  //         >
+  //           配置基本信息
+  //         </a>,
+  //         <a key="subscribeAlert" href="https://procomponents.ant.design/">
+  //           订阅
+  //         </a>,
+  //       ],
+  //     },
+  //   ];
 
   return (
-    // <PageContainer>
     <>
       <ProTable<API.KnowledgeBaseListItem, API.PageParams>
         headerTitle={'Enquiry form'}
@@ -225,15 +232,7 @@ export function TableList(props: ITableList) {
         ]}
         // request={rule}
         //TODO: 修改请求方法
-        request={async (p, sorter, filter) => {
-          console.log(p, sorter, filter);
-          //参数p是分页参数
-          const res = await myGetKnowledgeBaseList(p);
-          // const res = await rule(p)
-          console.log(res.data);
-          return res.data;
-          // return res
-        }}
+        request={props.request}
         columns={props.data.columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -292,6 +291,19 @@ export function TableList(props: ITableList) {
             },
             updateModalOpen: props.hooks.openUpdate?.value,
             values: props.hooks.setCurrentRow?.value || {},
+          })}
+      {props.component.DetailDrawer === undefined ||
+      props.hooks.openDetail === undefined ||
+      props.hooks.setCurrentRow === undefined
+        ? null
+        : props.component.DetailDrawer({
+            key: props.hooks.setCurrentRow?.value?.key || 0,
+            hook: {
+              open: {
+                value: props.hooks.openDetail.value,
+                set: props.hooks.openDetail.set,
+              },
+            },
           })}
       {/* <DetailDrawer
         key={0}
