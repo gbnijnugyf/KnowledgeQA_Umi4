@@ -1,6 +1,9 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import { IReturn } from './services/plugin/globalInter';
+import { history } from '@umijs/max';
+import { loginPath } from '../src/services/plugin/globalInter';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -72,15 +75,15 @@ export const errorConfig: RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        message.error(`Response status:${error.response.status}`);
+        message.error(`响应状态:${error.response.status}`);
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
         // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
         // 而在node.js中是 http.ClientRequest 的实例
-        message.error('None response! Please retry.');
+        message.error('没有回应! 请重试.');
       } else {
         // 发送请求时出了点问题
-        message.error('Request error, please retry.');
+        message.error('请求错误, 请重试.');
       }
     },
   },
@@ -90,8 +93,12 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      console.log('requestInterceptors', config);
+      config.headers = {
+        token: localStorage.getItem('token') || '',
+      }
+      // const url = config?.url?.concat('?token = 123');
+      return { ...config };
     },
   ],
 
@@ -100,11 +107,20 @@ export const errorConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理
-      const { data } = response as unknown as ResponseStructure;
+      // const { data } = response as unknown as ResponseStructure;
+      const res :IReturn = response.data as IReturn;
+      
+      //TODO: 是否可靠
+      if(res.msg === '登录信息失效' ){
+        localStorage.removeItem('token');
+        history.push(loginPath)
+        message.error('登录信息失效！');
 
-      if (data?.success === false) {
-        message.error('请求失败！');
       }
+      // if(data){}
+      // if (data?.success === false) {
+      //   message.error('请求失败！');
+      // }
       return response;
     },
   ],

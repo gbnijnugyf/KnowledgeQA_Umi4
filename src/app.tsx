@@ -7,8 +7,9 @@ import defaultSettings from '../config/defaultSettings';
 import { SwitchTheme } from './components/RightContent';
 import { errorConfig } from './requestErrorConfig';
 import { myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { loginPath } from '../src/services/plugin/globalInter';
 // const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state

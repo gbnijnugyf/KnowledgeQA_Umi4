@@ -37,7 +37,14 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             // styles={{padding:'32px 40px 48px'}}
             bodyStyle={{ padding: '32px 40px 48px' }}
             destroyOnClose
-            title="规则配置"
+            title={
+              <>
+                <h1>规则配置</h1>
+                <span style={{ fontWeight: 'lighter', color: 'rgba(128, 128, 128, 0.5)' }}>
+                  知识库文件请点击名称进行设置
+                </span>
+              </>
+            }
             open={props.updateModalOpen}
             footer={submitter}
             onCancel={() => {

@@ -63,8 +63,8 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
-/** 获取规则列表 GET /api/rule */
-export async function rule(
+/** 获取知识库列表 GET /getKnowledgeBase */
+export async function myGetKnowledgeBaseList(
   params: {
     // query
     /** 当前的页码 */
@@ -74,22 +74,22 @@ export async function rule(
   },
   options?: { [key: string]: any },
 ) {
-  console.log(params);
-  return request<API.RuleList>('/api/rule', {
+  //注意！需要后端返回总数total，成功success
+  return request<API.myList>(BASEURL + '/getKnowledgeBase', {
     method: 'GET',
+    //TODO: 看看返回参数是否有多余的
     params: {
       ...params,
     },
     ...(options || {}),
   });
 }
-export async function myGetKnowledgeBaseList(
+/** 获取知识库具体信息 GET / */
+export async function myGetKnowledgeBaseDetail(
   params: {
     // query
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
+    /** 知识库key */
+    key?: number;
   },
   options?: { [key: string]: any },
 ) {

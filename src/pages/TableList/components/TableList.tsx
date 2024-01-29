@@ -6,14 +6,13 @@ import {
 } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { FooterToolbar, PageContainer, ProTable } from '@ant-design/pro-components';
+import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { Button, Input, message } from 'antd';
 import React, { useRef, useState } from 'react';
-import DetailDrawer from './components/DetailDrawer';
-import NewForm from './components/NewForm';
-import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
-import {TableList} from './components/TableList'
+import DetailDrawer from './DetailDrawer';
+import NewForm from './NewForm';
+import type { FormValueType } from './UpdateForm';
+import UpdateForm from './UpdateForm';
 
 /**
  * @en-US Add node
@@ -83,7 +82,7 @@ const handleRemove = async (selectedRows: API.KnowledgeBaseListItem[]) => {
   }
 };
 
-const TableForm: React.FC = () => {
+export const TableList: React.FC = () => {
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -193,9 +192,9 @@ const TableForm: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
-      <TableList />
-      {/* <ProTable<API.KnowledgeBaseListItem, API.PageParams>
+    // <PageContainer>
+    <>
+      <ProTable<API.KnowledgeBaseListItem, API.PageParams>
         headerTitle={'Enquiry form'}
         actionRef={actionRef}
         rowKey="key"
@@ -231,8 +230,8 @@ const TableForm: React.FC = () => {
             setSelectedRows(selectedRows);
           },
         }}
-      /> */}
-      {/* {selectedRowsState?.length > 0 && (
+      />
+      {selectedRowsState?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
@@ -250,39 +249,39 @@ const TableForm: React.FC = () => {
             删除
           </Button>
         </FooterToolbar>
-      )} */}
-      {/* <NewForm
+      )}
+      <NewForm
         actionRef={actionRef}
         hook={{ open: { value: createModalOpen, set: handleModalOpen } }}
-      /> */}
+      />
       {/* <ModalForm
-        title={'New rule'}
-        width="400px"
-        open={createModalOpen}
-        onOpenChange={handleModalOpen}
-        onFinish={async (value) => {
-          const success = await handleAdd(value as API.KnowledgeBaseListItem);
-          if (success) {
-            handleModalOpen(false);
-            if (actionRef.current) {
-              actionRef.current.reload();
+          title={'New rule'}
+          width="400px"
+          open={createModalOpen}
+          onOpenChange={handleModalOpen}
+          onFinish={async (value) => {
+            const success = await handleAdd(value as API.KnowledgeBaseListItem);
+            if (success) {
+              handleModalOpen(false);
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
             }
-          }
-        }}
-      >
-        <ProFormText
-          rules={[
-            {
-              required: true,
-              message: 'Rule name is required',
-            },
-          ]}
-          width="md"
-          name="name"
-        />
-        <ProFormTextArea width="md" name="desc" />
-      </ModalForm> */}
-      {/* <UpdateForm
+          }}
+        >
+          <ProFormText
+            rules={[
+              {
+                required: true,
+                message: 'Rule name is required',
+              },
+            ]}
+            width="md"
+            name="name"
+          />
+          <ProFormTextArea width="md" name="desc" />
+        </ModalForm> */}
+      <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
           if (success) {
@@ -301,8 +300,8 @@ const TableForm: React.FC = () => {
         }}
         updateModalOpen={updateModalOpen}
         values={currentRow || {}}
-      /> */}
-      {/* <DetailDrawer
+      />
+      <DetailDrawer
         key={0}
         hook={{
           open: {
@@ -310,33 +309,32 @@ const TableForm: React.FC = () => {
             set: setShowDetail,
           },
         }}
-      /> */}
+      />
       {/* <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-          console.log(currentRow)
-        }}
-        closable={false}
-      >
-        {currentRow?.name && (
-          <ProDescriptions<API.KnowledgeBaseListItem>
-            column={2}
-            title={currentRow?.name}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.name,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.KnowledgeBaseListItem>[]}
-          />
-        )}
-      </Drawer> */}
-    </PageContainer>
+          width={600}
+          open={showDetail}
+          onClose={() => {
+            setCurrentRow(undefined);
+            setShowDetail(false);
+            console.log(currentRow)
+          }}
+          closable={false}
+        >
+          {currentRow?.name && (
+            <ProDescriptions<API.KnowledgeBaseListItem>
+              column={2}
+              title={currentRow?.name}
+              request={async () => ({
+                data: currentRow || {},
+              })}
+              params={{
+                id: currentRow?.name,
+              }}
+              columns={columns as ProDescriptionsItemProps<API.KnowledgeBaseListItem>[]}
+            />
+          )}
+        </Drawer> */}
+    </>
+    // </PageContainer>
   );
 };
-
-export default TableForm;
