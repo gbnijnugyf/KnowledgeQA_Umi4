@@ -1,20 +1,50 @@
-import { ProDescriptions, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import { Drawer, Table } from 'antd';
-import { useEffect } from 'react';
-import {TableList} from './TableList';
+import { myGetKnowledgeBaseFiles } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
+import { Drawer } from 'antd';
+import { useState } from 'react';
+import { KnowledgeBaseFile } from '../tableData';
+import { NewForm } from './NewForm';
+import { ITableRequest, TableList } from './TableList';
+import { UpdateForm } from './UpdateForm';
 
 export interface IDetailDrawerProps {
   key: number; //用于请求具体数据
+  baseName: string; //知识库名称
   hook: {
     open: IHookFunc<boolean>;
   };
 }
 
 export default function DetailDrawer(props: IDetailDrawerProps) {
+  /**
+   * @en-US Pop-up window of new window
+   * @zh-CN 新建窗口的弹窗
+   *  */
+  const [createModalOpen, handleModalOpen] = useState<boolean>(false);
+  /**
+   * @en-US The pop-up window of the distribution update window
+   * @zh-CN 分布更新窗口的弹窗
+   * */
+  const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
+  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
 
-    // useEffect(() => {
-    //     const res = await getRule({ id: props.key });
+  const resquest: ITableRequest = async (p, sorter, filter) => {
+    console.log(p, sorter, filter);
+    //参数p是分页参数
+    let params = { ...p };
+    if (Object.keys(sorter).length !== 0) {
+      params = { ...params, ...sorter };
+    }
+    if (Object.keys(filter).length !== 0) {
+      params = { ...params, ...filter };
+    }
+    console.log('params', params);
+    const res = await myGetKnowledgeBaseFiles({ ...params });
+    console.log('1', res.data);
+    return res.data;
+  };
+  const columns = KnowledgeBaseFile.getColumns();
 
   return (
     <Drawer
@@ -26,20 +56,33 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
       }}
       closable={false}
     >
-        {/* <TableList /> */}
-      {/* {currentRow?.name && (
-        <ProDescriptions<API.KnowledgeBaseListItem>
-          column={2}
-          title={currentRow?.name}
-          request={async () => ({
-            data: currentRow || {},
-          })}
-          params={{
-            id: currentRow?.name,
-          }}
-          columns={columns as ProDescriptionsItemProps<API.KnowledgeBaseListItem>[]}
-        />
-      )} */}
+      <TableList
+        component={{
+          NewForm: NewForm,
+          UpdateForm: UpdateForm,
+          DetailDrawer: DetailDrawer,
+        }}
+        hooks={{
+          openCreate: {
+            value: createModalOpen,
+            set: handleModalOpen,
+          },
+          openUpdate: {
+            value: updateModalOpen,
+            set: handleUpdateModalOpen,
+          },
+          openDetail: {
+            value: showDetail,
+            set: setShowDetail,
+          },
+          setCurrentRow: {
+            value: currentRow,
+            set: setCurrentRow,
+          },
+        }}
+        data={{ columns: columns, title: props.baseName }}
+        request={resquest}
+      />
     </Drawer>
   );
 }

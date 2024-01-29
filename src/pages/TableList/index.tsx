@@ -23,8 +23,18 @@ const TableForm: React.FC = () => {
 
   const resquest: ITableRequest = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
+    let params = { ...p };
+    if (Object.keys(sorter).length !== 0) {
+      params = { ...params, ...sorter };
+    }
+    if (Object.keys(filter).length !== 0) {
+      params = { ...params, ...filter };
+    }
+
     //参数p是分页参数
-    const res = await myGetKnowledgeBaseList(p);
+    const res = await myGetKnowledgeBaseList({
+      ...params,
+    });
     // console.log('1', res.data);
     return res.data;
   };
@@ -71,7 +81,7 @@ const TableForm: React.FC = () => {
             set: setCurrentRow,
           },
         }}
-        data={{ columns: columns }}
+        data={{ columns: columns, title: KnowledgeBase.title }}
         request={resquest}
       />
     </PageContainer>

@@ -71,6 +71,10 @@ export async function myGetKnowledgeBaseList(
     current?: number;
     /** 页面的容量 */
     pageSize?: number;
+    /** 排序参数 */
+    sorter?: any;
+    /** 过滤参数 */
+    filter?: any;
   },
   options?: { [key: string]: any },
 ) {
@@ -84,17 +88,21 @@ export async function myGetKnowledgeBaseList(
     ...(options || {}),
   });
 }
-/** 获取知识库具体信息 GET / */
-export async function myGetKnowledgeBaseDetail(
+/** 获取知识库具体信息 GET /getKnowledgeBaseFiles */
+export async function myGetKnowledgeBaseFiles(
   params: {
     // query
     /** 知识库key */
     key?: number;
+    /** 当前的页码 */
+    current?: number;
+    /** 页面的容量 */
+    pageSize?: number;
   },
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<API.myList>(BASEURL + '/getKnowledgeBase', {
+  return request<API.myList>(BASEURL + '/getKnowledgeBaseFiles', {
     method: 'GET',
     params: {
       ...params,

@@ -100,138 +100,40 @@ interface ITableList {
     setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem | undefined>;
   };
   data: {
+    title: string;
     columns: ProColumns<API.KnowledgeBaseListItem>[];
   };
   request: ITableRequest;
 }
 
 export function TableList(props: ITableList) {
-  /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
-  //   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
-  //   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
-
-  //   const [showDetail, setShowDetail] = useState<boolean>(false);
-
   const actionRef = useRef<ActionType>();
-  //   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
-
-  /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
-
-  //   const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
-  //     //TODO: 表格修改
-  //     {
-  //       title: '名称',
-  //       dataIndex: 'name',
-  //       tip: 'The rule name is the unique key',
-  //       render: (dom, entity) => {
-  //         // console.log(dom, entity);
-  //         return (
-  //           <a
-  //             onClick={() => {
-  //               setCurrentRow(entity);
-  //               setShowDetail(true);
-  //             }}
-  //           >
-  //             {dom}
-  //           </a>
-  //         );
-  //       },
-  //     },
-  //     {
-  //       title: '可见性',
-  //       dataIndex: 'status',
-  //       hideInForm: true,
-  //       onFilter: true,
-  //       valueEnum: {
-  //         0: {
-  //           text: '仅可问答',
-  //           status: 'Default',
-  //         },
-  //         1: {
-  //           text: '可见知识图谱',
-  //           status: 'Processing',
-  //         },
-  //         2: {
-  //           text: '所有可见',
-  //           status: 'Success',
-  //         },
-  //         3: {
-  //           text: '全不可见',
-  //           status: 'Error',
-  //         },
-  //       },
-  //     },
-  //     {
-  //       title: '最近更新时间',
-  //       sorter: true,
-  //       dataIndex: 'updatedAt',
-  //       valueType: 'dateTime',
-  //       renderFormItem: (item, { defaultRender, ...rest }, form) => {
-  //         const status = form.getFieldValue('status');
-  //         if (`${status}` === '0') {
-  //           return false;
-  //         }
-  //         if (`${status}` === '3') {
-  //           return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
-  //         }
-  //         return defaultRender(item);
-  //       },
-  //     },
-  //     {
-  //       title: '操作',
-  //       dataIndex: 'option',
-  //       valueType: 'option',
-  //       render: (_, record) => [
-  //         <a
-  //           key="config"
-  //           onClick={() => {
-  //             handleUpdateModalOpen(true);
-  //             setCurrentRow(record);
-  //           }}
-  //         >
-  //           配置基本信息
-  //         </a>,
-  //         <a key="subscribeAlert" href="https://procomponents.ant.design/">
-  //           订阅
-  //         </a>,
-  //       ],
-  //     },
-  //   ];
 
   return (
     <>
       <ProTable<API.KnowledgeBaseListItem, API.PageParams>
-        headerTitle={'Enquiry form'}
+        style={{ userSelect: 'none' }}
+        headerTitle={props.data.title}
         actionRef={actionRef}
         rowKey="key"
         search={{
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              props.hooks.openCreate?.set(true);
-            }}
-          >
-            <PlusOutlined />
-            新增
-          </Button>,
+          props.hooks.openCreate === undefined || props.component.NewForm === undefined ? null : (
+            <Button
+              type="primary"
+              key="primary"
+              onClick={() => {
+                props.hooks.openCreate?.set(true);
+              }}
+            >
+              <PlusOutlined />
+              新增
+            </Button>
+          ),
         ]}
-        // request={rule}
-        //TODO: 修改请求方法
         request={props.request}
         columns={props.data.columns}
         rowSelection={{
@@ -304,17 +206,10 @@ export function TableList(props: ITableList) {
                 set: props.hooks.openDetail.set,
               },
             },
+            baseName: (props.hooks.setCurrentRow?.value?.name
+              ? props.hooks.setCurrentRow?.value?.name
+              : '') + ' 知识库文件',
           })}
-      {/* <DetailDrawer
-        key={0}
-        hook={{
-          open: {
-            value: showDetail,
-            set: setShowDetail,
-          },
-        }}
-      /> */}
     </>
-    // </PageContainer>
   );
 }

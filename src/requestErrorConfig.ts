@@ -93,7 +93,7 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      console.log('requestInterceptors', config);
+      // console.log('requestInterceptors', config);
       config.headers = {
         token: localStorage.getItem('token') || '',
       }
