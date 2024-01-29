@@ -17,14 +17,14 @@ export type FormValueType = {
   frequency?: string;
 } & Partial<API.KnowledgeBaseListItem>;
 
-export type UpdateFormProps = {
+export interface IUpdateFormProps  {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   updateModalOpen: boolean;
   values: Partial<API.KnowledgeBaseListItem>;
 };
 
-const UpdateForm: React.FC<UpdateFormProps> = (props) => {
+export function UpdateForm(props: IUpdateFormProps)  {
   return (
     <StepsForm
       stepsProps={{
@@ -160,5 +160,3 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
     </StepsForm>
   );
 };
-
-export default UpdateForm;

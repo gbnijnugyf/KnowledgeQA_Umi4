@@ -13,3 +13,8 @@ export interface IReturn<T = any> {
   status: number;
   msg: string;
 }
+
+export interface IHookFunc<T> {
+  value: T;
+  set: React.Dispatch<React.SetStateAction<T>>;
+}

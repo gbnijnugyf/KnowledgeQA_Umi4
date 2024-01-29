@@ -28,7 +28,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
       }}
       closable={false}
     >
-        <TableList />
+        {/* <TableList /> */}
       {/* {currentRow?.name && (
         <ProDescriptions<API.KnowledgeBaseListItem>
           column={2}

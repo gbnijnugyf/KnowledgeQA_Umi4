@@ -3,7 +3,7 @@ import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design
 import { message } from 'antd';
 import { useState } from 'react';
 
-interface INewFormProps {
+export interface INewFormProps {
   actionRef: React.MutableRefObject<ActionType | undefined>;
   hook: {
     open: {
@@ -13,7 +13,7 @@ interface INewFormProps {
   };
 }
 
-export default function NewForm(props:INewFormProps) {
+export function NewForm(props:INewFormProps) {
   const handleAdd = async (fields: API.KnowledgeBaseListItem) => {
     const hide = message.loading('正在添加');
     try {
