@@ -4,7 +4,7 @@ import { ActionType } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { KnowledgeBaseFile } from '../tableData';
-import { NewForm } from './NewForm';
+import { NewKnowledgeBaseFileForm, NewKnowledgeBaseForm } from './NewForm';
 import { ITableRequest, TableList } from './TableList';
 import { UpdateForm } from './UpdateForm';
 
@@ -73,7 +73,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     >
       <TableList
         component={{
-          NewForm: NewForm,
+          NewForm: NewKnowledgeBaseFileForm,
           UpdateForm: UpdateForm,
           DetailDrawer: DetailDrawer,
         }}

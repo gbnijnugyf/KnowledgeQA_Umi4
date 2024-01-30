@@ -2,7 +2,7 @@ import { myGetKnowledgeBaseList } from '@/services/ant-design-pro/api';
 import { ActionType, PageContainer } from '@ant-design/pro-components';
 import React, { useState } from 'react';
 import DetailDrawer from './components/DetailDrawer';
-import { NewForm } from './components/NewForm';
+import { NewKnowledgeBaseForm } from './components/NewForm';
 import { ITableRequest, TableList } from './components/TableList';
 import { UpdateForm } from './components/UpdateForm';
 import { KnowledgeBase } from './tableData';
@@ -61,7 +61,7 @@ const TableForm: React.FC = () => {
     <PageContainer>
       <TableList
         component={{
-          NewForm: NewForm,
+          NewForm: NewKnowledgeBaseForm,
           UpdateForm: UpdateForm,
           DetailDrawer: DetailDrawer,
         }}

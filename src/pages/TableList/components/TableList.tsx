@@ -1,4 +1,4 @@
-import { addRule, myRemoveRule, updateRule } from '@/services/ant-design-pro/api';
+import { addRule, myRemoveRule } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-components';
@@ -7,8 +7,8 @@ import { Button, message } from 'antd';
 import { SortOrder } from 'antd/es/table/interface';
 import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
-import { INewFormProps } from './NewForm';
 import type { FormValueType, IUpdateFormProps } from './UpdateForm';
+import { INewFormProps } from './NewForm';
 
 /**
  * @en-US Add node
@@ -35,7 +35,6 @@ const handleAdd = async (fields: API.KnowledgeBaseListItem) => {
  *
  * @param fields
  */
-
 
 /**
  *  Delete node
@@ -163,6 +162,23 @@ export function TableList(props: ITableList) {
         ? null
         : props.component.NewForm({
             actionRef: props.hooks.ref,
+            onSubmit: async (value: FormValueType) => {
+              console.log(value);
+              // const success = await handleUpdate(value);
+              // if (success) {
+              //   props.hooks.openUpdate?.set(false);
+              //   props.hooks.setCurrentRow?.set(undefined);
+              //   if (props.hooks.ref.current) {
+              //     props.hooks.ref.current.reload();
+              //   }
+              // }
+            },
+            onCancel: () => {
+              props.hooks.openCreate?.set(false);
+              if (!props.hooks.openDetail?.value) {
+                props.hooks.setCurrentRow?.set(undefined);
+              }
+            },
             hook: {
               open: { value: props.hooks.openCreate.value, set: props.hooks.openCreate.set },
             },
@@ -173,12 +189,12 @@ export function TableList(props: ITableList) {
       props.hooks.openDetail === undefined
         ? null
         : props.component.UpdateForm({
-          hook: {
-            open: props.hooks.openUpdate,
-          },
-          actionRef: props.hooks.ref,
-          values: props.hooks.setCurrentRow.value || {},
-          key: props.hooks.setCurrentRow.value?.key || 0,
+            hook: {
+              open: props.hooks.openUpdate,
+            },
+            actionRef: props.hooks.ref,
+            values: props.hooks.setCurrentRow.value || {},
+            key: props.hooks.setCurrentRow.value?.key || 0,
             // onSubmit: async (value) => {
             //   const success = await handleUpdate(value);
             //   if (success) {
