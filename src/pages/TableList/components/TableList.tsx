@@ -35,24 +35,7 @@ const handleAdd = async (fields: API.KnowledgeBaseListItem) => {
  *
  * @param fields
  */
-const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('Configuring');
-  try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
-    });
-    hide();
 
-    message.success('Configuration is successful');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Configuration failed, please try again!');
-    return false;
-  }
-};
 
 /**
  *  Delete node
@@ -190,24 +173,30 @@ export function TableList(props: ITableList) {
       props.hooks.openDetail === undefined
         ? null
         : props.component.UpdateForm({
-            onSubmit: async (value) => {
-              const success = await handleUpdate(value);
-              if (success) {
-                props.hooks.openUpdate?.set(false);
-                props.hooks.setCurrentRow?.set(undefined);
-                if (props.hooks.ref.current) {
-                  props.hooks.ref.current.reload();
-                }
-              }
-            },
-            onCancel: () => {
-              props.hooks.openUpdate?.set(false);
-              if (!props.hooks.openDetail?.value) {
-                props.hooks.setCurrentRow?.set(undefined);
-              }
-            },
-            updateModalOpen: props.hooks.openUpdate?.value,
-            values: props.hooks.setCurrentRow?.value || {},
+          hook: {
+            open: props.hooks.openUpdate,
+          },
+          actionRef: props.hooks.ref,
+          values: props.hooks.setCurrentRow.value || {},
+          key: props.hooks.setCurrentRow.value?.key || 0,
+            // onSubmit: async (value) => {
+            //   const success = await handleUpdate(value);
+            //   if (success) {
+            //     props.hooks.openUpdate?.set(false);
+            //     props.hooks.setCurrentRow?.set(undefined);
+            //     if (props.hooks.ref.current) {
+            //       props.hooks.ref.current.reload();
+            //     }
+            //   }
+            // },
+            // onCancel: () => {
+            //   props.hooks.openUpdate?.set(false);
+            //   if (!props.hooks.openDetail?.value) {
+            //     props.hooks.setCurrentRow?.set(undefined);
+            //   }
+            // },
+            // updateModalOpen: props.hooks.openUpdate?.value,
+            // values: props.hooks.setCurrentRow?.value || {},
           })}
       {props.component.DetailDrawer === undefined ||
       props.hooks.openDetail === undefined ||

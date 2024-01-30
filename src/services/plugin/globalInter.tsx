@@ -18,3 +18,24 @@ export interface IHookFunc<T> {
   value: T;
   set: React.Dispatch<React.SetStateAction<T>>;
 }
+
+/**
+valueEnum: {
+          1: {
+            text: '仅可问答',
+            status: 'Default',
+          },
+          2: {
+            text: '可见知识图谱',
+            status: 'Processing',
+          },
+          3: {
+            text: '所有可见',
+            status: 'Success',
+          },
+          0: {
+            text: '全不可见',
+            status: 'Error',
+          },
+        },
+ */

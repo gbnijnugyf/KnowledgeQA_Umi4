@@ -38,19 +38,19 @@ export const KnowledgeBase = {
         hideInForm: true,
         onFilter: true,
         valueEnum: {
-          0: {
+          1: {
             text: '仅可问答',
             status: 'Default',
           },
-          1: {
+          2: {
             text: '可见知识图谱',
             status: 'Processing',
           },
-          2: {
+          3: {
             text: '所有可见',
             status: 'Success',
           },
-          3: {
+          0: {
             text: '全不可见',
             status: 'Error',
           },

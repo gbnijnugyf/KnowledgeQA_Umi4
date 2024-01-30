@@ -79,7 +79,7 @@ export async function myGetKnowledgeBaseList(
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<API.myList>(BASEURL + '/getKnowledgeBase', {
+  return request<IReturn<API.RuleList>>(BASEURL + '/getKnowledgeBase', {
     method: 'GET',
     //TODO: 看看返回参数是否有多余的
     params: {
@@ -102,7 +102,7 @@ export async function myGetKnowledgeBaseFiles(
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<API.myList>(BASEURL + '/getKnowledgeBaseFiles', {
+  return request<IReturn<API.RuleList>>(BASEURL + '/getKnowledgeBaseFiles', {
     method: 'GET',
     params: {
       ...params,
@@ -114,6 +114,15 @@ export async function myGetKnowledgeBaseFiles(
 /** 更新规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.KnowledgeBaseListItem>('/api/rule', {
+    method: 'POST',
+    data: {
+      method: 'update',
+      ...(options || {}),
+    },
+  });
+}
+export async function myUpdateKnowledgeBase(options?: { [key: string]: any }) {
+  return request<IReturn<API.KnowledgeBaseListItem>>(BASEURL+'/updateKnowledgeBaseInfo', {
     method: 'POST',
     data: {
       method: 'update',
