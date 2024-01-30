@@ -1,5 +1,5 @@
 import { myGetKnowledgeBaseList } from '@/services/ant-design-pro/api';
-import { PageContainer } from '@ant-design/pro-components';
+import { ActionType, PageContainer } from '@ant-design/pro-components';
 import React, { useState } from 'react';
 import DetailDrawer from './components/DetailDrawer';
 import { NewForm } from './components/NewForm';
@@ -20,7 +20,9 @@ const TableForm: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
 
+  const actionRef = React.useRef<ActionType>();
   const resquest: ITableRequest = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
     let params = { ...p };
@@ -80,6 +82,11 @@ const TableForm: React.FC = () => {
             value: currentRow,
             set: setCurrentRow,
           },
+          setRowState: {
+            value: selectedRowsState,
+            set: setSelectedRows,
+          },
+          ref: actionRef,
         }}
         data={{ columns: columns, title: KnowledgeBase.title }}
         request={resquest}

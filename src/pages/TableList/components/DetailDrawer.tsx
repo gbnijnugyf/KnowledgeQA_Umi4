@@ -1,7 +1,8 @@
 import { myGetKnowledgeBaseFiles } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
+import { ActionType } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KnowledgeBaseFile } from '../tableData';
 import { NewForm } from './NewForm';
 import { ITableRequest, TableList } from './TableList';
@@ -28,11 +29,25 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+
+  const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    // 当 key 改变时，重新加载 ProTable 的数据
+    handleModalOpen(false)
+    handleUpdateModalOpen(false)
+    setShowDetail(false)
+    setCurrentRow(undefined)
+    setSelectedRows([])
+    actionRef.current?.reload();
+
+  }, [props.key]);
 
   const resquest: ITableRequest = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
     //参数p是分页参数
-    let params = { ...p };
+    let params = { ...p, key: props.key };
     if (Object.keys(sorter).length !== 0) {
       params = { ...params, ...sorter };
     }
@@ -79,6 +94,11 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
             value: currentRow,
             set: setCurrentRow,
           },
+          setRowState: {
+            value: selectedRowsState,
+            set: setSelectedRows,
+          },
+          ref: actionRef,
         }}
         data={{ columns: columns, title: props.baseName }}
         request={resquest}

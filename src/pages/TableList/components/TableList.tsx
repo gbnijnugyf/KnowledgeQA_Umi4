@@ -2,10 +2,10 @@ import { addRule, myRemoveRule, updateRule } from '@/services/ant-design-pro/api
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-components';
-import { FooterToolbar, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { SortOrder } from 'antd/es/table/interface';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
 import { INewFormProps } from './NewForm';
 import type { FormValueType, IUpdateFormProps } from './UpdateForm';
@@ -98,6 +98,8 @@ interface ITableList {
     openUpdate?: IHookFunc<boolean>;
     openDetail?: IHookFunc<boolean>;
     setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem | undefined>;
+    setRowState: IHookFunc<API.KnowledgeBaseListItem[]>;
+    ref: React.MutableRefObject<ActionType | undefined>;
   };
   data: {
     title: string;
@@ -107,15 +109,18 @@ interface ITableList {
 }
 
 export function TableList(props: ITableList) {
-  const actionRef = useRef<ActionType>();
-  const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+  // const actionRef = useRef<ActionType>();
+  // const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+
+  // const title
 
   return (
     <>
       <ProTable<API.KnowledgeBaseListItem, API.PageParams>
         style={{ userSelect: 'none' }}
         headerTitle={props.data.title}
-        actionRef={actionRef}
+        tableAlertRender={false}
+        actionRef={props.hooks.ref}
         rowKey="key"
         search={{
           labelWidth: 120,
@@ -138,33 +143,43 @@ export function TableList(props: ITableList) {
         columns={props.data.columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
+            props.hooks.setRowState.set(selectedRows);
           },
         }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              选择 <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> 项
-            </div>
-          }
+      {props.hooks.setRowState.value?.length > 0 && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 0,
+            width: '100%',
+            padding: '10px',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            color: 'white',
+            textAlign: 'center',
+          }}
         >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            删除
-          </Button>
-        </FooterToolbar>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <div>
+              选择 <a style={{ fontWeight: 600 }}>{props.hooks.setRowState.value.length}</a> 项
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <Button
+              onClick={async () => {
+                await handleRemove(props.hooks.setRowState.value);
+                props.hooks.setRowState.set([]);
+                props.hooks.ref.current?.reloadAndRest?.();
+              }}
+            >
+              删除
+            </Button>
+          </div>
+        </div>
       )}
       {props.component.NewForm === undefined || props.hooks.openCreate === undefined
         ? null
         : props.component.NewForm({
-            actionRef: actionRef,
+            actionRef: props.hooks.ref,
             hook: {
               open: { value: props.hooks.openCreate.value, set: props.hooks.openCreate.set },
             },
@@ -180,8 +195,8 @@ export function TableList(props: ITableList) {
               if (success) {
                 props.hooks.openUpdate?.set(false);
                 props.hooks.setCurrentRow?.set(undefined);
-                if (actionRef.current) {
-                  actionRef.current.reload();
+                if (props.hooks.ref.current) {
+                  props.hooks.ref.current.reload();
                 }
               }
             },
@@ -206,9 +221,10 @@ export function TableList(props: ITableList) {
                 set: props.hooks.openDetail.set,
               },
             },
-            baseName: (props.hooks.setCurrentRow?.value?.name
-              ? props.hooks.setCurrentRow?.value?.name
-              : '') + ' 知识库文件',
+            baseName:
+              (props.hooks.setCurrentRow?.value?.name
+                ? props.hooks.setCurrentRow?.value?.name
+                : '') + ' 知识库文件',
           })}
     </>
   );

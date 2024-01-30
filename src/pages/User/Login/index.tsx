@@ -7,6 +7,7 @@ import { history, useModel } from '@umijs/max';
 import { Tabs, message } from 'antd';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
+// import loginBg from '../../../../public/loginBg.mp4';
 type LoginType = 'student' | 'teacher';
 
 function Page() {
@@ -61,6 +62,7 @@ function Page() {
     >
       <LoginFormPage
         backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
+        // backgroundVideoUrl='D:/CodeProject/KnowledgeQA/KnowledgeQA/public/loginBg.mp4'
         logo={<img alt="logo" src="/logo.webp" />}
         title={titleName}
         containerStyle={{
