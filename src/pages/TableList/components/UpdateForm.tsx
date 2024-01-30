@@ -1,4 +1,4 @@
-import { addRule, myUpdateKnowledgeBase, updateRule } from '@/services/ant-design-pro/api';
+import { myUpdateKnowledgeBase } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import {
   ActionType,
@@ -22,7 +22,7 @@ export interface IUpdateFormProps {
   // onSubmit: (values: FormValueType) => Promise<void>;
   // updateModalOpen: boolean;
   values: Partial<API.KnowledgeBaseListItem>;
-  key:number;
+  key: number;
   hook: {
     open: IHookFunc<boolean>;
   };
@@ -42,7 +42,7 @@ export function UpdateForm(props: IUpdateFormProps) {
       });
       console.log(res);
       hide();
-  
+
       message.success('配置成功');
       return true;
     } catch (error) {
@@ -56,7 +56,7 @@ export function UpdateForm(props: IUpdateFormProps) {
     <>
       <ModalForm
         title={'配置基本信息'}
-        width="30vw"
+        width="25vw"
         open={props.hook.open.value}
         onOpenChange={props.hook.open.set}
         initialValues={{
@@ -64,7 +64,7 @@ export function UpdateForm(props: IUpdateFormProps) {
           desc: props.values.desc,
         }}
         onFinish={async (value) => {
-          const value_ = {...value,key:props.key};
+          const value_ = { ...value, key: props.key };
           console.log(value_);
           const success = await handleUpdate(value_ as API.KnowledgeBaseListItem);
           if (success) {
@@ -101,6 +101,7 @@ export function UpdateForm(props: IUpdateFormProps) {
         <ProFormSelect
           name="status"
           label="可见性"
+          width="md"
           valueEnum={{
             0: '全不可见',
             1: '仅可问答',
