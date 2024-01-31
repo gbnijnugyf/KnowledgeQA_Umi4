@@ -5,10 +5,11 @@ import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-compon
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { SortOrder } from 'antd/es/table/interface';
+import { RcFile } from 'antd/es/upload';
 import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
-import type { FormValueType, IUpdateFormProps } from './UpdateForm';
 import { INewFormProps } from './NewForm';
+import type { FormValueType, IUpdateFormProps } from './UpdateForm';
 
 /**
  * @en-US Add node
@@ -82,12 +83,14 @@ interface ITableList {
     setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem | undefined>;
     setRowState: IHookFunc<API.KnowledgeBaseListItem[]>;
     ref: React.MutableRefObject<ActionType | undefined>;
+    setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
   };
   data: {
     title: string;
     columns: ProColumns<API.KnowledgeBaseListItem>[];
   };
   request: ITableRequest;
+  submitNewForm?: (value: FormValueType) => Promise<void>;
 }
 
 export function TableList(props: ITableList) {
@@ -158,30 +161,30 @@ export function TableList(props: ITableList) {
           </div>
         </div>
       )}
-      {props.component.NewForm === undefined || props.hooks.openCreate === undefined
+      {props.component.NewForm === undefined ||
+      props.hooks.openCreate === undefined ||
+      props.submitNewForm === undefined ||
+      props.hooks.setFileList === undefined
         ? null
         : props.component.NewForm({
             actionRef: props.hooks.ref,
-            onSubmit: async (value: FormValueType) => {
-              console.log(value);
-              // const success = await handleUpdate(value);
-              // if (success) {
-              //   props.hooks.openUpdate?.set(false);
-              //   props.hooks.setCurrentRow?.set(undefined);
-              //   if (props.hooks.ref.current) {
-              //     props.hooks.ref.current.reload();
-              //   }
-              // }
-            },
+            onSubmit: props.submitNewForm,
             onCancel: () => {
               props.hooks.openCreate?.set(false);
               if (!props.hooks.openDetail?.value) {
+                props.hooks.setFileList?.set([]);
                 props.hooks.setCurrentRow?.set(undefined);
               }
             },
             hook: {
               open: { value: props.hooks.openCreate.value, set: props.hooks.openCreate.set },
+              setFileList: {
+                value: props.hooks.setFileList.value,
+                set: props.hooks.setFileList.set,
+              },
             },
+            //此处key仅用于已有知识库新增文件时使用
+            key: props.hooks.setCurrentRow?.value?.key
           })}
       {props.component.UpdateForm === undefined ||
       props.hooks.openUpdate === undefined ||

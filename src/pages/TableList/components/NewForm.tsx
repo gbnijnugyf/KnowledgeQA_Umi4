@@ -8,7 +8,7 @@ import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { Modal } from 'antd';
-import { IUpdateFormProps } from './UpdateForm';
+import { RcFile } from 'antd/es/upload';
 import { UploadFiles } from './UploadFiles';
 
 export type FormValueType = {
@@ -24,23 +24,12 @@ export interface INewFormProps {
   onSubmit: (values: FormValueType) => Promise<void>;
   hook: {
     open: IHookFunc<boolean>;
+    setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
   };
+  key?: number;
 }
 
 export function NewKnowledgeBaseForm(props: INewFormProps) {
-  // const handleAdd = async (fields: API.KnowledgeBaseListItem) => {
-  //   const hide = message.loading('正在添加');
-  //   try {
-  //     await addRule({ ...fields });
-  //     hide();
-  //     message.success('Added successfully');
-  //     return true;
-  //   } catch (error) {
-  //     hide();
-  //     message.error('Adding failed, please try again!');
-  //     return false;
-  //   }
-  // };
 
   return (
     <StepsForm
@@ -98,7 +87,7 @@ export function NewKnowledgeBaseForm(props: INewFormProps) {
           ]}
         />
         <ProFormSelect
-          name="template"
+          name="status"
           width="md"
           label="知识库可见性"
           valueEnum={{
@@ -116,7 +105,17 @@ export function NewKnowledgeBaseForm(props: INewFormProps) {
         />
       </StepsForm.StepForm>
       <StepsForm.StepForm title="上传知识库文件">
-        <UploadFiles />
+        {props.hook.setFileList === undefined ? null : (
+          <UploadFiles
+            // key={props.key}
+            hook={{
+              setFileList: {
+                value: props.hook.setFileList?.value,
+                set: props.hook.setFileList?.set,
+              },
+            }}
+          />
+        )}
       </StepsForm.StepForm>
     </StepsForm>
   );
@@ -129,22 +128,20 @@ export function NewKnowledgeBaseFileForm(props: INewFormProps) {
       width="25vw"
       open={props.hook.open.value}
       onOpenChange={props.hook.open.set}
-      onFinish={async (value) => {
-        // const value_ = { ...value, key: props.key };
-        // console.log(value_);
-        // const success = await handleUpdate(value_ as API.KnowledgeBaseListItem);
-        console.log(value);
-        //TODO: 记得把判断条件改回来
-        if (true) {
-          props.hook.open.set(false);
-          if (props.actionRef.current) {
-            props.actionRef.current.reload();
-          }
-        }
-      }}
+      onFinish={props.onSubmit}
       modalProps={{ destroyOnClose: true }}
     >
-      <UploadFiles />
+      {props.hook.setFileList === undefined ? null : (
+        <UploadFiles
+          key={props.key}//已有知识库新增文件时，key为知识库的key
+          hook={{
+            setFileList: {
+              value: props.hook.setFileList?.value,
+              set: props.hook.setFileList?.set,
+            },
+          }}
+        />
+      )}
     </ModalForm>
   );
 }

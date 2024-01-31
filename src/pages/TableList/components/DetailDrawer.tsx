@@ -1,12 +1,13 @@
-import { myGetKnowledgeBaseFiles } from '@/services/ant-design-pro/api';
+import { myGetKnowledgeBaseFiles, myUploadKnowledgeBaseFile } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ActionType } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import { useEffect, useRef, useState } from 'react';
 import { KnowledgeBaseFile } from '../tableData';
-import { NewKnowledgeBaseFileForm, NewKnowledgeBaseForm } from './NewForm';
+import { NewKnowledgeBaseFileForm } from './NewForm';
 import { ITableRequest, TableList } from './TableList';
-import { UpdateForm } from './UpdateForm';
+import { FormValueType, UpdateForm } from './UpdateForm';
 
 export interface IDetailDrawerProps {
   key: number; //用于请求具体数据
@@ -30,18 +31,18 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+  const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
 
   const actionRef = useRef<ActionType>();
 
   useEffect(() => {
     // 当 key 改变时，重新加载 ProTable 的数据
-    handleModalOpen(false)
-    handleUpdateModalOpen(false)
-    setShowDetail(false)
-    setCurrentRow(undefined)
-    setSelectedRows([])
+    handleModalOpen(false);
+    handleUpdateModalOpen(false);
+    setShowDetail(false);
+    setCurrentRow(undefined);
+    setSelectedRows([]);
     actionRef.current?.reload();
-
   }, [props.key]);
 
   const resquest: ITableRequest = async (p, sorter, filter) => {
@@ -60,7 +61,22 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     return res.data;
   };
   const columns = KnowledgeBaseFile.getColumns();
-
+  const submitNewForm = async (value: FormValueType) => {
+    // console.log(props.key, fileList);
+    const res = await myUploadKnowledgeBaseFile({
+      options: { key: props.key },
+      fileList: fileList,
+    });
+    // console.log(res);
+    if (res.status === 1) {
+      handleUpdateModalOpen(false);
+      setCurrentRow(undefined);
+      handleModalOpen(false);
+      if (actionRef.current) {
+        actionRef.current.reload();
+      }
+    }
+  };
   return (
     <Drawer
       width={'80vw'}
@@ -75,7 +91,6 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
         component={{
           NewForm: NewKnowledgeBaseFileForm,
           UpdateForm: UpdateForm,
-          DetailDrawer: DetailDrawer,
         }}
         hooks={{
           openCreate: {
@@ -99,9 +114,14 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
             set: setSelectedRows,
           },
           ref: actionRef,
+          setFileList: {
+            value: fileList,
+            set: setFileList,
+          },
         }}
         data={{ columns: columns, title: props.baseName }}
         request={resquest}
+        submitNewForm={submitNewForm}
       />
     </Drawer>
   );

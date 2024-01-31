@@ -3,6 +3,7 @@
 import { request } from '@umijs/max';
 import { BASEURL, IReturn } from '../plugin/globalInter';
 import token from '../plugin/token';
+import { RcFile } from 'antd/es/upload';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -122,7 +123,7 @@ export async function updateRule(options?: { [key: string]: any }) {
   });
 }
 export async function myUpdateKnowledgeBase(options?: { [key: string]: any }) {
-  return request<IReturn<API.KnowledgeBaseListItem>>(BASEURL+'/updateKnowledgeBaseInfo', {
+  return request<IReturn<API.KnowledgeBaseListItem>>(BASEURL + '/updateKnowledgeBaseInfo', {
     method: 'POST',
     data: {
       method: 'update',
@@ -159,5 +160,27 @@ export async function myRemoveRule(options?: { [key: string]: any }) {
       method: 'delete',
       ...(options || {}),
     },
+  });
+}
+
+export async function myUploadKnowledgeBaseFile(props:{fileList: (string | Blob | RcFile)[], options?: { [key: string]: any }}) {
+  const formData = new FormData();
+  props.fileList.forEach((file) => {
+    formData.append('files', file);
+  });
+  // 如果 options 存在，将其每个属性添加到 formData 中
+  if (props.options) {
+    Object.entries(props.options).forEach(([key, value]) => {
+      formData.append(key, String(value)); // 将值转换为字符串
+    });
+  }
+  return request<IReturn<string>>(BASEURL + '/uploadFiles', {
+    method: 'POST',
+    data: formData,
+    //据说不用手动设置
+    // headers: {
+    //   'Content-Type': 'multipart/form-data',
+    // },
+    formData,
   });
 }

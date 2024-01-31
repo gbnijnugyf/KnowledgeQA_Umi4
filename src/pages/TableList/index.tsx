@@ -1,10 +1,12 @@
-import { myGetKnowledgeBaseList } from '@/services/ant-design-pro/api';
+import { myGetKnowledgeBaseList, myUploadKnowledgeBaseFile } from '@/services/ant-design-pro/api';
 import { ActionType, PageContainer } from '@ant-design/pro-components';
+import { message } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import React, { useState } from 'react';
 import DetailDrawer from './components/DetailDrawer';
 import { NewKnowledgeBaseForm } from './components/NewForm';
 import { ITableRequest, TableList } from './components/TableList';
-import { UpdateForm } from './components/UpdateForm';
+import { FormValueType, UpdateForm } from './components/UpdateForm';
 import { KnowledgeBase } from './tableData';
 
 const TableForm: React.FC = () => {
@@ -21,6 +23,7 @@ const TableForm: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+  const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
 
   const actionRef = React.useRef<ActionType>();
   const resquest: ITableRequest = async (p, sorter, filter) => {
@@ -56,6 +59,25 @@ const TableForm: React.FC = () => {
       },
     },
   });
+  const submitNewForm = async (value: FormValueType) => {
+    // console.log(value, fileList);
+    if (Object.keys(value).length === 0) {
+      message.warning('请完整填写表单');
+      return;
+    }
+    const res = await myUploadKnowledgeBaseFile({
+      options: { ...value },
+      fileList: fileList,
+    });
+    // console.log(res);
+    if (res.status === 1) {
+      handleModalOpen(false);
+      setCurrentRow(undefined);
+      if (actionRef.current) {
+        actionRef.current.reload();
+      }
+    }
+  };
 
   return (
     <PageContainer>
@@ -87,9 +109,14 @@ const TableForm: React.FC = () => {
             set: setSelectedRows,
           },
           ref: actionRef,
+          setFileList: {
+            value: fileList,
+            set: setFileList,
+          },
         }}
         data={{ columns: columns, title: KnowledgeBase.title }}
         request={resquest}
+        submitNewForm={submitNewForm}
       />
     </PageContainer>
   );
