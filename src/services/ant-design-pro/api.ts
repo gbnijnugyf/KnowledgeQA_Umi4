@@ -80,9 +80,26 @@ export async function myGetKnowledgeBaseList(
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<IReturn<API.RuleList>>(BASEURL + '/getKnowledgeBase', {
+  return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBase', {
     method: 'GET',
     //TODO: 看看返回参数是否有多余的
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+/** 根据头部token信息验证用户身份，获取对应知识库列表 */
+export async function myGetKnowledgeBaseListPart(
+  params?: {
+    // query
+    /** 可能会使用id进行身份判断（仅根据token也行吧） */
+    id?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBasePart', {
+    method: 'GET',
     params: {
       ...params,
     },
@@ -103,7 +120,7 @@ export async function myGetKnowledgeBaseFiles(
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<IReturn<API.RuleList>>(BASEURL + '/getKnowledgeBaseFiles', {
+  return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBaseFiles', {
     method: 'GET',
     params: {
       ...params,
@@ -182,5 +199,18 @@ export async function myUploadKnowledgeBaseFile(props:{fileList: (string | Blob 
     //   'Content-Type': 'multipart/form-data',
     // },
     formData,
+  });
+}
+
+
+/** 发送消息 POST /api/rule */
+export async function sendMessage(body: API.MessageBody, options?: { [key: string]: any }) {
+  return request<IReturn<string>>(BASEURL + '/sendMessage', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
   });
 }

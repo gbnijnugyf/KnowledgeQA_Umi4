@@ -1,0 +1,38 @@
+.message-box {
+  position: relative;
+  margin: 20px; /* 增加外边距以容纳箭头 */
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+}
+
+.message-box.user {
+  background-color: greenyellow; /* 用户消息框的背景色 */
+}
+.avatar {
+  flex-shrink: 0;
+  align-self: flex-start; /* 将头像移到顶部 */
+  margin-top: 0.25%
+}
+
+.message-box.user::after {
+  position: absolute;
+  top: 10px;
+  right: -20px; /* 将箭头移动到框的外部 */
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-left-color: greenyellow; /* 用户消息箭头的颜色 */
+  content: '';
+}
+
+.message-box.bot::before {
+  position: absolute;
+  top: 10px;
+  left: -20px; /* 将箭头移动到框的外部 */
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-right-color: #f0f0f0;
+  content: '';
+}
