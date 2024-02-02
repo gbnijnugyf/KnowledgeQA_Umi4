@@ -51,13 +51,12 @@ export default [
     path: '/QA',
     component: './ChatPage',
   },
-  // {
-  //   name: '查看表格',
-  //   icon: 'table',
-  //   path: '/list',
-  //   component: './TableList',
-  //   hideInMenu: true,
-  // },
+  {
+    name: '知识图谱',
+    icon: 'RadarChartOutlined',
+    path: '/knowledgeGraph',
+    component: './KnowledgeGraph',
+  },
   {
     path: '/',
     redirect: '/welcome',
