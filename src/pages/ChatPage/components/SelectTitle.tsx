@@ -9,7 +9,7 @@ type IOption = {
 interface ISelectTtileProps {
   setKey: React.Dispatch<React.SetStateAction<number>>;
 }
-export function SelectTtile(props:ISelectTtileProps) {
+export function SelectTtile(props: ISelectTtileProps) {
   const [options, setOptions] = useState<IOption[] | undefined>([]);
 
   useEffect(() => {
@@ -36,10 +36,16 @@ export function SelectTtile(props:ISelectTtileProps) {
       filterSort={(optionA, optionB) =>
         (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
       }
-      onChange={(value:number) => {
+      onChange={(value: number) => {
         props.setKey(value);
       }}
       options={options}
+      // allowClear
+      // onClear={() => {
+      //   flushSync(() => {
+      //     props.setKey(-1);
+      //   });
+      // }}
     />
   );
 }

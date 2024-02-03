@@ -4,6 +4,7 @@ import { request } from '@umijs/max';
 import { BASEURL, IReturn } from '../plugin/globalInter';
 import token from '../plugin/token';
 import { RcFile } from 'antd/es/upload';
+import { API } from './typings.d';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -211,6 +212,25 @@ export async function sendMessage(body: API.MessageBody, options?: { [key: strin
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 获取知识图谱 */
+export async function myGetGraph(
+  params: {
+    // query
+    /** 知识库key */
+    key: number;
+  },
+  options?: { [key: string]: any },
+) {
+  //注意！需要后端返回总数total，成功success
+  return request<IReturn<API.Graph>>(BASEURL + '/getGraph', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

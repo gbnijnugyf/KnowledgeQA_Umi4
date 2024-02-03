@@ -1,6 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
 
+import { dLink, dNode } from "@/pages/KnowledgeGraph/components/Graph";
+
 declare namespace API {
   type CurrentUser = {
     name?: string;
@@ -77,6 +79,10 @@ declare namespace API {
   type MessageBody = {
     text: string;
     key: number; //知识库标识
+  };
+  type Graph = {
+    nodes: dNode[];
+    links: dLink[];
   };
 
   type ErrorResponse = {
