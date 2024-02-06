@@ -203,10 +203,27 @@ export async function myUploadKnowledgeBaseFile(props:{fileList: (string | Blob 
   });
 }
 
+/** 获取问答记录  GET  */
+export async function getHistoryMessage(
+  params: {
+    // query
+    /** 知识库key */
+    key: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<Array<API.MessageType>>>(BASEURL + '/getHistory', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
 
-/** 发送消息 POST /api/rule */
-export async function sendMessage(body: API.MessageBody, options?: { [key: string]: any }) {
-  return request<IReturn<string>>(BASEURL + '/sendMessage', {
+/** 发送消息 POST */
+export async function sendMessage(body: API.SendMessageBody, options?: { [key: string]: any }) {
+  return request<IReturn<API.MessageType>>(BASEURL + '/sendMessage', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -76,9 +76,14 @@ declare namespace API {
     autoLogin?: boolean;
     type?: string;
   };
-  type MessageBody = {
+  type SendMessageBody = {
     text: string;
     key: number; //知识库标识
+  };
+  type MessageType = {
+    sender: 'user'|'bot';
+    text: string;
+    recommend?: Array<string>; //推荐的知识点
   };
   type Graph = {
     nodes: dNode[];

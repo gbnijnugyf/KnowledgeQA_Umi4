@@ -1,17 +1,16 @@
-import { sendMessage } from '@/services/ant-design-pro/api';
+import { getHistoryMessage, sendMessage } from '@/services/ant-design-pro/api';
 import { IReturn } from '@/services/plugin/globalInter';
 import { CopyOutlined, MessageOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Avatar, Button, Card, Input, List, message } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SelectTtile } from './components/SelectTitle';
+import { API } from '@/services/ant-design-pro/typings';
 
 import './index.css';
-type IMessage = {
-  sender: 'user' | 'bot';
-  text: string;
-};
+import { flushSync } from 'react-dom';
+type IMessage = API.MessageType
 const messageInit: IMessage = {
   sender: 'user',
   text: '',
@@ -21,6 +20,22 @@ const ChatPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<IMessage>(messageInit);
   const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(-1);
   const [loading, setLoading] = useState(false); // 新的状态变量
+
+  useEffect(() => {
+    if (knowledgeBaseKey === -1) {
+      return;
+    }
+    // 获取历史数据
+    getHistoryMessage({ key: knowledgeBaseKey }).then((res) => {
+      console.log(res);
+      flushSync(() => {
+        setMessages(res.data);
+      });
+      // setGraphInfo(res.data);
+    });
+  }, [knowledgeBaseKey]);
+    
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: IMessage = { sender: 'user', text: e.target.value };
@@ -36,13 +51,13 @@ const ChatPage: React.FC = () => {
       setLoading(true); // 开始加载
       try {
         const res = await Promise.race([
-          sendMessage({ key: knowledgeBaseKey, text: inputValue.text }) as Promise<IReturn<string>>,
+          sendMessage({ key: knowledgeBaseKey, text: inputValue.text }) as Promise<IReturn<API.MessageType>>,
           new Promise(
             (_, reject) => setTimeout(() => reject(new Error('请求超时')), 5000), // 5秒超时
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
-          setMessages([...messages, inputValue, { sender: 'bot', text: res.data }]);
+          setMessages([...messages, inputValue, { sender: 'bot', text: res.data.text }]);
           setInputValue(messageInit);
         } else {
           message.error('发送失败,请重试！');
