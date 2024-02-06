@@ -22,6 +22,7 @@ export interface dLink {
 interface IGraphProps {
   nodes: dNode[];
   links: dLink[];
+  color: string;
 }
 
 export function Graph(props: IGraphProps) {
@@ -93,7 +94,6 @@ export function Graph(props: IGraphProps) {
       .force('charge', d3.forceManyBody())
       .force('center', d3.forceCenter(width / 2, height / 2));
 
-
     const node = container_
       .append('g')
       .selectAll('circle')
@@ -125,6 +125,7 @@ export function Graph(props: IGraphProps) {
       .join('text')
       .call(drag(simulation))
       .text((d: dNode) => d.name)
+      .attr('fill', () =>props.color)
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
         // console.log(event, d)
@@ -146,7 +147,7 @@ export function Graph(props: IGraphProps) {
 
       nodeText.attr('x', (d: dNode) => d.x).attr('y', (d: dNode) => d.y);
     });
-  }, [props.nodes, props.links]);
+  }, [props]);
 
   return (
     <div ref={containerRef as any} style={{ width: '100%', height: '100%' }}>

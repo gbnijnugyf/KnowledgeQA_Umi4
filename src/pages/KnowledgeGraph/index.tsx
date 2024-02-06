@@ -1,9 +1,11 @@
 import { myGetGraph } from '@/services/ant-design-pro/api';
 import { API } from '@/services/ant-design-pro/typings';
 import { PageContainer } from '@ant-design/pro-components';
+import { useModel } from '@umijs/max';
 import { Card } from 'antd';
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
+import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Graph, dLink, dNode } from './components/Graph';
 
@@ -26,6 +28,22 @@ const KnowledgeGraph: React.FC = () => {
     nodes: nodesInit,
     links: linksInit,
   });
+  const [color, setColor] = useState<string>('black');
+  const { initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    const setting = initialState?.settings || defaultSettings;
+    if (setting.navTheme === 'realDark') {
+      console.log('dark');
+      flushSync(() => {
+        setColor('white');
+      });
+    } else {
+      flushSync(() => {
+        setColor('black');
+      });
+    }
+  }, [initialState]);
 
   // 从后端获取知识图谱数据
   useEffect(() => {
@@ -77,7 +95,7 @@ const KnowledgeGraph: React.FC = () => {
           height: '80vh',
         }}
       >
-        <Graph nodes={graphInfo.nodes} links={graphInfo.links} />
+        <Graph color={color} nodes={graphInfo.nodes} links={graphInfo.links} />
       </Card>
     </PageContainer>
   );

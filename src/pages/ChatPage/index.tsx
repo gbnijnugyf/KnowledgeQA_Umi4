@@ -98,6 +98,8 @@ const ChatPage: React.FC = () => {
               style={{
                 display: 'flex',
                 justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
+                borderBottom: 'none',
+                color:'black' //避免暗色主题下文字不可见
               }}
             >
               {item.sender === 'bot' ? (
