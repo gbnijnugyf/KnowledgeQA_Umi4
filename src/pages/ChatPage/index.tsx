@@ -1,16 +1,16 @@
 import { getHistoryMessage, sendMessage } from '@/services/ant-design-pro/api';
+import { API } from '@/services/ant-design-pro/typings';
 import { IReturn } from '@/services/plugin/globalInter';
-import { CopyOutlined, MessageOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
+import { CopyOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Avatar, Button, Card, Input, List, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SelectTtile } from './components/SelectTitle';
-import { API } from '@/services/ant-design-pro/typings';
 
-import './index.css';
 import { flushSync } from 'react-dom';
-type IMessage = API.MessageType
+import './index.css';
+type IMessage = API.MessageType;
 const messageInit: IMessage = {
   sender: 'user',
   text: '',
@@ -20,7 +20,14 @@ const ChatPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<IMessage>(messageInit);
   const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(-1);
   const [loading, setLoading] = useState(false); // 新的状态变量
+  const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
+  const handleRecommendationClick = (recommendation: string) => {
+    setSelectedRecommendation(recommendation);
+  };
 
+  const handleHidePreview = () => {
+    setSelectedRecommendation('');
+  };
   useEffect(() => {
     if (knowledgeBaseKey === -1) {
       return;
@@ -34,8 +41,6 @@ const ChatPage: React.FC = () => {
       // setGraphInfo(res.data);
     });
   }, [knowledgeBaseKey]);
-    
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: IMessage = { sender: 'user', text: e.target.value };
@@ -51,7 +56,9 @@ const ChatPage: React.FC = () => {
       setLoading(true); // 开始加载
       try {
         const res = await Promise.race([
-          sendMessage({ key: knowledgeBaseKey, text: inputValue.text }) as Promise<IReturn<API.MessageType>>,
+          sendMessage({ key: knowledgeBaseKey, text: inputValue.text }) as Promise<
+            IReturn<API.MessageType>
+          >,
           new Promise(
             (_, reject) => setTimeout(() => reject(new Error('请求超时')), 5000), // 5秒超时
           ) as Promise<any>,
@@ -88,48 +95,76 @@ const ChatPage: React.FC = () => {
             <SelectTtile setKey={setKnowledgeBaseKey} />
           </div>
         }
-        style={{ width: '80%', margin: '0 auto' }}
+        style={{ width: '100%', margin: '0 auto' }}
       >
-        <List
-          dataSource={messages}
-          style={{ minHeight: '50vh', overflow: 'auto' }}
-          renderItem={(item) => (
-            <List.Item
-              style={{
-                display: 'flex',
-                justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
-                borderBottom: 'none',
-                color:'black' //避免暗色主题下文字不可见
-              }}
-            >
-              {item.sender === 'bot' ? (
-                <Avatar icon={<RobotOutlined />} className="avatar" />
-              ) : null}
-              <div className={`message-box ${item.sender}`} style={{ margin: '0 1% 0' }}>
-                {item.text}
-              </div>
-              {item.sender === 'user' ? (
-                <Avatar icon={<UserOutlined />} className="avatar" />
-              ) : null}
-              {item.sender === 'bot' ? (
-                <CopyToClipboard text={item.text} onCopy={()=>message.success('已复制')}>
-                  <Button icon={<CopyOutlined />} />
-                </CopyToClipboard>
-              ) : null}
-            </List.Item>
+        <div style={{ display: 'flex' }}>
+          <div style={{ flex: selectedRecommendation ? 1 : 2 }}>
+            <List
+              dataSource={messages}
+              style={{ minHeight: '50vh', overflow: 'auto' }}
+              renderItem={(item) => (
+                <List.Item
+                  style={{
+                    display: 'flex',
+                    justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
+                    borderBottom: 'none',
+                    color: 'black', //避免暗色主题下文字不可见
+                  }}
+                >
+                  {item.sender === 'bot' ? (
+                    <Avatar icon={<RobotOutlined />} className="avatar" />
+                  ) : null}
+                  <div style={{ flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
+                      <div className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/>
+                        {item.text}
+                      </div>
+                      {item.sender === 'bot' ? (
+                        <CopyToClipboard text={item.text} onCopy={() => message.success('已复制')}>
+                          <Button icon={<CopyOutlined />} />
+                        </CopyToClipboard>
+                      ) : null}
+                    </div>
+                    <div>
+                      {item.recommend && (
+                        <ul>
+                          {item.recommend.map((recommendation) => (
+                            <li
+                              className="recommend-list"
+                              onClick={() => handleRecommendationClick(recommendation)}
+                            >
+                              {recommendation}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                  {item.sender === 'user' ? (
+                    <Avatar icon={<UserOutlined />} className="avatar" />
+                  ) : null}
+                </List.Item>
+              )}
+            />
+            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
+              <Input
+                placeholder="Type a message"
+                value={inputValue.text}
+                onChange={handleChange}
+                onPressEnter={handleSend}
+                style={{ marginRight: '8px', flex: 1 }}
+              />
+              <Button type="primary" onClick={handleSend} loading={loading}>
+                发送
+              </Button>
+            </div>
+          </div>
+          {selectedRecommendation && (
+            <div style={{ flex: 1 }}>
+              {/* 在这里展示预览的文件 */}
+              <Button onClick={handleHidePreview}>X</Button>
+            </div>
           )}
-        />
-        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
-          <Input
-            placeholder="Type a message"
-            value={inputValue.text}
-            onChange={handleChange}
-            onPressEnter={handleSend}
-            style={{ marginRight: '8px', flex: 1 }}
-          />
-          <Button type="primary" onClick={handleSend} loading={loading}>
-            发送
-          </Button>
         </div>
       </Card>
     </PageContainer>
