@@ -2,6 +2,7 @@
   position: relative;
   margin: 20px; /* 增加外边距以容纳箭头 */
   padding: 10px;
+  color: black; /*避免暗色主题下文字不可见*/
   background-color: #f0f0f0;
   border-radius: 10px;
 }
@@ -42,14 +43,14 @@
 }
 
 .recommend-list {
+  /* width: fit-content; */
+  width: 50%;
   margin: 10px 0;
   padding: 0px 1em;
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  /* width: fit-content; */
-  width: 50%;
 }
 
 .recommend-list:hover {
