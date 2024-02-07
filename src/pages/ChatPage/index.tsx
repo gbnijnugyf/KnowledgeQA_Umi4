@@ -168,10 +168,10 @@ const ChatPage: React.FC = () => {
               <iframe
                 width="100%"
                 height="100%"
-                // src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
+                src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
                 // src="http://localhost:8001/static/files/1.pptx"
                 // src="http://localhost:8001/static/files/2.csv"
-                src="http://localhost:8001/static/files/3.txt"
+                // src="http://localhost:8001/static/files/3.txt"
                 // src="http://localhost:8001/static/files/4.doc"
                 // src="http://localhost:8001/static/files/5.ppt"
               ></iframe>

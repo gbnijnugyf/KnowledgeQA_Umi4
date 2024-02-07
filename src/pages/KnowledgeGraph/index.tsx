@@ -2,12 +2,18 @@ import { myGetGraph } from '@/services/ant-design-pro/api';
 import { API } from '@/services/ant-design-pro/typings';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card } from 'antd';
-import { useEffect, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { Button, Card } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
+import { Edit } from './components/Edit';
 import { Graph, dLink, dNode } from './components/Graph';
+
+export type SelectNodeType = {
+  sNode: dNode;
+  links: Array<dLink>;
+  tNodes: Array<dNode>;
+};
 
 const nodesInit: dNode[] = [
   { id: 1, name: '请选择知识库', group: 1, weight: 15 },
@@ -30,18 +36,43 @@ const KnowledgeGraph: React.FC = () => {
   });
   const [color, setColor] = useState<string>('black');
   const { initialState } = useModel('@@initialState');
+  const [selectedNode, setSelectedNode] = useState<SelectNodeType | undefined>();
+  const handleNodeClick = (node: SelectNodeType) => {
+    setSelectedNode(node);
+  };
+  const handleHideEdit = () => {
+    setSelectedNode(undefined);
+  };
+  const handleAddNode = () => {};
+  // const [height, setHeight] = useState<number>(0);
+  // const [width, setWidth] = useState<number>(0);
+  const height = useRef<number>(0);
+  const width = useRef<number>(0);
+  const listenRef = useCallback((node: any) => {
+    if (node !== null) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          console.log(entry.contentRect.width, entry.contentRect.height);
+          width.current = entry.contentRect.width;
+          height.current = entry.contentRect.height;
+          // setHeight(entry.contentRect.height);
+          // setWidth(entry.contentRect.width);
+        }
+      });
+      resizeObserver.observe(node);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const setting = initialState?.settings || defaultSettings;
     if (setting.navTheme === 'realDark') {
       console.log('dark');
-      flushSync(() => {
-        setColor('white');
-      });
+      setColor('white');
     } else {
-      flushSync(() => {
-        setColor('black');
-      });
+      setColor('black');
     }
   }, [initialState]);
 
@@ -50,52 +81,58 @@ const KnowledgeGraph: React.FC = () => {
     if (knowledgeBaseKey === -1) {
       return;
     }
+    setSelectedNode(undefined);
     // 获取知识图谱数据
     myGetGraph({ key: knowledgeBaseKey }).then((res) => {
       console.log(res);
-      flushSync(() => {
-        setGraphInfo({
-          nodes: res.data.nodes,
-          links: res.data.links,
-        });
+      setGraphInfo({
+        nodes: res.data.nodes,
+        links: res.data.links,
       });
       // setGraphInfo(res.data);
     });
   }, [knowledgeBaseKey]);
 
-  // // 创建节点
-  // for (let i = 1; i <= 50; i++) {
-  //   nodes.push({ id: `node${i}`, name: `知识点${i}`, group: (i % 8) + 1 });
-  // }
-
-  // // 创建链接，每个节点链接到2-5个随机节点
-  // for (let i = 0; i < nodes.length; i++) {
-  //   const sourceNode = nodes[i];
-  //   // 随机选择2-5个连接
-  //   const linkCount = Math.floor(Math.random() * 4) + 2;
-  //   for (let j = 0; j < linkCount; j++) {
-  //     // 随机选择一个目标节点
-  //     const targetNode = nodes[Math.floor(Math.random() * nodes.length)];
-  //     // 避免自连接
-  //     if (sourceNode !== targetNode) {
-  //       links.push({ source: sourceNode, target: targetNode, value: 1, name: '知识关联' });
-  //     }
-  //   }
-  // }
-
   return (
     <PageContainer>
       <Card
-        title={<SelectTtile setKey={setKnowledgeBaseKey} />}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-        }}
+        
+        title={
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <div style={{ marginRight: '1%' }}>选择知识库:</div>
+              <SelectTtile setKey={setKnowledgeBaseKey} />
+            </div>
+            <Button onClick={handleAddNode}>添加节点</Button>
+            {selectedNode !== undefined ? <Button onClick={handleHideEdit}>关闭编辑</Button> : null}
+          </div>
+        }
+        style={{ width: '100%', margin: '0', minHeight: '70vh', overflowY:'hidden' }}
       >
-        <Graph color={color} nodes={graphInfo.nodes} links={graphInfo.links} />
+        <div style={{ display: 'flex', justifyContent: 'center'}}>
+          <div id="graphOutter" style={{ flex: selectedNode?1:2 }} >
+            <Graph
+              color={color}
+              nodes={graphInfo.nodes}
+              links={graphInfo.links}
+              select={handleNodeClick}
+              width={width.current ? width.current : 1000}
+              height={height.current ? height.current : 580}
+            />
+          </div>
+          {selectedNode && (
+            <div style={{ flex: 1 }}>
+              <Edit node={selectedNode} />
+            </div>
+          )}
+        </div>
       </Card>
     </PageContainer>
   );

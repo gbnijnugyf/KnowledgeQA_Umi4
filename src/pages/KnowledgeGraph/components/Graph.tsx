@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { useEffect, useRef } from 'react';
+import { SelectNodeType } from '..';
 
 export interface dNode {
   id: number;
@@ -23,14 +24,20 @@ interface IGraphProps {
   nodes: dNode[];
   links: dLink[];
   color: string;
+  select: (node: SelectNodeType) => void;
+  width:number;
+  height:number
 }
 
 export function Graph(props: IGraphProps) {
   const ref = useRef();
   const containerRef = useRef();
   const radius = 15;
-  const width = 1200;
-  const height = 600;
+  // const width = 1000;
+  // const height = 600;
+
+  const width = props.width;
+  const height = props.height;
 
   const drag = (simulation: any) => {
     function dragstarted(event: { active: any }, d: { fx: any; x: any; fy: any; y: any }) {
@@ -105,8 +112,51 @@ export function Graph(props: IGraphProps) {
       .call(drag(simulation))
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
-        // console.log(event, d)
-        console.log(`Node ${d.id} was clicked.`);
+        let selectedNode: SelectNodeType = {
+          sNode: d,
+          links: [],
+          tNodes: [],
+        };
+        // 打印节点的数据
+        console.log('Node data:', d);
+        // 打印与节点直接连接的边的数据，以及与这些边直接连接的其他节点的数据
+        link.each(function (l: dLink) {
+          if (l.source === d || l.target === d) {
+            selectedNode.links.push(l);
+            selectedNode.tNodes.push(l.source === d ? l.target : l.source);
+            console.log('Connected link data:', l);
+            console.log('Connected node data:', l.source === d ? l.target : l.source);
+          }
+        });
+        props.select(selectedNode);
+      })
+      .on('mouseover', function (this: any, _event: any, d: dNode) {
+        // 高亮显示所选节点
+        d3.select(this).style('fill', props.color === 'white' ? 'yellow' : 'red');
+
+        // 高亮显示与所选节点直接连接的边
+        link.style('stroke', function (l: dLink) {
+          if (l.source === d || l.target === d) {
+            return props.color === 'white' ? 'yellow' : 'red';
+          } else {
+            return '#999';
+          }
+        });
+        link.style('stroke-width', function (l: dLink) {
+          if (l.source === d || l.target === d) {
+            return Math.sqrt(l.weight) * 3;
+          } else {
+            return Math.sqrt(l.weight);
+          }
+        });
+      })
+      .on('mouseout', function (this: any, _event: any, d: dNode) {
+        // 恢复所选节点的颜色
+        d3.select(this).style('fill', color(d.group));
+
+        // 恢复所有边的颜色
+        link.style('stroke', '#999');
+        link.style('stroke-width', (l: dLink) => Math.sqrt(l.weight));
       });
 
     const link = container_
@@ -125,7 +175,7 @@ export function Graph(props: IGraphProps) {
       .join('text')
       .call(drag(simulation))
       .text((d: dNode) => d.name)
-      .attr('fill', () =>props.color)
+      .attr('fill', () => props.color)
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
         // console.log(event, d)
@@ -147,10 +197,16 @@ export function Graph(props: IGraphProps) {
 
       nodeText.attr('x', (d: dNode) => d.x).attr('y', (d: dNode) => d.y);
     });
+
+    // Clean up event listener on unmount
+    // return () => window.removeEventListener('resize', handleResize);
   }, [props]);
 
   return (
-    <div ref={containerRef as any} style={{ width: '100%', height: '100%' }}>
+    <div
+      ref={containerRef as any}
+      style={{ display: 'flex', justifyContent: 'center' }}
+    >
       <svg ref={ref as any} />
     </div>
   );
