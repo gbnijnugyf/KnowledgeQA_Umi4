@@ -7,7 +7,6 @@ import { Avatar, Button, Card, Input, List, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SelectTtile } from './components/SelectTitle';
-
 import { flushSync } from 'react-dom';
 import './index.css';
 type IMessage = API.MessageType;
@@ -24,10 +23,10 @@ const ChatPage: React.FC = () => {
   const handleRecommendationClick = (recommendation: string) => {
     setSelectedRecommendation(recommendation);
   };
-
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
+
   useEffect(() => {
     if (knowledgeBaseKey === -1) {
       return;
@@ -86,16 +85,18 @@ const ChatPage: React.FC = () => {
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-start',
-
+              justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <div style={{ marginRight: '1%' }}>选择知识库:</div>
-            <SelectTtile setKey={setKnowledgeBaseKey} />
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <div style={{ marginRight: '1%' }}>选择知识库:</div>
+              <SelectTtile setKey={setKnowledgeBaseKey} />
+            </div>
+            {selectedRecommendation !== '' ? <Button onClick={handleHidePreview}>关闭预览</Button> : null}
           </div>
         }
-        style={{ width: '100%', margin: '0 auto' }}
+        style={{ width: '100%', margin: '0', minHeight: '80vh' }}
       >
         <div style={{ display: 'flex' }}>
           <div style={{ flex: selectedRecommendation ? 1 : 2 }}>
@@ -115,7 +116,9 @@ const ChatPage: React.FC = () => {
                   ) : null}
                   <div style={{ flexDirection: 'column' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
-                      <div className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/>
+                      <div
+                        className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/
+                      >
                         {item.text}
                       </div>
                       {item.sender === 'bot' ? (
@@ -145,7 +148,7 @@ const ChatPage: React.FC = () => {
                 </List.Item>
               )}
             />
-            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ marginTop: '14vh', display: 'flex', justifyContent: 'space-between' }}>
               <Input
                 placeholder="Type a message"
                 value={inputValue.text}
@@ -161,7 +164,17 @@ const ChatPage: React.FC = () => {
           {selectedRecommendation && (
             <div style={{ flex: 1 }}>
               {/* 在这里展示预览的文件 */}
-              <Button onClick={handleHidePreview}>X</Button>
+              {/* TODO：ifame仅可展示pdf、txt格式，但后端可将ppt转为pdf */}
+              <iframe
+                width="100%"
+                height="100%"
+                // src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
+                // src="http://localhost:8001/static/files/1.pptx"
+                // src="http://localhost:8001/static/files/2.csv"
+                src="http://localhost:8001/static/files/3.txt"
+                // src="http://localhost:8001/static/files/4.doc"
+                // src="http://localhost:8001/static/files/5.ppt"
+              ></iframe>
             </div>
           )}
         </div>
