@@ -3,7 +3,7 @@ import { API } from '@/services/ant-design-pro/typings';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Card } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Edit } from './components/Edit';
@@ -44,27 +44,7 @@ const KnowledgeGraph: React.FC = () => {
     setSelectedNode(undefined);
   };
   const handleAddNode = () => {};
-  // const [height, setHeight] = useState<number>(0);
-  // const [width, setWidth] = useState<number>(0);
-  const height = useRef<number>(0);
-  const width = useRef<number>(0);
-  const listenRef = useCallback((node: any) => {
-    if (node !== null) {
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          console.log(entry.contentRect.width, entry.contentRect.height);
-          width.current = entry.contentRect.width;
-          height.current = entry.contentRect.height;
-          // setHeight(entry.contentRect.height);
-          // setWidth(entry.contentRect.width);
-        }
-      });
-      resizeObserver.observe(node);
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-  }, []);
+  const handleDeleteNode = () => {};
 
   useEffect(() => {
     const setting = initialState?.settings || defaultSettings;
@@ -96,7 +76,6 @@ const KnowledgeGraph: React.FC = () => {
   return (
     <PageContainer>
       <Card
-        
         title={
           <div
             style={{
@@ -110,21 +89,26 @@ const KnowledgeGraph: React.FC = () => {
               <div style={{ marginRight: '1%' }}>选择知识库:</div>
               <SelectTtile setKey={setKnowledgeBaseKey} />
             </div>
-            <Button onClick={handleAddNode}>添加节点</Button>
-            {selectedNode !== undefined ? <Button onClick={handleHideEdit}>关闭编辑</Button> : null}
+            <div>
+              <Button onClick={handleAddNode}>添加节点</Button>
+              <Button onClick={handleDeleteNode}>删除节点</Button>
+              {selectedNode !== undefined ? (
+                <Button onClick={handleHideEdit}>关闭编辑</Button>
+              ) : null}
+            </div>
           </div>
         }
-        style={{ width: '100%', margin: '0', minHeight: '70vh', overflowY:'hidden' }}
+        style={{ width: '100%', margin: '0', minHeight: '70vh', overflowY: 'hidden' }}
       >
-        <div style={{ display: 'flex', justifyContent: 'center'}}>
-          <div id="graphOutter" style={{ flex: selectedNode?1:2 }} >
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div id="graphOutter" style={{ flex: selectedNode ? 1 : 2 }}>
             <Graph
               color={color}
               nodes={graphInfo.nodes}
               links={graphInfo.links}
               select={handleNodeClick}
-              width={width.current ? width.current : 1000}
-              height={height.current ? height.current : 580}
+              width={1000}
+              height={580}
             />
           </div>
           {selectedNode && (

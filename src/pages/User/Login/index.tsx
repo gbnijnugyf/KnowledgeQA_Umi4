@@ -27,7 +27,7 @@ function Page() {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.loginUserParams) => {
     try {
       // 登录
       const userInfo = await initialState?.fetchUserInfo?.();

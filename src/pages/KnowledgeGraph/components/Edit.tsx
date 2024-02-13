@@ -201,7 +201,7 @@ function NodeEdit(props: {
       render: (_: any, record: { key: React.Key }) =>
         data.length >= 1 ? (
           <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-            <div style={{cursor:'pointer'}}>删除边关系</div>
+            <a style={{cursor:'pointer'}}>删除边关系</a>
           </Popconfirm>
         ) : null,
     },

@@ -39,26 +39,26 @@ export function Graph(props: IGraphProps) {
   const width = props.width;
   const height = props.height;
 
-  const drag = (simulation: any) => {
-    function dragstarted(event: { active: any }, d: { fx: any; x: any; fy: any; y: any }) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
+  // const drag = (simulation: any) => {
+  //   function dragstarted(event: { active: any }, d: { fx: any; x: any; fy: any; y: any }) {
+  //     if (!event.active) simulation.alphaTarget(0.3).restart();
+  //     d.fx = d.x;
+  //     d.fy = d.y;
+  //   }
 
-    function dragged(event: { x: any; y: any }, d: { fx: any; fy: any }) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
+  //   function dragged(event: { x: any; y: any }, d: { fx: any; fy: any }) {
+  //     d.fx = event.x;
+  //     d.fy = event.y;
+  //   }
 
-    function dragended(event: { active: any }, d: { fx: null; fy: null }) {
-      if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
+  //   function dragended(event: { active: any }, d: { fx: null; fy: null }) {
+  //     if (!event.active) simulation.alphaTarget(0);
+  //     d.fx = null;
+  //     d.fy = null;
+  //   }
 
-    return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended);
-  };
+  //   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended);
+  // };
   // 创建一个颜色比例尺
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -109,7 +109,7 @@ export function Graph(props: IGraphProps) {
       .attr('r', (d: dNode) => d.weight)
       .attr('fill', '#f00')
       .attr('fill', (d: dNode) => color(d.group)) // 使用比例尺设置颜色
-      .call(drag(simulation))
+      // .call(drag(simulation))
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
         let selectedNode: SelectNodeType = {
@@ -173,7 +173,7 @@ export function Graph(props: IGraphProps) {
       .selectAll('text')
       .data(nodeHandle)
       .join('text')
-      .call(drag(simulation))
+      // .call(drag(simulation))
       .text((d: dNode) => d.name)
       .attr('fill', () => props.color)
       .on('click', function (_event: any, d: dNode) {
