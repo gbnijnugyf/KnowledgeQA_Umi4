@@ -25,8 +25,8 @@ interface IGraphProps {
   links: dLink[];
   color: string;
   select: (node: SelectNodeType) => void;
-  width:number;
-  height:number
+  width: number;
+  height: number;
 }
 
 export function Graph(props: IGraphProps) {
@@ -89,6 +89,22 @@ export function Graph(props: IGraphProps) {
     svg.call(zoom);
     svg.attr('width', width).attr('height', height);
 
+    svg
+      .append('defs')
+      .selectAll('marker')
+      .data(['end']) // Different link/path types can be defined here
+      .enter()
+      .append('marker') // This section adds in the arrows
+      .attr('id', String)
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 15)
+      .attr('refY', -1.5)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5');
+
     const simulation = d3
       .forceSimulation(nodeHandle)
       .force(
@@ -99,7 +115,16 @@ export function Graph(props: IGraphProps) {
           .distance(150),
       )
       .force('charge', d3.forceManyBody())
-      .force('center', d3.forceCenter(width / 2, height / 2));
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force(
+        'collide',
+        d3
+          .forceCollide()
+          .radius(function (d: dNode) {
+            return d.weight + 0.5;
+          })
+          .iterations(2),
+      );
 
     const node = container_
       .append('g')
@@ -166,7 +191,8 @@ export function Graph(props: IGraphProps) {
       .join('line')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
-      .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight));
+      .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight))
+      .attr("marker-end", "url(#end)"); 
 
     const nodeText = container_
       .append('g')
@@ -203,10 +229,7 @@ export function Graph(props: IGraphProps) {
   }, [props]);
 
   return (
-    <div
-      ref={containerRef as any}
-      style={{ display: 'flex', justifyContent: 'center' }}
-    >
+    <div ref={containerRef as any} style={{ display: 'flex', justifyContent: 'center' }}>
       <svg ref={ref as any} />
     </div>
   );
