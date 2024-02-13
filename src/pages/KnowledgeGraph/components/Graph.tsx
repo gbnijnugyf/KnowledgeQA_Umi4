@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { useEffect, useRef } from 'react';
 import { SelectNodeType } from '..';
+import { selectNode } from '@/action';
+import { connect } from 'react-redux';
 
 export interface dNode {
   id: number;
@@ -226,7 +228,7 @@ export function Graph(props: IGraphProps) {
 
     // Clean up event listener on unmount
     // return () => window.removeEventListener('resize', handleResize);
-  }, [props]);
+  }, [props.nodes, props.links, props.color, width, height]);
 
   return (
     <div ref={containerRef as any} style={{ display: 'flex', justifyContent: 'center' }}>
@@ -234,3 +236,9 @@ export function Graph(props: IGraphProps) {
     </div>
   );
 }
+
+const mapDispatchToProps = {
+  select: selectNode,
+};
+
+export default connect(null, mapDispatchToProps)(Graph);
