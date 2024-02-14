@@ -1,8 +1,8 @@
+import { selectNode } from '@/action';
 import * as d3 from 'd3';
 import { useEffect, useRef } from 'react';
-import { SelectNodeType } from '..';
-import { selectNode } from '@/action';
 import { connect } from 'react-redux';
+import { SelectNodeType } from '..';
 
 export interface dNode {
   id: number;
@@ -84,11 +84,33 @@ export function Graph(props: IGraphProps) {
     const svg = d3.select(ref.current);
     // 创建一个g元素来包含所有的节点和边
     const container_ = svg.append('g');
+
+    // 更新图形的函数
+    function updateGraph(scaleLevel: number) {
+      // 根据缩放级别决定显示或隐藏节点和边
+      node.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
+      nodeText.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
+      link.style('display', (l: dLink) =>
+        l.source.group <= scaleLevel && l.target.group <= scaleLevel ? 'inline' : 'none',
+      );
+    }
+
     // 创建一个缩放行为
-    const zoom = d3.zoom().on('zoom', (event: any) => {
-      container_.attr('transform', event.transform);
-    });
+    const zoom = d3
+      .zoom()
+      .scaleExtent([0.25, 2.5])
+      .on('zoom', (event: any) => {
+        container_.attr('transform', event.transform);
+
+        // 当用户放大或缩小时，调用自定义函数
+        // let scaleLevel = Math.floor(event.transform.k);
+        let scaleLevel = event.transform.k*4;
+        console.log('scaleLevel:', scaleLevel);
+        updateGraph(scaleLevel);
+      });
+
     svg.call(zoom);
+
     svg.attr('width', width).attr('height', height);
 
     svg
@@ -99,8 +121,8 @@ export function Graph(props: IGraphProps) {
       .append('marker') // This section adds in the arrows
       .attr('id', String)
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 15)
-      .attr('refY', -1.5)
+      .attr('refX', 10)
+      .attr('refY', 0)
       .attr('markerWidth', 6)
       .attr('markerHeight', 6)
       .attr('orient', 'auto')
@@ -194,7 +216,7 @@ export function Graph(props: IGraphProps) {
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
       .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight))
-      .attr("marker-end", "url(#end)"); 
+      .attr('marker-end', 'url(#end)');
 
     const nodeText = container_
       .append('g')
@@ -225,7 +247,8 @@ export function Graph(props: IGraphProps) {
 
       nodeText.attr('x', (d: dNode) => d.x).attr('y', (d: dNode) => d.y);
     });
-
+    // 设置初始缩放级别为3
+    zoom.scaleTo(svg, 0.25);
     // Clean up event listener on unmount
     // return () => window.removeEventListener('resize', handleResize);
   }, [props.nodes, props.links, props.color, width, height]);

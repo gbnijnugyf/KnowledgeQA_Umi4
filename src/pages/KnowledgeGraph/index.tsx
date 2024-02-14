@@ -101,13 +101,13 @@ const KnowledgeGraph: React.FC = () => {
         style={{ width: '100%', margin: '0', minHeight: '70vh', overflowY: 'hidden' }}
       >
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div id="graphOutter" style={{ flex: selectedNode ? 1 : 2 }}>
+          <div id="graphOutter" style={{ flex: selectedNode ? 2 : 2 }}>
             <Graph
               color={color}
               nodes={graphInfo.nodes}
               links={graphInfo.links}
               select={handleNodeClick}
-              width={1000}
+              width={800}
               height={580}
             />
           </div>
