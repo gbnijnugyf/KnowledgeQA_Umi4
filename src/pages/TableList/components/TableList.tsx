@@ -168,7 +168,7 @@ export function TableList(props: ITableList) {
       props.hooks.setFileList === undefined
         ? null
         : props.component.NewForm({
-            // actionRef: props.hooks.ref,
+            actionRef: props.hooks.ref,
             onSubmit: props.submitNewForm,
             onCancel: () => {
               props.hooks.openCreate?.set(false);

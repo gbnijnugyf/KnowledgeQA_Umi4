@@ -20,7 +20,7 @@ export type FormValueType = {
   frequency?: string;
 } & Partial<API.KnowledgeBaseListItem>;
 export interface INewFormProps {
-  // actionRef: React.MutableRefObject<ActionType | undefined>;
+  actionRef: React.MutableRefObject<ActionType | undefined>;
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   hook: {

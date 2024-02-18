@@ -28,34 +28,42 @@ export default [
     icon: 'smile',
     component: './Welcome',
   },
-  // {
-  //   path: '/admin',
-  //   name: '管理页',
-  //   icon: 'crown',
-  //   access: 'adminRoute',
-  //   routes: [
-  //     {
-  //       path: '/admin',
-  //       redirect: '/admin/knowledgeBase',
-  //     },
-  //     {
-  //       path: '/admin/knowledgeBase',
-  //       name: '知识库管理',
-  //       component: './TableList',
-  //     },
-  //   ],
-  // },
   {
-    name: '问答',
-    icon: 'RobotOutlined',
-    path: '/QA',
-    component: './ChatPage',
+    path: '/admin',
+    name: '管理页',
+    icon: 'crown',
+    access: 'adminRoute',
+    routes: [
+      {
+        path: '/admin',
+        redirect: '/admin/knowledgeBase',
+      },
+      {
+        path: '/admin/knowledgeBase',
+        name: '课程管理',
+        component: './TableList',
+      },
+    ],
   },
+  // {
+  //   name: '问答',
+  //   icon: 'RobotOutlined',
+  //   path: '/chat',
+  //   component: './ChatPage',
+  // },
   {
     name: '知识图谱',
     icon: 'RadarChartOutlined',
     path: '/knowledgeGraph',
     component: './KnowledgeGraph',
+  },
+  {
+    // name: '知识图谱',
+    // icon: 'RadarChartOutlined',
+    path: '/graph',
+    component: './KnowledgeGraph',
+    hidinMenu: true,
+    layout: false,
   },
   {
     path: '/',

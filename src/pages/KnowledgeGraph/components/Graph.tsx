@@ -87,7 +87,7 @@ export function Graph(props: IGraphProps) {
 
     // 更新图形的函数
     function updateGraph(scaleLevel: number) {
-      // 根据缩放级别决定显示或隐藏节点和边
+      // 根据缩放级别决定显示或隐藏节点和边,组别从1开始
       node.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
       nodeText.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
       link.style('display', (l: dLink) =>

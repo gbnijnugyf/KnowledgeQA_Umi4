@@ -1,13 +1,14 @@
 import { myGetGraph } from '@/services/ant-design-pro/api';
 import { API } from '@/services/ant-design-pro/typings';
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { useLocation, useModel } from '@umijs/max';
 import { Button, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Edit } from './components/Edit';
 import { Graph, dLink, dNode } from './components/Graph';
+import { parse } from 'querystring';
 
 export type SelectNodeType = {
   sNode: dNode;
@@ -29,7 +30,10 @@ const linksInit: dLink[] = [
 ];
 
 const KnowledgeGraph: React.FC = () => {
-  const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(-1);
+  const location = useLocation();
+  const record = parse(location.search.substring(1));
+
+  const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(record.key?parseInt(record.key as string):-1);
   const [graphInfo, setGraphInfo] = useState<API.Graph>({
     nodes: nodesInit,
     links: linksInit,
@@ -62,6 +66,9 @@ const KnowledgeGraph: React.FC = () => {
       return;
     }
     setSelectedNode(undefined);
+    // myGetCourse({ key: knowledgeBaseKey }).then((res) => {
+    //   setBaseTitle(res.data.name);
+    // }
     // 获取知识图谱数据
     myGetGraph({ key: knowledgeBaseKey }).then((res) => {
       console.log(res);
@@ -87,7 +94,7 @@ const KnowledgeGraph: React.FC = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <div style={{ marginRight: '1%' }}>选择知识库:</div>
-              <SelectTtile setKey={setKnowledgeBaseKey} />
+              {location.pathname!=='/graph'?<SelectTtile setKey={setKnowledgeBaseKey} />:<div>{record.name}</div>}
             </div>
             <div>
               <Button onClick={handleAddNode}>添加节点</Button>
@@ -107,8 +114,8 @@ const KnowledgeGraph: React.FC = () => {
               nodes={graphInfo.nodes}
               links={graphInfo.links}
               select={handleNodeClick}
-              width={800}
-              height={580}
+              width={location.pathname==='/graph'?1300:800}
+              height={location.pathname==='/graph'?700:580}
             />
           </div>
           {selectedNode && (

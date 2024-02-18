@@ -1,12 +1,9 @@
-import { addCourse } from '@/action';
 import { myUploadKnowledgeBaseFile } from '@/services/ant-design-pro/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Card, message, theme } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { useState } from 'react';
-import { connect } from 'react-redux';
-import { NewKnowledgeBaseForm } from '../TableList/components/NewForm';
 import { FormValueType } from '../TableList/components/UpdateForm';
 
 export function CourseManage(props: { v: number }) {
@@ -31,41 +28,19 @@ export function CourseManage(props: { v: number }) {
     }
   };
 
-  if (props.v === -1) {
-    console.log('课程不存在');
-    handleModalOpen(true);
-    // return (
-    //   <PageContainer>
-    //     <NewKnowledgeBaseForm
-    //       hook={{
-    //         open: { value: createModalOpen, set: handleModalOpen },
-    //         setFileList: { value: fileList, set: setFileList },
-    //       }}
-    //       onSubmit={submitNewForm}
-    //       onCancel={() => {
-    //         handleModalOpen(false);
-    //       }}
-    //     />
-    //   </PageContainer>
-    // );
-  } 
-//   else {
-    return (
-      <PageContainer>
-        <Card>{props.v === 0 ? '该课程已不可见' : '课程详情' + props.v}</Card>
-        <NewKnowledgeBaseForm
-          hook={{
-            open: { value: createModalOpen, set: handleModalOpen },
-            setFileList: { value: fileList, set: setFileList },
-          }}
-          onSubmit={submitNewForm}
-          onCancel={() => {
-            handleModalOpen(false);
-          }}
-        />
-      </PageContainer>
-    );
-//   }
+  return (
+    <>
+      {props.v === -1 ? (
+        <PageContainer title="新建对话">
+          <div>123</div>
+        </PageContainer>
+      ) : (
+        <PageContainer>
+          <Card>{props.v === 0 ? '该对话已不可见' : '对话详情' + props.v}</Card>
+        </PageContainer>
+      )}
+    </>
+  );
 }
 // const mapDispatchToProps = {
 //   handleModalOpen: addCourse,

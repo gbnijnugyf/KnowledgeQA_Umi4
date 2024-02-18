@@ -1,6 +1,8 @@
+import { API } from '@/services/ant-design-pro/typings';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ProColumns } from '@ant-design/pro-components';
 import { Input } from 'antd';
+import { stringify } from 'querystring';
 
 interface IGetColumns {
   hooks: {
@@ -86,6 +88,9 @@ export const KnowledgeBase = {
           >
             配置基本信息
           </a>,
+          // <a key="graph" >查看知识图谱</a>,
+          // <Link key="graph" to={"/welcome"}>查看知识图谱</Link>,
+          <a key="graph" href={`/#/graph?${stringify({key:record.key,name:record.name})}`} target="_blank" rel="noopener noreferrer">查看知识图谱</a>,
         ],
       },
     ];
@@ -117,7 +122,7 @@ export const KnowledgeBaseFile = {
           1: {
             text: '可见',
             status: 'success',
-          }
+          },
         },
       },
       {

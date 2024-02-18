@@ -1,5 +1,5 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
-import { CrownOutlined, LinkOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { CrownOutlined, LinkOutlined, PlusCircleOutlined, RobotOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
@@ -9,7 +9,7 @@ import { RouteItem, loginPath } from '../src/services/plugin/globalInter';
 import { SwitchTheme } from './components/RightContent';
 import { CourseManage } from './pages/CourseManage';
 import { errorConfig } from './requestErrorConfig';
-import { myGetCourse, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { myGetCourses, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { API } from './services/ant-design-pro/typings';
 // const isDev = process.env.NODE_ENV === 'development';
 
@@ -171,16 +171,16 @@ let extraRoutes: any;
 export async function patchClientRoutes({ routes }: { routes: any }) {
   // 根据 extraRoutes 对 routes 做一些修改
   const routerIndex = routes.findIndex((item: RouteItem) => item.path === '/');
-  const adminIndex = routes[routerIndex]['routes'].findIndex(
-    (item: RouteItem) => item.path === '/admin',
-  );
+  // const adminIndex = routes[routerIndex]['routes'].findIndex(
+  //   (item: RouteItem) => item.path === '/admin',
+  // );
   // console.log(routes[routerIndex]['routes'][adminIndex].routes);
   console.log(routes, extraRoutes);
 
   if (extraRoutes) {
     extraRoutes = extraRoutes.map((item: any) => {
       return {
-        path: `/admin/course${item.key}`,
+        path: `/chat/course${item.key}`,
         name: item.name,
         element: <CourseManage v={item.key} />,
       };
@@ -189,20 +189,22 @@ export async function patchClientRoutes({ routes }: { routes: any }) {
   extraRoutes = [
     ...extraRoutes,
     {
-      path: '/admin/course',
-      name: <a /*onClick={ }*/ ><PlusCircleOutlined />  新增课程</a>,
+      path: '/chat/course',
+      name: <a /*onClick={ }*/ ><PlusCircleOutlined />  新增对话</a>,
+      element: <CourseManage v={-1} />,
+
     },
   ];
   // 将构造好的子路由添加到 routes 中
   routes[routerIndex]['routes'].push({
-    path: '/admin',
-    name: '课程管理',
-    icon: <CrownOutlined />,
+    path: '/chat',
+    name: '对话管理',
+    icon: <RobotOutlined />,
     access: 'adminRoute',
     children: [
       {
-        path: '/admin',
-        redirect: `/admin/course${extraRoutes.key === undefined ? 0 : extraRoutes.key}`,
+        path: '/chat',
+        redirect: `/chat/course${extraRoutes.key === undefined ? -1 : extraRoutes.key}`,
       },
       ...extraRoutes,
     ],
@@ -210,7 +212,7 @@ export async function patchClientRoutes({ routes }: { routes: any }) {
 }
 
 export function render(oldRender: any) {
-  myGetCourse({ option: 2 }).then((res) => {
+  myGetCourses({ option: 2 }).then((res) => {
     console.log(res);
     if (res.status === 1) {
       extraRoutes = res.data;
