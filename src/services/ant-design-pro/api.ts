@@ -21,7 +21,7 @@ export async function myCurrentUser(options?: { [key: string]: any }) {
   }>(BASEURL + '/fetchUserInfo', {
     method: 'GET',
     headers: {
-      Authorization: token.get() || '',
+      token: token.get() || '',
     },
     ...(options || {}),
   });
@@ -242,7 +242,6 @@ export async function myGetGraph(
   },
   options?: { [key: string]: any },
 ) {
-  //注意！需要后端返回总数total，成功success
   return request<IReturn<API.Graph>>(BASEURL + '/getGraph', {
     method: 'GET',
     params: {
@@ -253,16 +252,49 @@ export async function myGetGraph(
 }
 
 /** 获取课程列表 /getCourses */
-export async function myGetCourse(
+export async function myGetCourses(
   params: {
     // query
-    /** 知识库key */
+    /** 获取场景 */
     option: number;
   },
   options?: { [key: string]: any },
 ) {
-  //注意！需要后端返回总数total，成功success
   return request<IReturn<API.KnowledgeBaseListItem[]>>(BASEURL + '/getCourses', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取特定课程 /getSingleCourse */
+export async function myGetCourse(
+  params: {
+    // query
+    /** 知识库key */
+    key: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<API.KnowledgeBaseListItem>>(BASEURL + '/getSingleCourse', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取对话列表 //getDialogs */
+export async function myGetDialogs(
+  params: {
+    // query
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<API.DialogList[]>>(BASEURL + '/getDialogs', {
     method: 'GET',
     params: {
       ...params,

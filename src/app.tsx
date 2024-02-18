@@ -9,8 +9,7 @@ import { RouteItem, loginPath } from '../src/services/plugin/globalInter';
 import { SwitchTheme } from './components/RightContent';
 import { CourseManage } from './pages/CourseManage';
 import { errorConfig } from './requestErrorConfig';
-import { myGetCourses, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { API } from './services/ant-design-pro/typings';
+import { myGetCourses, myGetDialogs, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
 // const isDev = process.env.NODE_ENV === 'development';
 
 /**
@@ -212,7 +211,7 @@ export async function patchClientRoutes({ routes }: { routes: any }) {
 }
 
 export function render(oldRender: any) {
-  myGetCourses({ option: 2 }).then((res) => {
+  myGetDialogs({}).then((res) => {
     console.log(res);
     if (res.status === 1) {
       extraRoutes = res.data;

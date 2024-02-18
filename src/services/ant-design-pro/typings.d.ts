@@ -1,8 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 
-import { dLink, dNode } from "@/pages/KnowledgeGraph/components/Graph";
-
 declare namespace API {
   type CurrentUser = {
     name?: string;
@@ -87,7 +85,7 @@ declare namespace API {
     key: number; //知识库标识
   };
   type MessageType = {
-    sender: 'user'|'bot';
+    sender: 'user' | 'bot';
     text: string;
     recommend?: Array<string>; //推荐的知识点
   };
@@ -125,5 +123,13 @@ declare namespace API {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
+  };
+
+  type DialogList = {
+    key: number;
+    name: string;
+    updatedAt: string;
+    createdAt?: string;
+    Kbase: Array<KnowledgeBaseListItem>;
   };
 }

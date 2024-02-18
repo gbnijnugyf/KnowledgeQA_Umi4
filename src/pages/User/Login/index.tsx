@@ -1,6 +1,5 @@
 import { LoginForm } from '@/components/login/loginForm';
 import { myLogin } from '@/services/ant-design-pro/api';
-import { API } from '@/services/ant-design-pro/typings';
 import { IReturn, titleName } from '@/services/plugin/globalInter';
 import token from '@/services/plugin/token';
 import { LoginFormPage, ProConfigProvider, ProFormCheckbox } from '@ant-design/pro-components';
@@ -38,8 +37,8 @@ function Page() {
       console.log(msg);
       if (msg.status === 1) {
         message.success('登录成功！');
-        await fetchUserInfoHere();
         token.save(msg.data);
+        await fetchUserInfoHere();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;

@@ -1,4 +1,3 @@
-import { API } from '@/services/ant-design-pro/typings';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ProColumns } from '@ant-design/pro-components';
 import { Input } from 'antd';
