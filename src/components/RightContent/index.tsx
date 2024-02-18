@@ -1,22 +1,19 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { ProLayoutProps } from '@ant-design/pro-components';
-import { SelectLang as UmiSelectLang, useModel } from '@umijs/max';
+import { useModel } from '@umijs/max';
 import { Space, Switch } from 'antd';
 import defaultSettings from '../../../config/defaultSettings';
-
 export type SiderTheme = 'light' | 'dark';
-
-export const SelectLang = () => {
-  return (
-    <UmiSelectLang
-      style={{
-        padding: 4,
-      }}
-    />
-  );
-};
-
+// export const SelectLang = () => {
+//   return (
+//     <UmiSelectLang
+//       style={{
+//         padding: 4,
+//       }}
+//     />
+//   );
+// };
 export const Question = () => {
   return (
     <div
@@ -32,10 +29,8 @@ export const Question = () => {
     </div>
   );
 };
-
 export const SwitchTheme = () => {
   const { setInitialState } = useModel('@@initialState');
-
   return (
     <Space direction="vertical">
       <Switch
