@@ -251,3 +251,22 @@ export async function myGetGraph(
     ...(options || {}),
   });
 }
+
+/** 获取课程列表 /getCourses */
+export async function myGetCourse(
+  params: {
+    // query
+    /** 知识库key */
+    option: number;
+  },
+  options?: { [key: string]: any },
+) {
+  //注意！需要后端返回总数total，成功success
+  return request<IReturn<API.KnowledgeBaseListItem[]>>(BASEURL + '/getCourses', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

@@ -10,6 +10,7 @@ import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
 import { INewFormProps } from './NewForm';
 import type { FormValueType, IUpdateFormProps } from './UpdateForm';
+import { API } from '@/services/ant-design-pro/typings';
 
 /**
  * @en-US Add node
@@ -167,7 +168,7 @@ export function TableList(props: ITableList) {
       props.hooks.setFileList === undefined
         ? null
         : props.component.NewForm({
-            actionRef: props.hooks.ref,
+            // actionRef: props.hooks.ref,
             onSubmit: props.submitNewForm,
             onCancel: () => {
               props.hooks.openCreate?.set(false);

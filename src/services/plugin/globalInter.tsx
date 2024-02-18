@@ -1,4 +1,4 @@
-export const BASEURL = 'http://127.0.0.1:4523/m1/3961888-0-default';
+export const BASEURL = 'http://127.0.0.1:4523/m1/4024081-0-default';
 export const titleName = '知识库问答';
 export const loginPath = '/user/login';
 
@@ -39,3 +39,20 @@ valueEnum: {
           },
         },
  */
+export interface RouteItem {
+  path?: string;
+  name?: string;
+  icon?: string;
+  id?: number | string;
+  parentId?: number | string;
+  element?: JSX.Element;
+  children?: RouteItem[];
+}
+export interface MenuItem {
+  url: string;
+  menuName: string;
+  icon: string;
+  menuID: number | string;
+  page?: string;
+  children?: MenuItem[];
+}

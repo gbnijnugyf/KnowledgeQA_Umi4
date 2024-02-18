@@ -136,7 +136,7 @@ export function Graph(props: IGraphProps) {
         d3
           .forceLink(linkHandle)
           .id((d: dNode) => d.name)
-          .distance(150),
+          .distance(80),
       )
       .force('charge', d3.forceManyBody())
       .force('center', d3.forceCenter(width / 2, height / 2))

@@ -50,6 +50,12 @@ declare namespace API {
     createdAt?: string; // 创建时间，项目的创建时间
     progress?: number; // 进度，通常用于表示项目的完成进度
   };
+  type loginUserParams = {
+    /** The user name for login */
+    username: string;
+    /** The password for login in clear text */
+    password: string;
+  };
 
   type KBList = {
     data?: KnowledgeBaseListItem[];

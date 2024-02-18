@@ -28,23 +28,23 @@ export default [
     icon: 'smile',
     component: './Welcome',
   },
-  {
-    path: '/admin',
-    name: '管理页',
-    icon: 'crown',
-    access: 'adminRoute',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/knowledgeBase',
-      },
-      {
-        path: '/admin/knowledgeBase',
-        name: '知识库管理',
-        component: './TableList',
-      },
-    ],
-  },
+  // {
+  //   path: '/admin',
+  //   name: '管理页',
+  //   icon: 'crown',
+  //   access: 'adminRoute',
+  //   routes: [
+  //     {
+  //       path: '/admin',
+  //       redirect: '/admin/knowledgeBase',
+  //     },
+  //     {
+  //       path: '/admin/knowledgeBase',
+  //       name: '知识库管理',
+  //       component: './TableList',
+  //     },
+  //   ],
+  // },
   {
     name: '问答',
     icon: 'RobotOutlined',

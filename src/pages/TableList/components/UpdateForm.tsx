@@ -1,4 +1,5 @@
 import { myUpdateKnowledgeBase } from '@/services/ant-design-pro/api';
+import { API } from '@/services/ant-design-pro/typings';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import {
   ActionType,

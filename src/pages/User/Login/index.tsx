@@ -1,5 +1,6 @@
 import { LoginForm } from '@/components/login/loginForm';
 import { myLogin } from '@/services/ant-design-pro/api';
+import { API } from '@/services/ant-design-pro/typings';
 import { IReturn, titleName } from '@/services/plugin/globalInter';
 import token from '@/services/plugin/token';
 import { LoginFormPage, ProConfigProvider, ProFormCheckbox } from '@ant-design/pro-components';

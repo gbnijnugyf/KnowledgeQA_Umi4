@@ -10,6 +10,7 @@ import {
 import { Modal } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { UploadFiles } from './UploadFiles';
+import { API } from '@/services/ant-design-pro/typings';
 
 export type FormValueType = {
   target?: string;
@@ -19,7 +20,7 @@ export type FormValueType = {
   frequency?: string;
 } & Partial<API.KnowledgeBaseListItem>;
 export interface INewFormProps {
-  actionRef: React.MutableRefObject<ActionType | undefined>;
+  // actionRef: React.MutableRefObject<ActionType | undefined>;
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   hook: {
