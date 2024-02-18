@@ -21,10 +21,16 @@ export interface dLink {
   name?: string;
   // 更多属性...
 }
-
+export interface dLink_ {
+  source_id: number;
+  target_id: number;
+  weight: number;
+  name?: string;
+  // 更多属性...
+}
 interface IGraphProps {
   nodes: dNode[];
-  links: dLink[];
+  links: dLink_[];
   color: string;
   select: (node: SelectNodeType) => void;
   width: number;
@@ -69,8 +75,8 @@ export function Graph(props: IGraphProps) {
     console.log('Graph render start:', nodeHandle);
     const linkHandle: dLink[] = props.links.map((link) => {
       return {
-        source: nodeHandle.find((d: dNode) => d.id === link.source.id) ?? initNode,
-        target: nodeHandle.find((d: dNode) => d.id === link.target.id) ?? initNode,
+        source: nodeHandle.find((d: dNode) => d.id === link.source_id) ?? initNode,
+        target: nodeHandle.find((d: dNode) => d.id === link.target_id) ?? initNode,
         weight: link.weight,
         name: link.name,
       };

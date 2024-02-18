@@ -1,5 +1,4 @@
 import { myGetGraph } from '@/services/ant-design-pro/api';
-import { API } from '@/services/ant-design-pro/typings';
 import { PageContainer } from '@ant-design/pro-components';
 import { useLocation, useModel } from '@umijs/max';
 import { Button, Card } from 'antd';
@@ -7,7 +6,7 @@ import { useEffect, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Edit } from './components/Edit';
-import { Graph, dLink, dNode } from './components/Graph';
+import { Graph, dLink, dLink_, dNode } from './components/Graph';
 import { parse } from 'querystring';
 
 export type SelectNodeType = {
@@ -23,9 +22,9 @@ const nodesInit: dNode[] = [
   // 更多节点...
 ];
 
-const linksInit: dLink[] = [
-  { source: nodesInit[0], target: nodesInit[1], weight: 1, name: '知识关联' },
-  { source: nodesInit[1], target: nodesInit[2], weight: 1, name: '知识关联' },
+const linksInit: dLink_[] = [
+  { source_id: 1, target_id: 2, weight: 1, name: '知识关联' },
+  { source_id: 2, target_id: 3, weight: 1, name: '知识关联' },
   // 更多链接...
 ];
 
