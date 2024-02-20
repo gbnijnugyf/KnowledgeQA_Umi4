@@ -1,10 +1,9 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { RcFile } from 'antd/es/upload';
 import { BASEURL, IReturn } from '../plugin/globalInter';
 import token from '../plugin/token';
-import { RcFile } from 'antd/es/upload';
-import { API } from './typings.d';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -30,6 +29,14 @@ export async function myCurrentUser(options?: { [key: string]: any }) {
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/login/outLogin', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+/** 退出登录接口 POST /outLogin */
+export async function myOutLogin(options?: { [key: string]: any }) {
+  return request<IReturn<undefined>>(BASEURL + '/outLogin', {
     method: 'POST',
     ...(options || {}),
   });
@@ -181,7 +188,10 @@ export async function myRemoveRule(options?: { [key: string]: any }) {
   });
 }
 
-export async function myUploadKnowledgeBaseFile(props:{fileList: (string | Blob | RcFile)[], options?: { [key: string]: any }}) {
+export async function myUploadKnowledgeBaseFile(props: {
+  fileList: (string | Blob | RcFile)[];
+  options?: { [key: string]: any };
+}) {
   const formData = new FormData();
   props.fileList.forEach((file) => {
     formData.append('files', file);
@@ -294,10 +304,25 @@ export async function myGetDialogs(
   },
   options?: { [key: string]: any },
 ) {
-  return request<IReturn<API.DialogList[]>>(BASEURL + '/getDialogs', {
+  return request<IReturn<API.DialogListItem[]>>(BASEURL + '/getDialogs', {
     method: 'GET',
     params: {
       ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 新建对话 /addDialog */
+export async function addDialog(body: API.DialogInfo, options?: { [key: string]: any }) {
+  return request<IReturn<number>>(BASEURL + '/addDialog', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      method: 'add',
+      ...body,
     },
     ...(options || {}),
   });

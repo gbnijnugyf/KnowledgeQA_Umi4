@@ -1,5 +1,4 @@
 import { getHistoryMessage, sendMessage } from '@/services/ant-design-pro/api';
-import { API } from '@/services/ant-design-pro/typings';
 import { IReturn } from '@/services/plugin/globalInter';
 import { CopyOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
@@ -91,7 +90,7 @@ const ChatPage: React.FC = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <div style={{ marginRight: '1%' }}>选择知识库:</div>
-              <SelectTtile setKey={setKnowledgeBaseKey} />
+              <SelectTtile<number> setKey={setKnowledgeBaseKey} />
             </div>
             {selectedRecommendation !== '' ? <Button onClick={handleHidePreview}>关闭预览</Button> : null}
           </div>

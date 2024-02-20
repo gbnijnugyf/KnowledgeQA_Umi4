@@ -5,8 +5,9 @@ import { Card, message, theme } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { useState } from 'react';
 import { FormValueType } from '../TableList/components/UpdateForm';
+import { NewDialogPage } from './components/NewDialogPage';
 
-export function CourseManage(props: { v: number }) {
+export function DialogManage(props: { v: number }) {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
@@ -31,9 +32,7 @@ export function CourseManage(props: { v: number }) {
   return (
     <>
       {props.v === -1 ? (
-        <PageContainer title="新建对话">
-          <div>123</div>
-        </PageContainer>
+        <NewDialogPage />
       ) : (
         <PageContainer>
           <Card>{props.v === 0 ? '该对话已不可见' : '对话详情' + props.v}</Card>

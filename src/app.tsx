@@ -1,5 +1,5 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
-import { CrownOutlined, LinkOutlined, PlusCircleOutlined, RobotOutlined } from '@ant-design/icons';
+import { LinkOutlined, PlusCircleOutlined, RobotOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
@@ -7,9 +7,9 @@ import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import { RouteItem, loginPath } from '../src/services/plugin/globalInter';
 import { SwitchTheme } from './components/RightContent';
-import { CourseManage } from './pages/CourseManage';
+import { DialogManage } from './pages/DialogManage';
 import { errorConfig } from './requestErrorConfig';
-import { myGetCourses, myGetDialogs, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { myGetDialogs, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
 // const isDev = process.env.NODE_ENV === 'development';
 
 /**
@@ -165,23 +165,30 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ 
 //   }
 // }
 
-let extraRoutes: any;
+let extraRoutes_: any;
 
-export async function patchClientRoutes({ routes }: { routes: any }) {
+export async function patchClientRoutes({ routes, extraRoutes=extraRoutes_, auto=true }: { routes: any, extraRoutes: any, auto:boolean}) {
   // 根据 extraRoutes 对 routes 做一些修改
-  const routerIndex = routes.findIndex((item: RouteItem) => item.path === '/');
+  let router:any;
+  if(auto){
+    const routerIndex = routes.findIndex((item: RouteItem) => item.path === '/');
+    router = routes[routerIndex]['routes'];
+  }else{
+    router = routes;
+  }
+
   // const adminIndex = routes[routerIndex]['routes'].findIndex(
   //   (item: RouteItem) => item.path === '/admin',
   // );
   // console.log(routes[routerIndex]['routes'][adminIndex].routes);
-  console.log(routes, extraRoutes);
+  console.log(router, extraRoutes);
 
   if (extraRoutes) {
     extraRoutes = extraRoutes.map((item: any) => {
       return {
         path: `/chat/course${item.key}`,
         name: item.name,
-        element: <CourseManage v={item.key} />,
+        element: <DialogManage v={item.key} />,
       };
     });
   }
@@ -189,13 +196,16 @@ export async function patchClientRoutes({ routes }: { routes: any }) {
     ...extraRoutes,
     {
       path: '/chat/course',
-      name: <a /*onClick={ }*/ ><PlusCircleOutlined />  新增对话</a>,
-      element: <CourseManage v={-1} />,
-
+      name: (
+        <a /*onClick={ }*/>
+          <PlusCircleOutlined /> 新增对话
+        </a>
+      ),
+      element: <DialogManage v={-1} />,
     },
   ];
   // 将构造好的子路由添加到 routes 中
-  routes[routerIndex]['routes'].push({
+  router.push({
     path: '/chat',
     name: '对话管理',
     icon: <RobotOutlined />,
@@ -211,13 +221,14 @@ export async function patchClientRoutes({ routes }: { routes: any }) {
 }
 
 export function render(oldRender: any) {
+  console.log('render:',oldRender);
   myGetDialogs({}).then((res) => {
     console.log(res);
     if (res.status === 1) {
-      extraRoutes = res.data;
+      extraRoutes_ = res.data;
       oldRender();
     } else {
-      message.error('获取课程列表失败');
+      message.error('获取菜单列表失败，请刷新');
     }
   });
 }

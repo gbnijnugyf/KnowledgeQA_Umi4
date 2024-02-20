@@ -125,11 +125,16 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
-  type DialogList = {
+  type DialogListItem = {
     key: number;
     name: string;
     updatedAt: string;
     createdAt?: string;
     Kbase: Array<KnowledgeBaseListItem>;
   };
+  type DialogInfo={
+    name: string;
+    Kbase: Array<number>;
+  }
+
 }

@@ -42,6 +42,8 @@ function Page() {
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
+      }else{
+        message.error('账号或密码错误！');
       }
       console.log(msg);
 

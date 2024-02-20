@@ -93,7 +93,7 @@ const KnowledgeGraph: React.FC = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <div style={{ marginRight: '1%' }}>选择知识库:</div>
-              {location.pathname!=='/graph'?<SelectTtile setKey={setKnowledgeBaseKey} />:<div>{record.name}</div>}
+              {location.pathname!=='/graph'?<SelectTtile<number> setKey={setKnowledgeBaseKey} />:<div>{record.name}</div>}
             </div>
             <div>
               <Button onClick={handleAddNode}>添加节点</Button>
