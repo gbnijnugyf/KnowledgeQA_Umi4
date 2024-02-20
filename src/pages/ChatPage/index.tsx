@@ -11,7 +11,8 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Avatar, Button, Card, Dropdown, Input, List, Menu, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { flushSync } from 'react-dom';
+import { DelDialogModal } from './components/DelDialog';
+import { EditDialogModal } from './components/EditDialog';
 import { NewDialogPage } from './components/NewDialogPage';
 import './index.css';
 type IMessage = API.MessageType;
@@ -22,23 +23,28 @@ const messageInit: IMessage = {
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [inputValue, setInputValue] = useState<IMessage>(messageInit);
-  const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(-1);
   const [loading, setLoading] = useState(false); // 新的状态变量
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
   const [flush, setFlush] = useState<boolean>(false);
   const [dialogs, setDialogs] = useState<API.DialogListItem[]>([]);
   const [currentDialogKey, setCurrentDialogKey] = useState<number | null>(null);
+  const [deleteDialogModal, setDeleteDialogModal] = useState<boolean>(false);
+  const [editDialogModal, setEditDialogModal] = useState<boolean>(false);
+  const [operateDialogKey, setOperateDialogKey] = useState<{ key: number; name: string }>({
+    key: -1,
+    name: '',
+  });
 
   // 删除对话框
-  const handleDeleteDialog = (key: number) => {
-    message.info(`删除对话框 ${key}`);
-    // 你可以在这里添加删除对话框的代码
+  const handleDeleteDialog = (key: number, name: string) => {
+    setOperateDialogKey({ key, name });
+    setDeleteDialogModal(true);
   };
 
   // 编辑对话框
-  const handleEditDialog = (key: number) => {
-    message.info(`编辑对话框 ${key}`);
-    // 你可以在这里添加编辑对话框的代码
+  const handleEditDialog = (key: number, name: string) => {
+    setOperateDialogKey({ key, name });
+    setEditDialogModal(true);
   };
 
   // 获取所有对话框
@@ -53,6 +59,8 @@ const ChatPage: React.FC = () => {
         };
         res.data.push(newItem);
         setDialogs(res.data);
+        setCurrentDialogKey(null);
+        setMessages([]);
       } else {
         message.error('获取对话列表失败,请重试！');
       }
@@ -84,35 +92,22 @@ const ChatPage: React.FC = () => {
     setSelectedRecommendation('');
   };
 
-  useEffect(() => {
-    if (knowledgeBaseKey === -1) {
-      return;
-    }
-    // 获取历史数据
-    getHistoryMessage({ key: knowledgeBaseKey }).then((res) => {
-      console.log(res);
-      flushSync(() => {
-        setMessages(res.data);
-      });
-      // setGraphInfo(res.data);
-    });
-  }, [knowledgeBaseKey]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: IMessage = { sender: 'user', text: e.target.value };
     setInputValue(value);
   };
 
   const handleSend = async () => {
-    if (knowledgeBaseKey === -1) {
+    if (currentDialogKey === -1 || currentDialogKey === null) {
       message.warning('请选择知识库');
       return;
     }
     if (inputValue.text !== '') {
       setLoading(true); // 开始加载
+      setMessages([...messages, inputValue, { sender: 'bot', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
-          sendMessage({ key: knowledgeBaseKey, text: inputValue.text }) as Promise<
+          sendMessage({ key: currentDialogKey, text: inputValue.text }) as Promise<
             IReturn<API.MessageType>
           >,
           new Promise(
@@ -120,14 +115,23 @@ const ChatPage: React.FC = () => {
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
-          setMessages([...messages, inputValue, { sender: 'bot', text: res.data.text }]);
+          setMessages((prevMessages) => {
+            // 替换最后一条消息
+            const newMessages = [...prevMessages];
+            newMessages[newMessages.length - 1] = { sender: 'bot', text: res.data.text };
+            return newMessages;
+          });
           setInputValue(messageInit);
         } else {
           message.error('发送失败,请重试！');
         }
       } catch (error) {
         console.error(error);
-        message.error('请求失败');
+        setMessages((prevMessages) => {
+          // 删除最后一条消息
+          return prevMessages.slice(0, -1);
+        });
+        message.error('获取回复失败');
       } finally {
         setLoading(false); // 加载完成
       }
@@ -189,10 +193,10 @@ const ChatPage: React.FC = () => {
                           onClick: ({ key }) => {
                             switch (key) {
                               case 'delete':
-                                handleDeleteDialog(dialog.key);
+                                handleDeleteDialog(dialog.key, dialog.name);
                                 break;
                               case 'edit':
-                                handleEditDialog(dialog.key);
+                                handleEditDialog(dialog.key, dialog.name);
                                 break;
                               default:
                                 break;
@@ -203,7 +207,7 @@ const ChatPage: React.FC = () => {
                             { key: 'edit', label: '编辑' },
                           ],
                         }}
-                        trigger={['click']}
+                        trigger={['hover']}
                       >
                         <Button type="link" icon={<EllipsisOutlined />} />
                       </Dropdown>
@@ -310,6 +314,18 @@ const ChatPage: React.FC = () => {
           )}
         </div>
       </Card>
+      <DelDialogModal
+        key={operateDialogKey.key}
+        name={operateDialogKey.name}
+        open={{ set: setDeleteDialogModal, value: deleteDialogModal }}
+        flush={{ set: setFlush, value: flush }}
+      />
+      <EditDialogModal
+        key={operateDialogKey.key}
+        name={operateDialogKey.name}
+        open={{ set: setEditDialogModal, value: editDialogModal }}
+        flush={{ set: setFlush, value: flush }}
+      />
     </PageContainer>
   );
 };

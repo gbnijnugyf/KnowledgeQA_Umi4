@@ -7,7 +7,6 @@ import { message } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { history } from 'umi';
 
 export type FormValueType = {
   target?: string;
@@ -17,16 +16,6 @@ export type FormValueType = {
   frequency?: string;
 } & Partial<API.KnowledgeBaseListItem>;
 
-// export interface INewFormProps {
-//   // actionRef: React.MutableRefObject<ActionType | undefined>;
-//   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-//   onSubmit: (values: FormValueType) => Promise<void>;
-//   hook: {
-//     open: IHookFunc<boolean>;
-//     setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
-//   };
-//   key?: number;
-// }
 export interface INewFormProps {
   onFlush: IHookFunc<boolean>;
 }
@@ -58,7 +47,7 @@ export function NewDialogPage(props: INewFormProps) {
     console.log(res);
     if (res.status === 1) {
       message.success('创建成功');
-      props.onFlush.set(!props.onFlush.value)
+      props.onFlush.set(!props.onFlush.value);
     } else {
       message.error('创建失败');
     }
@@ -89,7 +78,7 @@ export function NewDialogPage(props: INewFormProps) {
           },
         ]}
       >
-        <SelectTtile<number[]> mode="multiple" width={325} />
+        <SelectTtile<number[]> mode="multiple" width={325} placeholder="创建后不可修改！" />
       </ProFormItem>
     </ProForm>
   );

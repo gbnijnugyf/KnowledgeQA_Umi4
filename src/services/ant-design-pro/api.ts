@@ -327,3 +327,17 @@ export async function addDialog(body: API.DialogInfo, options?: { [key: string]:
     ...(options || {}),
   });
 }
+
+/** 删除对话 /deleteDialog */
+export async function deleteDialog(key: number, options?: { [key: string]: any }) {
+  return request<IReturn<undefined>>(BASEURL+'/deleteDialog', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      key: key,
+      ...(options || {}),
+    },
+  });
+}
+
+/** 编辑对话名称 */ //暂未实现
