@@ -165,73 +165,68 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ 
 //   }
 // }
 
-let extraRoutes_: any;
+/** 动态路由配置 */
+// let extraRoutes_: any;
 
-export async function patchClientRoutes({ routes, extraRoutes=extraRoutes_, auto=true }: { routes: any, extraRoutes: any, auto:boolean}) {
-  // 根据 extraRoutes 对 routes 做一些修改
-  let router:any;
-  if(auto){
-    const routerIndex = routes.findIndex((item: RouteItem) => item.path === '/');
-    router = routes[routerIndex]['routes'];
-  }else{
-    router = routes;
-  }
+// export async function patchClientRoutes({ routes, extraRoutes=extraRoutes_, auto=true }: { routes: any, extraRoutes: any, auto:boolean}) {
+//   // 根据 extraRoutes 对 routes 做一些修改
+//   let router:any;
+//   if(auto){
+//     const routerIndex = routes.findIndex((item: RouteItem) => item.path === '/');
+//     router = routes[routerIndex]['routes'];
+//   }else{
+//     router = routes;
+//   }
 
-  // const adminIndex = routes[routerIndex]['routes'].findIndex(
-  //   (item: RouteItem) => item.path === '/admin',
-  // );
-  // console.log(routes[routerIndex]['routes'][adminIndex].routes);
-  console.log(router, extraRoutes);
+//   if (extraRoutes) {
+//     extraRoutes = extraRoutes.map((item: any) => {
+//       return {
+//         path: `/chat/course${item.key}`,
+//         name: item.name,
+//         element: <DialogManage v={item.key} />,
+//       };
+//     });
+//   }
+//   extraRoutes = [
+//     ...extraRoutes,
+//     {
+//       path: '/chat/course',
+//       name: (
+//         <a /*onClick={ }*/>
+//           <PlusCircleOutlined /> 新增对话
+//         </a>
+//       ),
+//       element: <DialogManage v={-1} />,
+//     },
+//   ];
+//   // 将构造好的子路由添加到 routes 中
+//   router.push({
+//     path: '/chat',
+//     name: '对话管理',
+//     icon: <RobotOutlined />,
+//     access: 'adminRoute',
+//     children: [
+//       {
+//         path: '/chat',
+//         redirect: `/chat/course${extraRoutes.key === undefined ? -1 : extraRoutes.key}`,
+//       },
+//       ...extraRoutes,
+//     ],
+//   });
+// }
 
-  if (extraRoutes) {
-    extraRoutes = extraRoutes.map((item: any) => {
-      return {
-        path: `/chat/course${item.key}`,
-        name: item.name,
-        element: <DialogManage v={item.key} />,
-      };
-    });
-  }
-  extraRoutes = [
-    ...extraRoutes,
-    {
-      path: '/chat/course',
-      name: (
-        <a /*onClick={ }*/>
-          <PlusCircleOutlined /> 新增对话
-        </a>
-      ),
-      element: <DialogManage v={-1} />,
-    },
-  ];
-  // 将构造好的子路由添加到 routes 中
-  router.push({
-    path: '/chat',
-    name: '对话管理',
-    icon: <RobotOutlined />,
-    access: 'adminRoute',
-    children: [
-      {
-        path: '/chat',
-        redirect: `/chat/course${extraRoutes.key === undefined ? -1 : extraRoutes.key}`,
-      },
-      ...extraRoutes,
-    ],
-  });
-}
-
-export function render(oldRender: any) {
-  console.log('render:',oldRender);
-  myGetDialogs({}).then((res) => {
-    console.log(res);
-    if (res.status === 1) {
-      extraRoutes_ = res.data;
-      oldRender();
-    } else {
-      message.error('获取菜单列表失败，请刷新');
-    }
-  });
-}
+// export function render(oldRender: any) {
+//   console.log('render:',oldRender);
+//   myGetDialogs({}).then((res) => {
+//     console.log(res);
+//     if (res.status === 1) {
+//       extraRoutes_ = res.data;
+//       oldRender();
+//     } else {
+//       message.error('获取菜单列表失败，请刷新');
+//     }
+//   });
+// }
 
 /**
  * @name request 配置，可以配置错误处理

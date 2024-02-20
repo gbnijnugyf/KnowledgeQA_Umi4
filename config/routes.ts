@@ -45,12 +45,12 @@ export default [
       },
     ],
   },
-  // {
-  //   name: '问答',
-  //   icon: 'RobotOutlined',
-  //   path: '/chat',
-  //   component: './ChatPage',
-  // },
+  {
+    name: '问答',
+    icon: 'RobotOutlined',
+    path: '/chat',
+    component: './ChatPage',
+  },
   {
     name: '知识图谱',
     icon: 'RadarChartOutlined',
