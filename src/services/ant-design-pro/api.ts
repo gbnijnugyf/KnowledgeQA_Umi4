@@ -243,6 +243,18 @@ export async function sendMessage(body: API.SendMessageBody, options?: { [key: s
   });
 }
 
+/** 删除消息 /deleteMessage */
+export async function deleteMessage(key: number, options?: { [key: string]: any }) {
+  return request<IReturn<undefined>>(BASEURL + '/deleteMessage', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      key: key,
+      ...(options || {}),
+    },
+  });
+}
+
 /** 获取知识图谱 */
 export async function myGetGraph(
   params: {
@@ -330,7 +342,7 @@ export async function addDialog(body: API.DialogInfo, options?: { [key: string]:
 
 /** 删除对话 /deleteDialog */
 export async function deleteDialog(key: number, options?: { [key: string]: any }) {
-  return request<IReturn<undefined>>(BASEURL+'/deleteDialog', {
+  return request<IReturn<undefined>>(BASEURL + '/deleteDialog', {
     method: 'POST',
     data: {
       method: 'delete',
@@ -341,3 +353,20 @@ export async function deleteDialog(key: number, options?: { [key: string]: any }
 }
 
 /** 编辑对话名称 */ //暂未实现
+
+/** 用户输入前 /getRecommendedInput */
+export async function myGetRecommendedInput(
+  params: {
+    // query
+    text: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<string[]>>(BASEURL + '/getRecommendedInput', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

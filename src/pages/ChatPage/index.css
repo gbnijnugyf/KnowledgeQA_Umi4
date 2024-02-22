@@ -1,3 +1,25 @@
+/* .dialog-list::-webkit-scrollbar {
+  display: none;
+} */
+/* 这个规则应用于整个文档 */
+.dialog-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* 滚动条的轨道 */
+.dialog-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 滚动条的滑块 */
+.dialog-list::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* 滚动条的滑块：鼠标悬浮 */
+.dialog-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 .message-box {
   position: relative;
   margin: 20px; /* 增加外边距以容纳箭头 */

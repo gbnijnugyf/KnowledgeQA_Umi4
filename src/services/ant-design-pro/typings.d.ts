@@ -85,6 +85,7 @@ declare namespace API {
     key: number; //知识库标识
   };
   type MessageType = {
+    key: number;
     sender: 'user' | 'bot';
     text: string;
     recommend?: Array<string>; //推荐的知识点

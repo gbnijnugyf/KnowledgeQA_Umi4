@@ -8,6 +8,26 @@ export function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min; //含最大值，含最小值
 }
 
+//防抖
+type ThisParameterType<T> = T extends (this: infer U, ...args: any[]) => any ? U : unknown;
+export function debounce<F extends (this: any, ...args: any[]) => any>(func: F, wait: number): (this: ThisParameterType<F>, ...args: Parameters<F>) => void {
+  let timeout: NodeJS.Timeout | null;
+  return function(this: ThisParameterType<F>, ...args: Parameters<F>) {
+    const later = () => {
+      timeout = null;
+      func.apply(this, args);
+    };
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(later, wait);
+  };
+}
+
+
+
+
+
 export const loopMenuItem = (menus: MenuItem[], pId: number | string): RouteItem[] => {
   return menus.flatMap((item) => {
     let Component: React.ComponentType<any> | null = null;
