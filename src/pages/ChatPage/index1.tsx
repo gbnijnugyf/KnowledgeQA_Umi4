@@ -6,6 +6,7 @@ import {
   sendMessage,
 } from '@/services/ant-design-pro/api';
 import { IReturn } from '@/services/plugin/globalInter';
+import { debounce } from '@/services/plugin/utils';
 import {
   CopyOutlined,
   DeleteOutlined,
@@ -16,224 +17,18 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { AutoComplete, Avatar, Button, Card, Dropdown, List, Menu, Tooltip, message } from 'antd';
-import { debounce } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { DelDialogModal } from './components/DelDialog';
 import { EditDialogModal } from './components/EditDialog';
 import { NewDialogPage } from './components/NewDialogPage';
 import './index.css';
-
-// 定义 DialogList 组件的 props 类型
-interface DialogListProps {
-  dialogs: API.DialogListItem[];
-  currentDialogKey: number | null;
-  handleDialogClick: (key: number) => void;
-  handleDeleteDialog: (key: number, name: string) => void;
-  handleEditDialog: (key: number, name: string) => void;
-}
-
-// DialogList 组件
-function DialogList({
-  dialogs,
-  currentDialogKey,
-  handleDialogClick,
-  handleDeleteDialog,
-  handleEditDialog,
-}: DialogListProps) {
-  return (
-    <Menu
-      onClick={({ key }: { key: string }) => handleDialogClick(Number(key))}
-      style={{ width: '100%' }}
-      mode="inline"
-    >
-      {dialogs.map((dialog) => (
-        <Menu.Item key={dialog.key} icon={dialog.key === -1 ? <PlusCircleOutlined /> : undefined}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {dialog.name}
-            {dialog.key !== -1 ? (
-              <Dropdown
-                menu={{
-                  onClick: ({ key }) => {
-                    switch (key) {
-                      case 'delete':
-                        handleDeleteDialog(dialog.key, dialog.name);
-                        break;
-                      case 'edit':
-                        handleEditDialog(dialog.key, dialog.name);
-                        break;
-                      default:
-                        break;
-                    }
-                  },
-                  items: [
-                    { key: 'delete', label: '删除' },
-                    { key: 'edit', label: '编辑' },
-                  ],
-                }}
-                trigger={['hover']}
-              >
-                <Button type="link" icon={<EllipsisOutlined />} />
-              </Dropdown>
-            ) : null}
-          </div>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
-}
-
-// 定义 MessageList 组件的 props 类型
-interface MessageListProps {
-  messages: IMessage[];
-  handleDeleteMessage: (key: number) => void;
-  handleRecommendationClick: (recommendation: string) => void;
-}
-
-// MessageList 组件
-function MessageList({
-  messages,
-  handleDeleteMessage,
-  handleRecommendationClick,
-}: MessageListProps) {
-  return (
-    <List
-      dataSource={messages}
-      id="dialogList"
-      className="dialog-list"
-      style={{ overflow: 'auto', paddingRight: '1vw' }}
-      renderItem={(item) => (
-        <Tooltip
-          title={
-            <div>
-              <CopyToClipboard text={item.text} onCopy={() => message.success('已复制')}>
-                <Button icon={<CopyOutlined />} />
-              </CopyToClipboard>
-              <Button
-                style={{ marginLeft: '0.5vw' }}
-                icon={<DeleteOutlined />}
-                onClick={() => handleDeleteMessage(item.key)}
-              />
-            </div>
-          }
-          placement={item.sender === 'user' ? 'topRight' : 'topLeft'}
-          overlayStyle={{ margin: '-1vh' }}
-        >
-          <List.Item
-            style={{
-              display: 'flex',
-              justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
-              borderBottom: 'none',
-            }}
-          >
-            {item.sender === 'bot' ? <Avatar icon={<RobotOutlined />} className="avatar" /> : null}
-            <div style={{ flexDirection: 'column' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'flex-end',
-                }}
-              >
-                <div className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/>
-                  {item.text}
-                </div>
-              </div>
-              <div>
-                {item.recommend && (
-                  <ul>
-                    {item.recommend.map((recommendation: string) => (
-                      <li
-                        className="recommend-list"
-                        onClick={() => handleRecommendationClick(recommendation)}
-                      >
-                        {recommendation}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-            {item.sender === 'user' ? <Avatar icon={<UserOutlined />} className="avatar" /> : null}
-          </List.Item>
-        </Tooltip>
-      )}
-    />
-  );
-}
-
-// 定义 MessageInput 组件的 props 类型
-interface MessageInputProps {
-  inputValue: IMessage;
-  recommendations: string[];
-  handleChange: (e: string) => void;
-  handleSend: () => void;
-}
-
-// MessageInput 组件
-function MessageInput({
-  inputValue,
-  recommendations,
-  handleChange,
-  handleSend,
-}: MessageInputProps) {
-  return (
-    <>
-      <AutoComplete
-        placeholder="ctrl+enter发送"
-        options={recommendations?.map((rec) => ({ value: rec }))}
-        value={inputValue.text}
-        onChange={handleChange}
-        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-          if (event.key === 'Enter' && event.ctrlKey) {
-            handleSend();
-          }
-        }}
-        style={{ marginRight: '8px', flex: 1 }}
-      />
-      <Button type="primary" onClick={handleSend}>
-        发送
-      </Button>
-    </>
-  );
-}
-
-// 定义 RecommendationPreview 组件的 props 类型
-interface RecommendationPreviewProps {
-  selectedRecommendation: string;
-  handleHidePreview: () => void;
-}
-
-// RecommendationPreview 组件
-function RecommendationPreview({
-  selectedRecommendation,
-  handleHidePreview,
-}: RecommendationPreviewProps) {
-  return (
-    <>
-      {/* 在这里展示预览的文件 */}
-      {/* TODO：ifame仅可展示pdf、txt格式，但后端可将ppt转为pdf */}
-      <iframe
-        width="100%"
-        height="100%"
-        src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
-        // src="http://localhost:8001/static/files/1.pptx"
-        // src="http://localhost:8001/static/files/2.csv"
-        // src="http://localhost:8001/static/files/3.txt"
-        // src="http://localhost:8001/static/files/4.doc"
-        // src="http://localhost:8001/static/files/5.ppt"
-      ></iframe>
-    </>
-  );
-}
-
 type IMessage = API.MessageType;
 const messageInit: IMessage = {
   key: -1,
   sender: 'user',
   text: '',
 };
-// 在 ChatPage 组件中使用这些子组件
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [inputValue, setInputValue] = useState<IMessage>(messageInit);
@@ -248,14 +43,13 @@ const ChatPage: React.FC = () => {
     name: '',
   });
   const [recommendations, setRecommendations] = useState<string[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     let chatBox = document.getElementById('dialogList');
     if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-  };
+  }
 
   useEffect(scrollToBottom, [messages]); // 当 messages 发生变化时，滚动到底部
 
@@ -306,8 +100,6 @@ const ChatPage: React.FC = () => {
   // 当前对话框改变时，获取对应的对话内容
   useEffect(() => {
     if (currentDialogKey !== null && currentDialogKey !== -1) {
-      setSelectedRecommendation('');
-
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
         if (res.status === 1) {
           setMessages(res.data);
@@ -385,6 +177,17 @@ const ChatPage: React.FC = () => {
             1000,
           );
           setMessageBackFunc();
+          // setMessages((prevMessages) => {
+          //   // 替换最后一条消息
+          //   const newMessages = [...prevMessages];
+          //   newMessages[newMessages.length - 1] = {
+          //     key: res.data.key,
+          //     sender: 'bot',
+          //     text: res.data.text,
+          //     recommend: res.data.recommend,
+          //   };
+          //   return newMessages;
+          // });
           setInputValue(messageInit);
         } else {
           setMessages((prevMessages) => {
@@ -403,6 +206,7 @@ const ChatPage: React.FC = () => {
       }
     }
   };
+
   return (
     <PageContainer>
       <Card
@@ -435,19 +239,53 @@ const ChatPage: React.FC = () => {
           height: '71vh',
           display: 'flex',
           flexDirection: 'column',
+          // overflowY: 'auto',
         }}
       >
-        {' '}
         <div style={{ display: 'flex', height: '100%' }}>
           {/* 对话框列表 */}
           <div style={{ width: '20%', marginRight: '0.5%', overflowY: 'auto', maxHeight: '71vh' }}>
-            <DialogList
-              dialogs={dialogs}
-              currentDialogKey={currentDialogKey}
-              handleDialogClick={handleDialogClick}
-              handleDeleteDialog={handleDeleteDialog}
-              handleEditDialog={handleEditDialog}
-            />
+            <Menu
+              onClick={({ key }) => handleDialogClick(Number(key))}
+              style={{ width: '100%' }}
+              mode="inline"
+            >
+              {dialogs.map((dialog) => (
+                <Menu.Item
+                  key={dialog.key}
+                  icon={dialog.key === -1 ? <PlusCircleOutlined /> : undefined}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {dialog.name}
+                    {dialog.key !== -1 ? (
+                      <Dropdown
+                        menu={{
+                          onClick: ({ key }) => {
+                            switch (key) {
+                              case 'delete':
+                                handleDeleteDialog(dialog.key, dialog.name);
+                                break;
+                              case 'edit':
+                                handleEditDialog(dialog.key, dialog.name);
+                                break;
+                              default:
+                                break;
+                            }
+                          },
+                          items: [
+                            { key: 'delete', label: '删除' },
+                            { key: 'edit', label: '编辑' },
+                          ],
+                        }}
+                        trigger={['hover']}
+                      >
+                        <Button type="link" icon={<EllipsisOutlined />} />
+                      </Dropdown>
+                    ) : null}
+                  </div>
+                </Menu.Item>
+              ))}
+            </Menu>
           </div>
           {currentDialogKey !== -1 && currentDialogKey !== null ? (
             <>
@@ -468,10 +306,76 @@ const ChatPage: React.FC = () => {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <MessageList
-                    messages={messages}
-                    handleDeleteMessage={handleDeleteMessage}
-                    handleRecommendationClick={handleRecommendationClick}
+                  <List
+                    dataSource={messages}
+                    id="dialogList"
+                    className="dialog-list"
+                    style={{ overflow: 'auto', paddingRight: '1vw' }}
+                    renderItem={(item) => (
+                      <Tooltip
+                        title={
+                          <div>
+                            <CopyToClipboard
+                              text={item.text}
+                              onCopy={() => message.success('已复制')}
+                            >
+                              <Button icon={<CopyOutlined />} />
+                            </CopyToClipboard>
+                            <Button
+                              style={{ marginLeft: '0.5vw' }}
+                              icon={<DeleteOutlined />}
+                              onClick={() => handleDeleteMessage(item.key)}
+                            />
+                          </div>
+                        }
+                        placement="top"
+                        overlayStyle={{ margin: '-1vh' }}
+                      >
+                        <List.Item
+                          style={{
+                            display: 'flex',
+                            justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
+                            borderBottom: 'none',
+                          }}
+                        >
+                          {item.sender === 'bot' ? (
+                            <Avatar icon={<RobotOutlined />} className="avatar" />
+                          ) : null}
+                          <div style={{ flexDirection: 'column' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'flex-end',
+                              }}
+                            >
+                              <div
+                                className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/
+                              >
+                                {item.text}
+                              </div>
+                            </div>
+                            <div>
+                              {item.recommend && (
+                                <ul>
+                                  {item.recommend.map((recommendation) => (
+                                    <li
+                                      className="recommend-list"
+                                      onClick={() => handleRecommendationClick(recommendation)}
+                                    >
+                                      {recommendation}
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          </div>
+                          {item.sender === 'user' ? (
+                            <Avatar icon={<UserOutlined />} className="avatar" />
+                          ) : null}
+                        </List.Item>
+                      </Tooltip>
+                    )}
                   />
                   {currentDialogKey !== -1 && currentDialogKey !== null ? (
                     <div
@@ -483,22 +387,39 @@ const ChatPage: React.FC = () => {
                         justifyContent: 'space-between',
                       }}
                     >
-                      <MessageInput
-                        inputValue={inputValue}
-                        recommendations={recommendations}
-                        handleChange={handleChange}
-                        handleSend={handleSend}
+                      <AutoComplete
+                        placeholder="ctrl+enter发送"
+                        options={recommendations?.map((rec) => ({ value: rec }))}
+                        value={inputValue.text}
+                        onChange={handleChange}
+                        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                          if (event.key === 'Enter' && event.ctrlKey) {
+                            handleSend();
+                          }
+                        }}
+                        style={{ marginRight: '8px', flex: 1 }}
                       />
+                      <Button type="primary" onClick={handleSend} >
+                        发送
+                      </Button>
                     </div>
                   ) : null}
                 </div>
               </div>
               {selectedRecommendation && (
                 <div style={{ flex: 1 }}>
-                  <RecommendationPreview
-                    selectedRecommendation={selectedRecommendation}
-                    handleHidePreview={handleHidePreview}
-                  />
+                  {/* 在这里展示预览的文件 */}
+                  {/* TODO：ifame仅可展示pdf、txt格式，但后端可将ppt转为pdf */}
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
+                    // src="http://localhost:8001/static/files/1.pptx"
+                    // src="http://localhost:8001/static/files/2.csv"
+                    // src="http://localhost:8001/static/files/3.txt"
+                    // src="http://localhost:8001/static/files/4.doc"
+                    // src="http://localhost:8001/static/files/5.ppt"
+                  ></iframe>
                 </div>
               )}
             </>
