@@ -90,6 +90,10 @@ declare namespace API {
     text: string;
     recommend?: Array<string>; //推荐的知识点
   };
+  type sendMessageType = {
+    reply:MessageType;
+    userMsgKey:number
+  }
   type Graph = {
     nodes: dNode[];
     links: dLink[];

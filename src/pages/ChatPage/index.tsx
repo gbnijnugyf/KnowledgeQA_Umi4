@@ -6,237 +6,28 @@ import {
   sendMessage,
 } from '@/services/ant-design-pro/api';
 import { IReturn } from '@/services/plugin/globalInter';
-import {
-  CopyOutlined,
-  DeleteOutlined,
-  EllipsisOutlined,
-  PlusCircleOutlined,
-  RobotOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { AutoComplete, Avatar, Button, Card, Dropdown, List, Menu, Tooltip, message } from 'antd';
+import { Button, Card, message } from 'antd';
 import { debounce } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useEffect, useState } from 'react';
 import { DelDialogModal } from './components/DelDialog';
+import { DialogList } from './components/DialogList';
 import { EditDialogModal } from './components/EditDialog';
+import { MessageInput } from './components/MessageInput';
+import { MessageList } from './components/MessageList';
 import { NewDialogPage } from './components/NewDialogPage';
+import { RecommendationPreview } from './components/RecommendationPreview';
 import './index.css';
 
-// 定义 DialogList 组件的 props 类型
-interface DialogListProps {
-  dialogs: API.DialogListItem[];
-  currentDialogKey: number | null;
-  handleDialogClick: (key: number) => void;
-  handleDeleteDialog: (key: number, name: string) => void;
-  handleEditDialog: (key: number, name: string) => void;
-}
-
-// DialogList 组件
-function DialogList({
-  dialogs,
-  currentDialogKey,
-  handleDialogClick,
-  handleDeleteDialog,
-  handleEditDialog,
-}: DialogListProps) {
-  return (
-    <Menu
-      onClick={({ key }: { key: string }) => handleDialogClick(Number(key))}
-      style={{ width: '100%' }}
-      mode="inline"
-    >
-      {dialogs.map((dialog) => (
-        <Menu.Item key={dialog.key} icon={dialog.key === -1 ? <PlusCircleOutlined /> : undefined}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {dialog.name}
-            {dialog.key !== -1 ? (
-              <Dropdown
-                menu={{
-                  onClick: ({ key }) => {
-                    switch (key) {
-                      case 'delete':
-                        handleDeleteDialog(dialog.key, dialog.name);
-                        break;
-                      case 'edit':
-                        handleEditDialog(dialog.key, dialog.name);
-                        break;
-                      default:
-                        break;
-                    }
-                  },
-                  items: [
-                    { key: 'delete', label: '删除' },
-                    { key: 'edit', label: '编辑' },
-                  ],
-                }}
-                trigger={['hover']}
-              >
-                <Button type="link" icon={<EllipsisOutlined />} />
-              </Dropdown>
-            ) : null}
-          </div>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
-}
-
-// 定义 MessageList 组件的 props 类型
-interface MessageListProps {
-  messages: IMessage[];
-  handleDeleteMessage: (key: number) => void;
-  handleRecommendationClick: (recommendation: string) => void;
-}
-
-// MessageList 组件
-function MessageList({
-  messages,
-  handleDeleteMessage,
-  handleRecommendationClick,
-}: MessageListProps) {
-  return (
-    <List
-      dataSource={messages}
-      id="dialogList"
-      className="dialog-list"
-      style={{ overflow: 'auto', paddingRight: '1vw' }}
-      renderItem={(item) => (
-        <Tooltip
-          title={
-            <div>
-              <CopyToClipboard text={item.text} onCopy={() => message.success('已复制')}>
-                <Button icon={<CopyOutlined />} />
-              </CopyToClipboard>
-              <Button
-                style={{ marginLeft: '0.5vw' }}
-                icon={<DeleteOutlined />}
-                onClick={() => handleDeleteMessage(item.key)}
-              />
-            </div>
-          }
-          placement={item.sender === 'user' ? 'topRight' : 'topLeft'}
-          overlayStyle={{ margin: '-1vh' }}
-        >
-          <List.Item
-            style={{
-              display: 'flex',
-              justifyContent: item.sender === 'user' ? 'flex-end' : 'flex-start',
-              borderBottom: 'none',
-            }}
-          >
-            {item.sender === 'bot' ? <Avatar icon={<RobotOutlined />} className="avatar" /> : null}
-            <div style={{ flexDirection: 'column' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'flex-end',
-                }}
-              >
-                <div className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/>
-                  {item.text}
-                </div>
-              </div>
-              <div>
-                {item.recommend && (
-                  <ul>
-                    {item.recommend.map((recommendation: string) => (
-                      <li
-                        className="recommend-list"
-                        onClick={() => handleRecommendationClick(recommendation)}
-                      >
-                        {recommendation}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-            {item.sender === 'user' ? <Avatar icon={<UserOutlined />} className="avatar" /> : null}
-          </List.Item>
-        </Tooltip>
-      )}
-    />
-  );
-}
-
-// 定义 MessageInput 组件的 props 类型
-interface MessageInputProps {
-  inputValue: IMessage;
-  recommendations: string[];
-  handleChange: (e: string) => void;
-  handleSend: () => void;
-}
-
-// MessageInput 组件
-function MessageInput({
-  inputValue,
-  recommendations,
-  handleChange,
-  handleSend,
-}: MessageInputProps) {
-  return (
-    <>
-      <AutoComplete
-        placeholder="ctrl+enter发送"
-        options={recommendations?.map((rec) => ({ value: rec }))}
-        value={inputValue.text}
-        onChange={handleChange}
-        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-          if (event.key === 'Enter' && event.ctrlKey) {
-            handleSend();
-          }
-        }}
-        style={{ marginRight: '8px', flex: 1 }}
-      />
-      <Button type="primary" onClick={handleSend}>
-        发送
-      </Button>
-    </>
-  );
-}
-
-// 定义 RecommendationPreview 组件的 props 类型
-interface RecommendationPreviewProps {
-  selectedRecommendation: string;
-  handleHidePreview: () => void;
-}
-
-// RecommendationPreview 组件
-function RecommendationPreview({
-  selectedRecommendation,
-  handleHidePreview,
-}: RecommendationPreviewProps) {
-  return (
-    <>
-      {/* 在这里展示预览的文件 */}
-      {/* TODO：ifame仅可展示pdf、txt格式，但后端可将ppt转为pdf */}
-      <iframe
-        width="100%"
-        height="100%"
-        src="http://localhost:8001/static/files/知识图谱融合大模型.pdf"
-        // src="http://localhost:8001/static/files/1.pptx"
-        // src="http://localhost:8001/static/files/2.csv"
-        // src="http://localhost:8001/static/files/3.txt"
-        // src="http://localhost:8001/static/files/4.doc"
-        // src="http://localhost:8001/static/files/5.ppt"
-      ></iframe>
-    </>
-  );
-}
-
-type IMessage = API.MessageType;
-const messageInit: IMessage = {
+const messageInit: API.MessageType = {
   key: -1,
   sender: 'user',
   text: '',
 };
 // 在 ChatPage 组件中使用这些子组件
 const ChatPage: React.FC = () => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [inputValue, setInputValue] = useState<IMessage>(messageInit);
+  const [messages, setMessages] = useState<API.MessageType[]>([]);
+  const [inputValue, setInputValue] = useState<API.MessageType>(messageInit);
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
   const [flush, setFlush] = useState<boolean>(false);
   const [dialogs, setDialogs] = useState<API.DialogListItem[]>([]);
@@ -248,7 +39,6 @@ const ChatPage: React.FC = () => {
     name: '',
   });
   const [recommendations, setRecommendations] = useState<string[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     let chatBox = document.getElementById('dialogList');
@@ -260,8 +50,7 @@ const ChatPage: React.FC = () => {
   useEffect(scrollToBottom, [messages]); // 当 messages 发生变化时，滚动到底部
 
   useEffect(() => {
-    // 这是一个假设的函数，你应该替换为你的实际函数
-    myGetRecommendedInput({ text: inputValue.text }).then((res) => {
+    myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
       console.log(res);
       setRecommendations(res.data);
     });
@@ -307,7 +96,8 @@ const ChatPage: React.FC = () => {
   useEffect(() => {
     if (currentDialogKey !== null && currentDialogKey !== -1) {
       setSelectedRecommendation('');
-
+      setMessages([]);
+      setInputValue(messageInit);
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
         if (res.status === 1) {
           setMessages(res.data);
@@ -347,59 +137,68 @@ const ChatPage: React.FC = () => {
   // 输入框改变时的处理函数
   const handleChange = (e: string) => {
     console.log(e);
-    const value: IMessage = { key: -1, sender: 'user', text: e };
+    const value: API.MessageType = { key: -2, sender: 'user', text: e };
     setInputValue(value);
   };
 
   // 发送消息
   const handleSend = async () => {
-    if (currentDialogKey === -1 || currentDialogKey === null) {
+    if (currentDialogKey === null || currentDialogKey === -1) {
       message.warning('请选择知识库');
       return;
     }
     if (inputValue.text !== '') {
+      //TODO: 有bug，加入message的消息(inputValue)需要有真实的key，而不是-1
       setMessages([...messages, inputValue, { key: -1, sender: 'bot', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text }) as Promise<
-            IReturn<API.MessageType>
+            IReturn<API.sendMessageType>
           >,
           new Promise(
             (_, reject) => setTimeout(() => reject(new Error('请求超时')), 5000), // 5秒超时
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
-          const setMessageBackFunc = debounce(
-            () =>
-              setMessages((prevMessages) => {
-                // 替换最后一条消息
-                const newMessages = [...prevMessages];
-                newMessages[newMessages.length - 1] = {
-                  key: res.data.key,
-                  sender: 'bot',
-                  text: res.data.text,
-                  recommend: res.data.recommend,
-                };
-                return newMessages;
-              }),
-            1000,
-          );
-          setMessageBackFunc();
+          const setMessageBackFunc = debounce(() => {
+            const prevMessages = [...messages];
+            prevMessages.slice(0, -2);
+            prevMessages.push({
+              key: res.data.userMsgKey,
+              sender: 'user',
+              text: inputValue.text,
+            });
+            // 替换最后一条消息
+            prevMessages.push({
+              key: res.data.reply.key,
+              sender: 'bot',
+              text: res.data.reply.text,
+              recommend: res.data.reply.recommend,
+            });
+            setMessages(prevMessages);
+          }, 500);
+          await setMessageBackFunc();
           setInputValue(messageInit);
         } else {
-          setMessages((prevMessages) => {
-            // 删除最后两条消息
-            return prevMessages.slice(0, -2);
-          });
+          debounce(() => {
+            setInputValue(() => inputValue || messageInit);
+            setMessages((prevMessages) => {
+              // 删除最后两条消息
+              return prevMessages.slice(0, -2);
+            });
+          }, 1000)();
           message.error('发送失败,请重试！');
         }
       } catch (error) {
         console.error(error);
-        setMessages((prevMessages) => {
-          // 删除最后一条消息
-          return prevMessages.slice(0, -1);
-        });
-        message.error('获取回复失败');
+        debounce(() => {
+          setInputValue(() =>inputValue || messageInit);
+          setMessages((prevMessages) => {
+            // 删除最后两条消息
+            return prevMessages.slice(0, -2);
+          });
+        }, 1000)();
+        message.error('发送失败，请重试');
       }
     }
   };
@@ -469,7 +268,7 @@ const ChatPage: React.FC = () => {
                   }}
                 >
                   <MessageList
-                    messages={messages}
+                    messageList={messages}
                     handleDeleteMessage={handleDeleteMessage}
                     handleRecommendationClick={handleRecommendationClick}
                   />
@@ -477,7 +276,7 @@ const ChatPage: React.FC = () => {
                     <div
                       style={{
                         // marginTop: '10vh',
-                        top: 0,
+                        height: '7vh',
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'space-between',

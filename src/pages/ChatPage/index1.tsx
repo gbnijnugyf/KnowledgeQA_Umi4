@@ -17,7 +17,7 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { AutoComplete, Avatar, Button, Card, Dropdown, List, Menu, Tooltip, message } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { DelDialogModal } from './components/DelDialog';
 import { EditDialogModal } from './components/EditDialog';
@@ -49,13 +49,13 @@ const ChatPage: React.FC = () => {
     if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-  }
+  };
 
   useEffect(scrollToBottom, [messages]); // 当 messages 发生变化时，滚动到底部
 
   useEffect(() => {
     // 这是一个假设的函数，你应该替换为你的实际函数
-    myGetRecommendedInput({ text: inputValue.text }).then((res) => {
+    myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
       console.log(res);
       setRecommendations(res.data);
     });
@@ -154,7 +154,7 @@ const ChatPage: React.FC = () => {
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text }) as Promise<
-            IReturn<API.MessageType>
+            IReturn<API.sendMessageType>
           >,
           new Promise(
             (_, reject) => setTimeout(() => reject(new Error('请求超时')), 5000), // 5秒超时
@@ -167,10 +167,10 @@ const ChatPage: React.FC = () => {
                 // 替换最后一条消息
                 const newMessages = [...prevMessages];
                 newMessages[newMessages.length - 1] = {
-                  key: res.data.key,
+                  key: res.data.reply.key,
                   sender: 'bot',
-                  text: res.data.text,
-                  recommend: res.data.recommend,
+                  text: res.data.reply.text,
+                  recommend: res.data.reply.recommend,
                 };
                 return newMessages;
               }),
@@ -399,7 +399,7 @@ const ChatPage: React.FC = () => {
                         }}
                         style={{ marginRight: '8px', flex: 1 }}
                       />
-                      <Button type="primary" onClick={handleSend} >
+                      <Button type="primary" onClick={handleSend}>
                         发送
                       </Button>
                     </div>

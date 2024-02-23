@@ -233,7 +233,7 @@ export async function getHistoryMessage(
 
 /** 发送消息 POST */
 export async function sendMessage(body: API.SendMessageBody, options?: { [key: string]: any }) {
-  return request<IReturn<API.MessageType>>(BASEURL + '/sendMessage', {
+  return request<IReturn<API.sendMessageType>>(BASEURL + '/sendMessage', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -354,10 +354,11 @@ export async function deleteDialog(key: number, options?: { [key: string]: any }
 
 /** 编辑对话名称 */ //暂未实现
 
-/** 用户输入前 /getRecommendedInput */
+/** 用户输入前获取推荐输入 /getRecommendedInput */
 export async function myGetRecommendedInput(
   params: {
     // query
+    key:number;
     text: string;
   },
   options?: { [key: string]: any },
