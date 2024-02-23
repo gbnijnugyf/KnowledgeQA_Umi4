@@ -8,7 +8,6 @@ import { NewKnowledgeBaseForm } from './components/NewForm';
 import { ITableRequest, TableList } from './components/TableList';
 import { FormValueType, UpdateForm } from './components/UpdateForm';
 import { KnowledgeBase } from './tableData';
-import { API } from '@/services/ant-design-pro/typings';
 
 const TableForm: React.FC = () => {
   /**
