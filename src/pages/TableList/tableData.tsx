@@ -108,22 +108,22 @@ export const KnowledgeBaseFile = {
         title: '文件类型',
         dataIndex: 'type',
       },
-      {
-        title: '可见性',
-        dataIndex: 'status',
-        hideInForm: true,
-        onFilter: true,
-        valueEnum: {
-          0: {
-            text: '不可见',
-            status: 'Default',
-          },
-          1: {
-            text: '可见',
-            status: 'success',
-          },
-        },
-      },
+      // {
+      //   title: '可见性',
+      //   dataIndex: 'status',
+      //   hideInForm: true,
+      //   onFilter: true,
+      //   valueEnum: {
+      //     0: {
+      //       text: '不可见',
+      //       status: 'Default',
+      //     },
+      //     1: {
+      //       text: '可见',
+      //       status: 'success',
+      //     },
+      //   },
+      // },
       {
         title: '上传时间',
         sorter: true,

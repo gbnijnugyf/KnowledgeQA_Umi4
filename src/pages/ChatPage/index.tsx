@@ -34,6 +34,7 @@ const ChatPage: React.FC = () => {
   const [currentDialogKey, setCurrentDialogKey] = useState<number | null>(null);
   const [deleteDialogModal, setDeleteDialogModal] = useState<boolean>(false);
   const [editDialogModal, setEditDialogModal] = useState<boolean>(false);
+  const [menuDisplay, setMenuDisplay] = useState<boolean>(true);
   const [operateDialogKey, setOperateDialogKey] = useState<{ key: number; name: string }>({
     key: -1,
     name: '',
@@ -119,6 +120,12 @@ const ChatPage: React.FC = () => {
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
+  const handleHideMenu = () => {
+    setMenuDisplay(false);
+  };
+  const handleOpenMenu = () => {
+    setMenuDisplay(true);
+  };
 
   // 删除某条消息
   const handleDeleteMessage = (key: number) => {
@@ -192,7 +199,7 @@ const ChatPage: React.FC = () => {
       } catch (error) {
         console.error(error);
         debounce(() => {
-          setInputValue(() =>inputValue || messageInit);
+          setInputValue(() => inputValue || messageInit);
           setMessages((prevMessages) => {
             // 删除最后两条消息
             return prevMessages.slice(0, -2);
@@ -223,31 +230,41 @@ const ChatPage: React.FC = () => {
                   : dialogs.find((i) => i.key === currentDialogKey)?.name}
               </div>
             </div>
-            {selectedRecommendation !== '' ? (
-              <Button onClick={handleHidePreview}>关闭预览</Button>
-            ) : null}
+            <div>
+              {menuDisplay === true ? (
+                <Button onClick={handleHideMenu}>隐藏菜单</Button>
+              ) : (
+                <Button onClick={handleOpenMenu}>显示菜单</Button>
+              )}
+              {selectedRecommendation !== '' ? (
+                <Button onClick={handleHidePreview}>关闭预览</Button>
+              ) : null}
+            </div>
           </div>
         }
         style={{
           width: '100%',
           margin: '0',
-          height: '71vh',
+          height: '75vh',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        {' '}
         <div style={{ display: 'flex', height: '100%' }}>
           {/* 对话框列表 */}
-          <div style={{ width: '20%', marginRight: '0.5%', overflowY: 'auto', maxHeight: '71vh' }}>
-            <DialogList
-              dialogs={dialogs}
-              currentDialogKey={currentDialogKey}
-              handleDialogClick={handleDialogClick}
-              handleDeleteDialog={handleDeleteDialog}
-              handleEditDialog={handleEditDialog}
-            />
-          </div>
+          {menuDisplay === true ? (
+            <div
+              style={{ width: '20vw', marginRight: '0.5%', overflowY: 'auto', maxHeight: '71vh' }}
+            >
+              <DialogList
+                dialogs={dialogs}
+                currentDialogKey={currentDialogKey}
+                handleDialogClick={handleDialogClick}
+                handleDeleteDialog={handleDeleteDialog}
+                handleEditDialog={handleEditDialog}
+              />
+            </div>
+          ) : null}
           {currentDialogKey !== -1 && currentDialogKey !== null ? (
             <>
               <div
@@ -265,6 +282,7 @@ const ChatPage: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    overflowX:'hidden'
                   }}
                 >
                   <MessageList
