@@ -96,10 +96,10 @@ const KnowledgeGraph: React.FC = () => {
               {location.pathname!=='/graph'?<SelectTtile<number> setKey={setKnowledgeBaseKey} />:<div>{record.name}</div>}
             </div>
             <div>
-              <Button onClick={handleAddNode}>添加节点</Button>
-              <Button onClick={handleDeleteNode}>删除节点</Button>
+              {/* <Button onClick={handleAddNode}>添加节点</Button>
+              <Button onClick={handleDeleteNode}>删除节点</Button> */}
               {selectedNode !== undefined ? (
-                <Button onClick={handleHideEdit}>关闭编辑</Button>
+                <Button onClick={handleHideEdit}>关闭描述</Button>
               ) : null}
             </div>
           </div>
