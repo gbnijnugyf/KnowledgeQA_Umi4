@@ -90,19 +90,19 @@ export function Graph(props: IGraphProps) {
   });
 
   function deleteLink(l: dLink) {
-    const link_1: string = buildLinkString(l)
-    const link_2: string = buildLinkString(l,true)
+    const link_1: string = buildLinkString(l);
+    const link_2: string = buildLinkString(l, true);
     if (hiddenLinks.has(link_1)) {
-      hiddenLinks.delete(link_1)
+      hiddenLinks.delete(link_1);
     } else if (hiddenLinks.has(link_2)) {
-      hiddenLinks.delete(link_2)
+      hiddenLinks.delete(link_2);
     }
   }
   // 构建边的字符串
-  function buildLinkString(l: dLink, reverse:boolean = false) {
+  function buildLinkString(l: dLink, reverse: boolean = false) {
     const link_string: dLink_ = {
-      source_id: reverse?l.target.id:l.source.id,
-      target_id: reverse?l.source.id:l.target.id,
+      source_id: reverse ? l.target.id : l.source.id,
+      target_id: reverse ? l.source.id : l.target.id,
       weight: l.weight,
       name: l.name,
     };
@@ -130,44 +130,98 @@ export function Graph(props: IGraphProps) {
     const container_ = svg.append('g');
 
     // 更新图形的函数
+    // function updateGraphByZoom(scaleLevel: number) {
+    //   currentScale.current = scaleLevel; // 更新当前的缩放级别
+    //   // 根据缩放级别决定显示或隐藏节点和边,组别从1开始
+    //   node
+    //     .style('display', (d: dNode) => {
+    //       // TODO: 更新隐藏的节点和边——通过Zoom显示的结点和边也要从hidden集合中删除
+    //       if (d.group <= scaleLevel) {
+    //         if (hiddenNodes.has(d.id)) {
+    //           hiddenNodes.delete(node);
+    //         }
+    //         return 'inline';
+    //       } else {
+    //         hiddenNodes.add(node);
+    //         return 'none';
+    //       }
+    //     })
+    //     .attr('r', (d: dNode) => d.weight * (2 / scaleLevel));
+    //   // 更新 forceManyBody 力的强度
+    //   simulation.force('charge', d3.forceManyBody().strength(-30 * scaleLevel));
+    //   nodeText
+    //     .style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'))
+    //     .style('font-size', (d: dNode) => `${d.weight * (1 / scaleLevel)}px`);
+
+    //   // nodeFold.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
+    //   link
+    //     .style('display', (l: dLink) => {
+    //       if (l.source.group <= scaleLevel && l.target.group <= scaleLevel) {
+    //         // deleteLink(l);
+    //         return 'inline';
+    //       } else {
+    //         return 'none';
+    //       }
+    //     })
+    //     .attr('stroke-width', (d: dLink) => Math.sqrt(1 / scaleLevel));
+    // }
+    // 更新图形的函数
     function updateGraphByZoom(scaleLevel: number) {
-      currentScale.current = scaleLevel; // 更新当前的缩放级别
+      // 更新当前的缩放级别
+      currentScale.current = scaleLevel;
+      // 更新 forceManyBody 力的强度
+      // 这里我们使用 1/scaleLevel 作为比例因子，因此当 scaleLevel 增大时，力的强度（即节点间的距离）会减小
+      simulation.force('charge', d3.forceManyBody().strength(-50 / scaleLevel));
+      // 更新箭头大小，使用 1/scaleLevel 作为比例因子
+      d3.selectAll('marker')
+        .attr('markerWidth', 15 / scaleLevel)
+        .attr('markerHeight', 15 / scaleLevel);
       // 根据缩放级别决定显示或隐藏节点和边,组别从1开始
-      node.style('display', (d: dNode) => {
-        // TODO: 更新隐藏的节点和边——通过Zoom显示的结点和边也要从hidden集合中删除
-        if (d.group <= scaleLevel) {
-          if (hiddenNodes.has(d.id)) {
-            hiddenNodes.delete(node);
+      node
+        .style('display', (d: dNode) => {
+          // TODO: 更新隐藏的节点和边——通过Zoom显示的结点和边也要从hidden集合中删除
+          if (d.group <= scaleLevel) {
+            if (hiddenNodes.has(d.id)) {
+              hiddenNodes.delete(node);
+            }
+            return 'inline';
+          } else {
+            hiddenNodes.add(node);
+            return 'none';
           }
-          return 'inline';
-        } else {
-          hiddenNodes.add(node);
-          return 'none';
-        }
-      });
-      nodeText.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
-      nodeFold.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
-      link.style('display', (l: dLink) => {
-        if (l.source.group <= scaleLevel && l.target.group <= scaleLevel) {
-          // deleteLink(l);
-          return 'inline';
-        } else {
-          return 'none';
-        }
-      });
+        })
+        // 更新节点大小，使用 1/scaleLevel 作为比例因子
+        .attr('r', (d: dNode) => d.weight * (3 / scaleLevel));
+
+      nodeText
+        .style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'))
+        // 更新字体大小，使用 1/scaleLevel 作为比例因子
+        .style('font-size', (d: dNode) => `${d.weight * (3 / scaleLevel)}px`);
+
+      // nodeFold.style('display', (d: dNode) => (d.group <= scaleLevel ? 'inline' : 'none'));
+      link
+        .style('display', (l: dLink) => {
+          if (l.source.group <= scaleLevel && l.target.group <= scaleLevel) {
+            // deleteLink(l);
+            return 'inline';
+          } else {
+            return 'none';
+          }
+        })
+        // 更新边的粗细，使用 1/scaleLevel 作为比例因子
+        .attr('stroke-width', (d: dLink) => scaleLevel===10?0.01:scaleLevel>5?0.3:Math.sqrt(d.weight));
     }
+
     function updateGraphByClick() {
-      nodeFold.style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline'));
+      // nodeFold.style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline'));
       nodeText.style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline'));
       node.style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline'));
       link.style('display', (l: dLink) => {
-        const link_1: string = buildLinkString(l)
-        const link_2: string = buildLinkString(l,true)
+        const link_1: string = buildLinkString(l);
+        const link_2: string = buildLinkString(l, true);
         console.log('hiddenLinks:', hiddenLinks);
         console.log('link_1:', link_1);
-        return hiddenLinks.has(link_1) || hiddenLinks.has(link_2)
-          ? 'none'
-          : 'inline';
+        return hiddenLinks.has(link_1) || hiddenLinks.has(link_2) ? 'none' : 'inline';
       }); // 根据隐藏的边设置显示或隐藏
     }
     // 创建一个缩放行为
@@ -181,7 +235,7 @@ export function Graph(props: IGraphProps) {
         // let scaleLevel = Math.floor(event.transform.k);
         let scaleLevel = event.transform.k * 4;
         console.log('scaleLevel:', scaleLevel);
-        // currentScale.current === scaleLevel ? null : updateGraphByZoom(scaleLevel);
+        currentScale.current === scaleLevel ? null : updateGraphByZoom(scaleLevel);
       });
 
     svg.call(zoom);
@@ -294,11 +348,9 @@ export function Graph(props: IGraphProps) {
       .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight))
       .attr('marker-end', 'url(#end)')
       .style('display', (l: dLink) => {
-        const link_1: string = buildLinkString(l)
-        const link_2: string = buildLinkString(l,true)
-        return hiddenLinks.has(link_1) || hiddenLinks.has(link_2)
-          ? 'none'
-          : 'inline';
+        const link_1: string = buildLinkString(l);
+        const link_2: string = buildLinkString(l, true);
+        return hiddenLinks.has(link_1) || hiddenLinks.has(link_2) ? 'none' : 'inline';
       }); // 根据隐藏的边设置显示或隐藏
 
     const nodeText = container_
@@ -310,62 +362,63 @@ export function Graph(props: IGraphProps) {
       .text((d: dNode) => d.name)
       .attr('fill', () => props.color)
       .style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline'))
+      .style('font-size', (d: dNode) => `${d.weight}px`)
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
         // console.log(event, d)
         console.log(`Node ${d.id} was clicked.`);
       });
 
-    const nodeFold = container_
-      .append('g')
-      .selectAll('text')
-      .data(nodeHandle)
-      .join('text')
-      .text(() => '...')
-      .attr('fill', () => props.color)
-      .style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline')) // 根据隐藏的节点设置显示或隐藏
-      // 在点击图标时，更新节点和边的显示状态
-      .on('click', function (this: any, _event: any, d: dNode) {
-        // 找出所有邻接点
-        const adjacentNodes = linkHandle
-          .filter((l: dLink) => l.source === d || l.target === d)
-          .map((l: dLink) => (l.source === d ? l.target : l.source));
+    // const nodeFold = container_
+    //   .append('g')
+    //   .selectAll('text')
+    //   .data(nodeHandle)
+    //   .join('text')
+    //   .text(() => '...')
+    //   .attr('fill', () => props.color)
+    //   .style('display', (d: dNode) => (hiddenNodes.has(d.id) ? 'none' : 'inline')) // 根据隐藏的节点设置显示或隐藏
+    //   // 在点击图标时，更新节点和边的显示状态
+    //   .on('click', function (this: any, _event: any, d: dNode) {
+    //     // 找出所有邻接点
+    //     const adjacentNodes = linkHandle
+    //       .filter((l: dLink) => l.source === d || l.target === d)
+    //       .map((l: dLink) => (l.source === d ? l.target : l.source));
 
-        console.log('adjacentNodes:', adjacentNodes);
-        if (d3.select(this).text() === '...') {
-          adjacentNodes.forEach((node: dNode) => {
-            if (hiddenNodes.has(node.id)) {
-              hiddenNodes.delete(node.id);
-            }
-            if (hiddenNodes.has(d.id)) {
-              hiddenNodes.delete(d.id);
-            }
-          });
-          linkHandle.forEach((l: dLink) => {
-            if (l.source === d || l.target === d) {
-              deleteLink(l);
-            }
-          });
-          d3.select(this).text(() => 'fold');
-        } else {
-          adjacentNodes.forEach((node: dNode) => {
-            if (!hiddenNodes.has(node.id)) {
-              hiddenNodes.add(node.id);
-            }
-          });
-          linkHandle.forEach((l: dLink) => {
-            if (l.source === d || l.target === d) {
-              const link_: string = buildLinkString(l)
-              hiddenLinks.add(link_);
-            }
-          });
-          d3.select(this).text(() => '...');
-        }
-        updateGraphByClick();
-      })
-      .on('mouseover', function (this: any, _event: any, _d: dNode) {
-        d3.select(this).style('cursor', 'pointer');
-      });
+    //     console.log('adjacentNodes:', adjacentNodes);
+    //     if (d3.select(this).text() === '...') {
+    //       adjacentNodes.forEach((node: dNode) => {
+    //         if (hiddenNodes.has(node.id)) {
+    //           hiddenNodes.delete(node.id);
+    //         }
+    //         if (hiddenNodes.has(d.id)) {
+    //           hiddenNodes.delete(d.id);
+    //         }
+    //       });
+    //       linkHandle.forEach((l: dLink) => {
+    //         if (l.source === d || l.target === d) {
+    //           deleteLink(l);
+    //         }
+    //       });
+    //       d3.select(this).text(() => 'fold');
+    //     } else {
+    //       adjacentNodes.forEach((node: dNode) => {
+    //         if (!hiddenNodes.has(node.id)) {
+    //           hiddenNodes.add(node.id);
+    //         }
+    //       });
+    //       linkHandle.forEach((l: dLink) => {
+    //         if (l.source === d || l.target === d) {
+    //           const link_: string = buildLinkString(l)
+    //           hiddenLinks.add(link_);
+    //         }
+    //       });
+    //       d3.select(this).text(() => '...');
+    //     }
+    //     updateGraphByClick();
+    //   })
+    //   .on('mouseover', function (this: any, _event: any, _d: dNode) {
+    //     d3.select(this).style('cursor', 'pointer');
+    //   });
 
     simulation.on('tick', () => {
       link
@@ -381,7 +434,7 @@ export function Graph(props: IGraphProps) {
       node.attr('cx', (d: dNode) => d.x).attr('cy', (d: dNode) => d.y);
 
       nodeText.attr('x', (d: dNode) => d.x).attr('y', (d: dNode) => d.y);
-      nodeFold.attr('x', (d: dNode) => (d.x || 0) - 10).attr('y', (d: dNode) => (d.y || 0) + 14);
+      // nodeFold.attr('x', (d: dNode) => (d.x || 0) - 10).attr('y', (d: dNode) => (d.y || 0) + 14);
     });
     // 设置初始缩放级别为3
     zoom.scaleTo(svg, 0.25);
