@@ -7,7 +7,9 @@ import {
 } from '@/services/ant-design-pro/api';
 import { IReturn } from '@/services/plugin/globalInter';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, message } from 'antd';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
+import { Breadcrumb, Button, Card, message } from 'antd';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { DelDialogModal } from './components/DelDialog';
@@ -40,6 +42,12 @@ const ChatPage: React.FC = () => {
     name: '',
   });
   const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [breadItems, setBreadItems] = useState<Array<{ title: string; path?: string }>>([
+    {
+      path: '/chat',
+      title: '问答',
+    },
+  ]);
 
   const scrollToBottom = () => {
     let chatBox = document.getElementById('dialogList');
@@ -95,6 +103,14 @@ const ChatPage: React.FC = () => {
 
   // 当前对话框改变时，获取对应的对话内容
   useEffect(() => {
+    console.log('currentDialogKey:', currentDialogKey);
+    const title = `${
+      currentDialogKey === null || currentDialogKey === -1
+        ? '新建对话'
+        : dialogs.find((i) => i.key === currentDialogKey)?.name
+    }`;
+    setBreadItems((prev) => [prev[0], { title: title }]);
+
     if (currentDialogKey !== null && currentDialogKey !== -1) {
       setSelectedRecommendation('');
       setMessages([]);
@@ -120,12 +136,12 @@ const ChatPage: React.FC = () => {
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
-  const handleHideMenu = () => {
-    setMenuDisplay(false);
-  };
-  const handleOpenMenu = () => {
-    setMenuDisplay(true);
-  };
+  // const handleHideMenu = () => {
+  //   setMenuDisplay(false);
+  // };
+  // const handleOpenMenu = () => {
+  //   setMenuDisplay(true);
+  // };
 
   // 删除某条消息
   const handleDeleteMessage = (key: number) => {
@@ -209,8 +225,13 @@ const ChatPage: React.FC = () => {
       }
     }
   };
+
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        title: null,
+      }}
+    >
       <Card
         title={
           <div
@@ -223,19 +244,15 @@ const ChatPage: React.FC = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <div style={{ marginRight: '1%' }}>
-                {currentDialogKey === null
-                  ? '请选择对话'
-                  : currentDialogKey === -1
-                  ? '新建对话'
-                  : dialogs.find((i) => i.key === currentDialogKey)?.name}
+                <Breadcrumb style={{ width: '20vw' }} items={breadItems} />
               </div>
             </div>
             <div>
-              {menuDisplay === true ? (
+              {/* {menuDisplay === true ? (
                 <Button onClick={handleHideMenu}>隐藏菜单</Button>
               ) : (
                 <Button onClick={handleOpenMenu}>显示菜单</Button>
-              )}
+              )} */}
               {selectedRecommendation !== '' ? (
                 <Button onClick={handleHidePreview}>关闭预览</Button>
               ) : null}
@@ -245,17 +262,18 @@ const ChatPage: React.FC = () => {
         style={{
           width: '100%',
           margin: '0',
-          height: '75vh',
+          height: '86vh',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <div style={{ display: 'flex', height: '100%' }}>
-          {/* 对话框列表 */}
-          {menuDisplay === true ? (
-            <div
-              style={{ width: '20vw', marginRight: '0.5%', overflowY: 'auto', maxHeight: '71vh' }}
-            >
+        <div style={{ display: 'flex', height: '74vh' }}>
+          <Allotment defaultSizes={[600, 2000]} >
+            {/* 对话框列表 */}
+            {menuDisplay === true ? (
+              // <div
+              //   style={{ width: '20vw', marginRight: '0.5%', overflowY: 'auto', maxHeight: '71vh' }}
+              // >
               <DialogList
                 dialogs={dialogs}
                 currentDialogKey={currentDialogKey}
@@ -263,75 +281,76 @@ const ChatPage: React.FC = () => {
                 handleDeleteDialog={handleDeleteDialog}
                 handleEditDialog={handleEditDialog}
               />
-            </div>
-          ) : null}
-          {currentDialogKey !== -1 && currentDialogKey !== null ? (
-            <>
-              <div
-                style={{
-                  position: 'relative',
-                  flex: selectedRecommendation ? 1 : 2,
-                  overflowY: 'auto',
-                  height: '59vh',
-                  width: '100%',
-                }}
-              >
+            ) : // </div>
+            null}
+            {currentDialogKey !== -1 && currentDialogKey !== null ? (
+              <div style={{display:'flex',flexDirection:'row', marginLeft:'1vw'}}>
                 <div
                   style={{
-                    height: '59vh',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    overflowX:'hidden'
+                    position: 'relative',
+                    flex: selectedRecommendation ? 1 : 2,
+                    overflowY: 'auto',
+                    height: '70vh',
+                    width: '100%',
                   }}
                 >
-                  <MessageList
-                    messageList={messages}
-                    handleDeleteMessage={handleDeleteMessage}
-                    handleRecommendationClick={handleRecommendationClick}
-                  />
-                  {currentDialogKey !== -1 && currentDialogKey !== null ? (
-                    <div
-                      style={{
-                        // marginTop: '10vh',
-                        height: '7vh',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <MessageInput
-                        inputValue={inputValue}
-                        recommendations={recommendations}
-                        handleChange={handleChange}
-                        handleSend={handleSend}
-                      />
-                    </div>
-                  ) : null}
+                  <div
+                    style={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      overflowX: 'hidden',
+                    }}
+                  >
+                    <MessageList
+                      messageList={messages}
+                      handleDeleteMessage={handleDeleteMessage}
+                      handleRecommendationClick={handleRecommendationClick}
+                    />
+                    {currentDialogKey !== -1 && currentDialogKey !== null ? (
+                      <div
+                        style={{
+                          // marginTop: '10vh',
+                          height: '7vh',
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <MessageInput
+                          inputValue={inputValue}
+                          recommendations={recommendations}
+                          handleChange={handleChange}
+                          handleSend={handleSend}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
+                {selectedRecommendation && (
+                  <div style={{ flex: 1 }}>
+                    <RecommendationPreview
+                      selectedRecommendation={selectedRecommendation}
+                      handleHidePreview={handleHidePreview}
+                    />
+                  </div>
+                )}
               </div>
-              {selectedRecommendation && (
-                <div style={{ flex: 1 }}>
-                  <RecommendationPreview
-                    selectedRecommendation={selectedRecommendation}
-                    handleHidePreview={handleHidePreview}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <div
-              style={{
-                height: '100%',
-                width: '80%',
-                justifyContent: 'center',
-                display: 'flex',
-                overflow: 'hidden',
-              }}
-            >
-              <NewDialogPage onFlush={{ set: setFlush, value: flush }} />
-            </div>
-          )}
+            ) : (
+              <div
+                style={{
+                  height: '100%',
+                  width: '80%',
+                  justifyContent: 'center',
+                  display: 'flex',
+                  overflowY: 'hidden',
+                }}
+              >
+                <NewDialogPage onFlush={{ set: setFlush, value: flush }} />
+              </div>
+            )}
+          </Allotment>
         </div>
       </Card>
       <DelDialogModal
