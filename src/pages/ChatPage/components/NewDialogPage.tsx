@@ -57,10 +57,12 @@ export function NewDialogPage(props: INewFormProps) {
       onFinish={onSubmit}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
+      <h2>新建对话</h2>
+
       <ProFormText
         name="name"
         label="对话名称"
-        width="md"
+        // width="md"
         rules={[
           {
             required: true,
@@ -78,7 +80,7 @@ export function NewDialogPage(props: INewFormProps) {
           },
         ]}
       >
-        <SelectTtile<number[]> mode="multiple" width={325} placeholder="创建后不可修改！" />
+        <SelectTtile<number[]> mode="multiple" placeholder="创建后不可修改！" />
       </ProFormItem>
     </ProForm>
   );

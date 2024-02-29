@@ -2,12 +2,12 @@ import { myGetGraph } from '@/services/ant-design-pro/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { useLocation, useModel } from '@umijs/max';
 import { Button, Card } from 'antd';
+import { parse } from 'querystring';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
 import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Edit } from './components/Edit';
 import { Graph, dLink, dLink_, dNode } from './components/Graph';
-import { parse } from 'querystring';
 
 export type SelectNodeType = {
   sNode: dNode;
@@ -32,7 +32,9 @@ const KnowledgeGraph: React.FC = () => {
   const location = useLocation();
   const record = parse(location.search.substring(1));
 
-  const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(record.key?parseInt(record.key as string):-1);
+  const [knowledgeBaseKey, setKnowledgeBaseKey] = useState<number>(
+    record.key ? parseInt(record.key as string) : -1,
+  );
   const [graphInfo, setGraphInfo] = useState<API.Graph>({
     nodes: nodesInit,
     links: linksInit,
@@ -80,7 +82,11 @@ const KnowledgeGraph: React.FC = () => {
   }, [knowledgeBaseKey]);
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        title: null,
+      }}
+    >
       <Card
         title={
           <div
@@ -93,7 +99,11 @@ const KnowledgeGraph: React.FC = () => {
           >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <div style={{ marginRight: '1%' }}>选择知识库:</div>
-              {location.pathname!=='/graph'?<SelectTtile<number> setKey={setKnowledgeBaseKey} />:<div>{record.name}</div>}
+              {location.pathname !== '/graph' ? (
+                <SelectTtile<number> setKey={setKnowledgeBaseKey} />
+              ) : (
+                <div>{record.name}</div>
+              )}
             </div>
             <div>
               {/* <Button onClick={handleAddNode}>添加节点</Button>
@@ -113,8 +123,8 @@ const KnowledgeGraph: React.FC = () => {
               nodes={graphInfo.nodes}
               links={graphInfo.links}
               select={handleNodeClick}
-              width={location.pathname==='/graph'?1300:800}
-              height={location.pathname==='/graph'?700:580}
+              width={location.pathname === '/graph' ? 1300 : 800}
+              height={location.pathname === '/graph' ? 700 : 580}
             />
           </div>
           {selectedNode && (

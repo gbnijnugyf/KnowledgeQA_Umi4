@@ -1,5 +1,7 @@
 import { EllipsisOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
+import { throttle } from 'lodash';
+import { CSSProperties, Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 
 // 定义 DialogList 组件的 props 类型
 interface DialogListProps {
@@ -21,7 +23,7 @@ export function DialogList({
   return (
     <Menu
       onClick={({ key }: { key: string }) => handleDialogClick(Number(key))}
-      style={{ width: '100%' }}
+      style={{ width: '100%' , borderRight: 'none'}}
       mode="inline"
     >
       {dialogs.map((dialog) => (

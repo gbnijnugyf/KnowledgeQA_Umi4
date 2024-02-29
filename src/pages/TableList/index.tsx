@@ -80,7 +80,9 @@ const TableForm: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer header={{
+      title:null
+    }}>
       <TableList
         component={{
           NewForm: NewKnowledgeBaseForm,

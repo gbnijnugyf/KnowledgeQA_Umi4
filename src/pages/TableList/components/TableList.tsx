@@ -10,7 +10,6 @@ import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
 import { INewFormProps } from './NewForm';
 import type { FormValueType, IUpdateFormProps } from './UpdateForm';
-import { API } from '@/services/ant-design-pro/typings';
 
 /**
  * @en-US Add node
@@ -103,14 +102,16 @@ export function TableList(props: ITableList) {
   return (
     <>
       <ProTable<API.KnowledgeBaseListItem, API.PageParams>
+        search={{
+          collapsed: false,
+          collapseRender: () => false,
+          labelWidth: 'auto',
+        }}
         style={{ userSelect: 'none' }}
         headerTitle={props.data.title}
         tableAlertRender={false}
         actionRef={props.hooks.ref}
         rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
         toolBarRender={() => [
           props.hooks.openCreate === undefined || props.component.NewForm === undefined ? null : (
             <Button

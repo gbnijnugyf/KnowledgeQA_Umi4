@@ -195,16 +195,16 @@ function NodeEdit(props: {
     //     );
     //   },
     // },
-    {
-      title: 'operation',
-      dataIndex: 'operation',
-      render: (_: any, record: { key: React.Key }) =>
-        data.length >= 1 ? (
-          <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-            <a style={{cursor:'pointer'}}>删除边关系</a>
-          </Popconfirm>
-        ) : null,
-    },
+    // {
+    //   title: 'operation',
+    //   dataIndex: 'operation',
+    //   render: (_: any, record: { key: React.Key }) =>
+    //     data.length >= 1 ? (
+    //       <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+    //         <a style={{cursor:'pointer'}}>删除边关系</a>
+    //       </Popconfirm>
+    //     ) : null,
+    // },
   ];
 
   const mergedColumns = columns.map((col) => {
@@ -226,7 +226,7 @@ function NodeEdit(props: {
   return (
     <>
       <Form form={form} component={false}>
-        <Button onClick={handleAddLink}>添加边关系</Button>
+        {/* <Button onClick={handleAddLink}>添加边关系</Button> */}
         <Table
           components={{
             body: {
