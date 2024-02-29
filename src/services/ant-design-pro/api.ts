@@ -98,22 +98,22 @@ export async function myGetKnowledgeBaseList(
   });
 }
 /** 根据头部token信息验证用户身份，获取对应知识库列表 */
-export async function myGetKnowledgeBaseListPart(
-  params?: {
-    // query
-    /** 可能会使用id进行身份判断（仅根据token也行吧） */
-    id?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBasePart', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
+// export async function myGetKnowledgeBaseListPart(
+//   params?: {
+//     // query
+//     /** 可能会使用id进行身份判断（仅根据token也行吧） */
+//     id?: number;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBasePart', {
+//     method: 'GET',
+//     params: {
+//       ...params,
+//     },
+//     ...(options || {}),
+//   });
+// }
 /** 获取知识库具体信息 GET /getKnowledgeBaseFiles */
 export async function myGetKnowledgeBaseFiles(
   params: {
@@ -279,6 +279,7 @@ export async function myGetCourses(
     // query
     /** 获取场景 */
     option: number;
+    word?: string;
   },
   options?: { [key: string]: any },
 ) {

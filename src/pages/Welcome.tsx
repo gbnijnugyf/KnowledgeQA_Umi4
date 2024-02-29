@@ -3,6 +3,9 @@ import { useModel } from '@umijs/max';
 import { Card, theme } from 'antd';
 import React from 'react';
 import welComeBg from '../../public/welcomeBg.jpg';
+import { AddCourseDialog } from './Course/components/AddCourseDialog';
+import { CourseForm } from './Course/components/CourseForm';
+import { Search } from './Course/components/SearchCourse';
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -87,6 +90,14 @@ const InfoCard: React.FC<{
 const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
+  const [course, setCourse] = React.useState<API.KnowledgeBaseListItem>();
+  const [addCourseModal, setAddCourseModal] = React.useState<boolean>(false);
+
+  const myOnClick = (course: API.KnowledgeBaseListItem) => {
+    setCourse(course);
+    setAddCourseModal(true);
+  };
+
   return (
     <PageContainer>
       <Card
@@ -110,7 +121,7 @@ const Welcome: React.FC = () => {
         >
           <div
             style={{
-              fontSize: '20px',
+              fontSize: '150%',
               color: token.colorTextHeading,
             }}
           >
@@ -151,7 +162,28 @@ const Welcome: React.FC = () => {
             <InfoCard index={3} title="了解我们" href="http://cst.whut.edu.cn/" desc="" />
           </div>
         </div>
+        <div style={{ marginTop: '5vh', height: '35vh', overflow: 'auto' }}>
+          <div>
+            <div
+              style={{
+                fontSize: '150%',
+                color: token.colorTextHeading,
+              }}
+            >
+              加入你感兴趣的课程吧！
+              <Search myOnSeleted={myOnClick}/>
+            </div>
+          </div>
+          <CourseForm myOnClick={myOnClick} />
+        </div>
       </Card>
+      <AddCourseDialog
+        open={{
+          value: addCourseModal,
+          set: setAddCourseModal,
+        }}
+        course={course}
+      />
     </PageContainer>
   );
 };

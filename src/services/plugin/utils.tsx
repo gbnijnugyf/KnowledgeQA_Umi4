@@ -1,6 +1,6 @@
-import React from "react";
-import { MenuItem, RouteItem } from "./globalInter";
-import { Navigate } from "@umijs/max";
+import { Navigate } from '@umijs/max';
+import React from 'react';
+import { MenuItem, RouteItem } from './globalInter';
 
 export function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
@@ -10,9 +10,12 @@ export function getRandomInt(min: number, max: number): number {
 
 //防抖
 type ThisParameterType<T> = T extends (this: infer U, ...args: any[]) => any ? U : unknown;
-export function debounce<F extends (this: any, ...args: any[]) => any>(func: F, wait: number): (this: ThisParameterType<F>, ...args: Parameters<F>) => void {
+export function debounce<F extends (this: any, ...args: any[]) => any>(
+  func: F,
+  wait: number,
+): (this: ThisParameterType<F>, ...args: Parameters<F>) => void {
   let timeout: NodeJS.Timeout | null;
-  return function(this: ThisParameterType<F>, ...args: Parameters<F>) {
+  return function (this: ThisParameterType<F>, ...args: Parameters<F>) {
     const later = () => {
       timeout = null;
       func.apply(this, args);
@@ -24,20 +27,31 @@ export function debounce<F extends (this: any, ...args: any[]) => any>(func: F, 
   };
 }
 
+//将列表转换为一组columns个的二维数组
+export function convertTo2DArray<T>(arr: T[], columns: number): T[][] {
+  const result: T[][] = [];
+  const rows = Math.ceil(arr.length / columns);
 
+  for (let i = 0; i < rows; i++) {
+    const row = arr.slice(i * columns, (i + 1) * columns);
+    result.push(row);
+  }
 
-
+  return result;
+}
 
 export const loopMenuItem = (menus: MenuItem[], pId: number | string): RouteItem[] => {
   return menus.flatMap((item) => {
     let Component: React.ComponentType<any> | null = null;
     if (item.page) {
       // 防止配置了路由，但本地暂未添加对应的页面，产生的错误
-      Component = React.lazy(() => new Promise((resolve, reject) => {
-          import(`@/pages${item.page}`)
-              .then(module => resolve(module))
-              // .catch((error) => resolve(import(`../pages/404.tsx`)))
-      }))
+      Component = React.lazy(
+        () =>
+          new Promise((resolve, reject) => {
+            import(`@/pages${item.page}`).then((module) => resolve(module));
+            // .catch((error) => resolve(import(`../pages/404.tsx`)))
+          }),
+      );
     }
     if (item.children) {
       return [
@@ -52,10 +66,10 @@ export const loopMenuItem = (menus: MenuItem[], pId: number | string): RouteItem
               path: item.url,
               element: <Navigate to={item.children[0].url} replace />,
             },
-            ...loopMenuItem(item.children, item.menuID)
-          ]
-        }
-      ]
+            ...loopMenuItem(item.children, item.menuID),
+          ],
+        },
+      ];
     } else {
       return [
         {
@@ -64,14 +78,14 @@ export const loopMenuItem = (menus: MenuItem[], pId: number | string): RouteItem
           icon: item.icon,
           id: item.menuID,
           parentId: pId,
-          children:[],
+          children: [],
           element: (
             <React.Suspense fallback={<div>Loading...</div>}>
               {Component && <Component />}
             </React.Suspense>
-          )
-        }
-      ]
+          ),
+        },
+      ];
     }
-  })
-}
+  });
+};

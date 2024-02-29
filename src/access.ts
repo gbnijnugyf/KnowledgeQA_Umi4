@@ -7,6 +7,7 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
   const isAdmin = currentUser?.access === 'teacher';
   return {
     adminRoute: () => isAdmin,
+    studRoute: () => !isAdmin,
     // canAdmin: currentUser && currentUser.access === 'teacher',
   };
 }

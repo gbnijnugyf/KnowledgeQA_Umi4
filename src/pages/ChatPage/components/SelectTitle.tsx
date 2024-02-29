@@ -1,4 +1,4 @@
-import { myGetKnowledgeBaseListPart } from '@/services/ant-design-pro/api';
+import { myGetCourses } from '@/services/ant-design-pro/api';
 import { Select } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -37,9 +37,9 @@ export function SelectTtile<T extends number | Array<number>>(props: ISelectTtil
   const [options, setOptions] = useState<IOption[] | undefined>([]);
 
   useEffect(() => {
-    myGetKnowledgeBaseListPart().then((res) => {
+    myGetCourses({option:2}).then((res) => {
       console.log(res);
-      const data: IOption[] | undefined = res.data.data?.map((item) => {
+      const data: IOption[] | undefined = res.data.map((item) => {
         const temp: IOption = {
           value: item.key?.toString() as string,
           label: item.name as string,
