@@ -42,8 +42,22 @@ export default [
         path: '/admin/knowledgeBase',
         name: '课程管理',
         component: './TableList',
+        routes: [
+          //具体课程
+          // {
+          //   path: '/admin/knowledgeBase/:courseId',
+          //   name: '课程详情',
+          //   component: './CourseDetail',
+          //   hidinMenu: true,
+          // },
+        ]
       },
     ],
+  },
+  {
+    path: '/admin/knowledgeBase/:courseId',
+    component: './CourseDetail',
+    hidinMenu: true,
   },
   {
     name: '问答',
@@ -59,8 +73,6 @@ export default [
     component: './KnowledgeGraph',
   },
   {
-    // name: '知识图谱',
-    // icon: 'RadarChartOutlined',
     path: '/graph',
     component: './KnowledgeGraph',
     hidinMenu: true,

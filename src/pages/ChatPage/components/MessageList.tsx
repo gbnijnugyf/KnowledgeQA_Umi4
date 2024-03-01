@@ -80,6 +80,7 @@ export function MessageList({
                   <div>
                     {item.recommend && (
                       <ul>
+                        {/* TODO: 可用多选卡片CheckCard优化样式 */}
                         {item.recommend.map((recommendation: string) => (
                           <li
                             className="recommend-list"

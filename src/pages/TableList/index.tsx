@@ -87,7 +87,7 @@ const TableForm: React.FC = () => {
         component={{
           NewForm: NewKnowledgeBaseForm,
           UpdateForm: UpdateForm,
-          DetailDrawer: DetailDrawer,
+          // DetailDrawer: DetailDrawer,
         }}
         hooks={{
           openCreate: {

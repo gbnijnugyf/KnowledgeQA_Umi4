@@ -209,8 +209,9 @@ export function Graph(props: IGraphProps) {
           }
         })
         // 更新边的粗细，使用 1/scaleLevel 作为比例因子
-        .attr('stroke-width', (d: dLink) =>{
-          return ( scaleLevel>8?0.1:scaleLevel>3?0.3:Math.sqrt(d.weight))});
+        .attr('stroke-width', (d: dLink) => {
+          return scaleLevel > 8 ? 0 : scaleLevel > 3 ? 0.3 : 0.5;
+        });
     }
 
     function updateGraphByClick() {
@@ -345,7 +346,7 @@ export function Graph(props: IGraphProps) {
       .join('line')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
-      .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight))
+      // .attr('stroke-width', (d: dLink) => Math.sqrt(d.weight))
       .attr('marker-end', 'url(#end)')
       .style('display', (l: dLink) => {
         const link_1: string = buildLinkString(l);
@@ -426,7 +427,7 @@ export function Graph(props: IGraphProps) {
         .attr('y1', (d: dLink) => d.source.y)
         .attr('x2', (d: dLink) => d.target.x)
         .attr('y2', (d: dLink) => d.target.y);
-
+        
       // linkText
       //   .attr('x', (d: dLink) => ((d.source.x as number) + (d.target.x as number)) / 2)
       //   .attr('y', (d: dLink) => ((d.source.y as number) + (d.target.y as number)) / 2);

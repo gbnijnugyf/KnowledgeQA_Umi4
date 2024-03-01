@@ -95,7 +95,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
           labelWidth: 'auto',
         }}
         style={{ userSelect: 'none' }}
-        headerTitle={props.data.title}
+        // headerTitle={props.data.title}
         tableAlertRender={false}
         actionRef={props.hooks.ref}
         rowKey="key"

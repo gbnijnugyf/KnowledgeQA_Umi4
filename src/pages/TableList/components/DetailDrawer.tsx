@@ -12,7 +12,7 @@ import { FormValueType, UpdateFileForm, UpdateForm } from './UpdateForm';
 export interface IDetailDrawerProps {
   key: number; //用于请求具体数据
   baseName: string; //知识库名称
-  hook: {
+  hook?: {
     open: IHookFunc<boolean>;
   };
 }
@@ -93,15 +93,15 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     }
   };
   return (
-    <Drawer
-      width={'80vw'}
-      open={props.hook.open.value}
-      onClose={() => {
-        // setCurrentRow(undefined);
-        props.hook.open.set(false);
-      }}
-      closable={false}
-    >
+    // <Drawer
+    //   width={'80vw'}
+    //   open={props.hook.open.value}
+    //   onClose={() => {
+    //     // setCurrentRow(undefined);
+    //     props.hook.open.set(false);
+    //   }}
+    //   closable={false}
+    // >
       <TableList<API.KnowledgeBaseFileListItem>
         component={{
           NewForm: NewKnowledgeBaseFileForm,
@@ -138,6 +138,6 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
         request={resquest}
         submitNewForm={submitNewForm}
       />
-    </Drawer>
+    // </Drawer>
   );
 }

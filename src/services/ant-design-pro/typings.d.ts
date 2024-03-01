@@ -22,7 +22,10 @@ declare namespace API {
     address?: string;
     phone?: string;
   };
-
+  type StudentInfo = {
+    key: number;
+    name: string;
+  };
   type LoginResult = {
     status?: string;
     type?: string;
@@ -50,11 +53,11 @@ declare namespace API {
   };
   type KnowledgeBaseFileListItem = {
     key: number; // 键，唯一标识
-    name:string;
-    type:string;
-    uploadAt:string;
-    status:0|1; //0表示不可见，1表示可见
-    is_solve:0|1; //0表示未解决，1表示已解决
+    name: string;
+    type: string;
+    uploadAt: string;
+    status: 0 | 1; //0表示不可见，1表示可见
+    is_solve: 0 | 1; //0表示未解决，1表示已解决
   };
   type loginUserParams = {
     /** The user name for login */
@@ -98,9 +101,9 @@ declare namespace API {
     recommend?: Array<string>; //推荐的知识点
   };
   type sendMessageType = {
-    reply:MessageType;
-    userMsgKey:number
-  }
+    reply: MessageType;
+    userMsgKey: number;
+  };
   type Graph = {
     nodes: dNode[];
     links: dLink[];
@@ -144,9 +147,8 @@ declare namespace API {
     createdAt?: string;
     Kbase: Array<KnowledgeBaseListItem>;
   };
-  type DialogInfo={
+  type DialogInfo = {
     name: string;
     Kbase: Array<number>;
-  }
-
+  };
 }

@@ -1,5 +1,6 @@
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ProColumns } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { Input } from 'antd';
 import { stringify } from 'querystring';
 
@@ -14,6 +15,7 @@ interface IGetColumns<T> {
 export const KnowledgeBase = {
   title: '知识库',
   getColumns: (props: IGetColumns<API.KnowledgeBaseListItem>): ProColumns<API.KnowledgeBaseListItem>[] => {
+    const navigate = useNavigate();
     const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
       {
         title: '名称',
@@ -26,6 +28,7 @@ export const KnowledgeBase = {
               onClick={() => {
                 props.hooks.setCurrentRow.set(entity);
                 props.hooks.openDetail.set(true);
+                navigate(`/admin/knowledgeBase/${entity.key}`)
               }}
             >
               {dom}

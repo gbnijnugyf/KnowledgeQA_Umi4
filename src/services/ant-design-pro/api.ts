@@ -408,3 +408,20 @@ export async function deleteCourse(key: number, options?: { [key: string]: any }
     },
   });
 }
+
+/** 获取学生列表 */
+export async function getStudentsList(
+  params: {
+    // query
+    key:number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<API.StudentInfo[]>>(BASEURL + '/getStudents', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
