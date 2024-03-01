@@ -1,5 +1,6 @@
+import { addCourse } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
-import { Button, Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
 
 interface IAddCourseDialog {
   open: IHookFunc<boolean>;
@@ -7,7 +8,15 @@ interface IAddCourseDialog {
   course: API.KnowledgeBaseListItem | undefined;
 }
 export function AddCourseDialog(props: IAddCourseDialog) {
-  async function handleOk() {}
+  async function handleOk() {
+    const res = await addCourse(props.course?.key || -1);
+    if (res.status === 1) {
+      props.open.set(false);
+      message.success('添加成功');
+    }else{
+      message.error('添加失败')
+    }
+  }
 
   return (
     <>

@@ -16,19 +16,6 @@ import type { FormValueType, IUpdateFormProps } from './UpdateForm';
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.KnowledgeBaseListItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addRule({ ...fields });
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
-};
 
 /**
  * @en-US Update node
@@ -61,7 +48,7 @@ const handleRemove = async (selectedRows: API.KnowledgeBaseListItem[]) => {
   }
 };
 
-export type ITableRequest = (
+export type ITableRequest<T> = (
   params: API.PageParams & {
     pageSize?: number;
     current?: number;
@@ -69,31 +56,31 @@ export type ITableRequest = (
   },
   sort: Record<string, SortOrder>,
   filter: Record<string, (string | number)[] | null>,
-) => Promise<Partial<RequestData<API.KnowledgeBaseListItem>>>;
-interface ITableList {
+) => Promise<Partial<RequestData<T>>>;
+interface ITableList<T> {
   component: {
     NewForm?: (props: INewFormProps) => React.JSX.Element;
-    UpdateForm?: (props: IUpdateFormProps) => React.JSX.Element;
+    UpdateForm?: (props: IUpdateFormProps<T>) => React.JSX.Element;
     DetailDrawer?: (props: IDetailDrawerProps) => React.JSX.Element;
   };
   hooks: {
     openCreate?: IHookFunc<boolean>;
     openUpdate?: IHookFunc<boolean>;
     openDetail?: IHookFunc<boolean>;
-    setCurrentRow?: IHookFunc<API.KnowledgeBaseListItem | undefined>;
-    setRowState: IHookFunc<API.KnowledgeBaseListItem[]>;
+    setCurrentRow?: IHookFunc<T | undefined>;
+    setRowState: IHookFunc<T[]>;
     ref: React.MutableRefObject<ActionType | undefined>;
     setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
   };
   data: {
     title: string;
-    columns: ProColumns<API.KnowledgeBaseListItem>[];
+    columns: ProColumns<T>[];
   };
-  request: ITableRequest;
-  submitNewForm?: (value: FormValueType) => Promise<void>;
+  request: ITableRequest<T>;
+  submitNewForm?: (value: FormValueType<T>) => Promise<void>;
 }
 
-export function TableList(props: ITableList) {
+export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
   // const actionRef = useRef<ActionType>();
   // const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
 
@@ -101,7 +88,7 @@ export function TableList(props: ITableList) {
 
   return (
     <>
-      <ProTable<API.KnowledgeBaseListItem, API.PageParams>
+      <ProTable<T, API.PageParams>
         search={{
           collapsed: false,
           collapseRender: () => false,

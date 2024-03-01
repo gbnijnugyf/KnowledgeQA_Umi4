@@ -114,7 +114,7 @@ export async function myGetKnowledgeBaseList(
 //     ...(options || {}),
 //   });
 // }
-/** 获取知识库具体信息 GET /getKnowledgeBaseFiles */
+/** 获取知识库具体文件列表 GET /getKnowledgeBaseFiles */
 export async function myGetKnowledgeBaseFiles(
   params: {
     // query
@@ -128,7 +128,7 @@ export async function myGetKnowledgeBaseFiles(
   options?: { [key: string]: any },
 ) {
   //注意！需要后端返回总数total，成功success
-  return request<IReturn<API.KBList>>(BASEURL + '/getKnowledgeBaseFiles', {
+  return request<IReturn<API.KBFileList>>(BASEURL + '/getKnowledgeBaseFiles', {
     method: 'GET',
     params: {
       ...params,
@@ -149,6 +149,17 @@ export async function updateRule(options?: { [key: string]: any }) {
 }
 export async function myUpdateKnowledgeBase(options?: { [key: string]: any }) {
   return request<IReturn<API.KnowledgeBaseListItem>>(BASEURL + '/updateKnowledgeBaseInfo', {
+    method: 'POST',
+    data: {
+      method: 'update',
+      ...(options || {}),
+    },
+  });
+}
+
+/** 更新知识库文件 */
+export async function myUpdateKnowledgeBaseFile(options?: { [key: string]: any }) {
+  return request<IReturn<API.KnowledgeBaseFileListItem>>(BASEURL + '/updateKnowledgeBaseFile', {
     method: 'POST',
     data: {
       method: 'update',
@@ -193,6 +204,7 @@ export async function myUploadKnowledgeBaseFile(props: {
   options?: { [key: string]: any };
 }) {
   const formData = new FormData();
+  //多文件上传，formData的append方法，对于同一个key会将新添加的key/value添加到后面，不会覆盖已经存在的key
   props.fileList.forEach((file) => {
     formData.append('files', file);
   });
@@ -370,5 +382,29 @@ export async function myGetRecommendedInput(
       ...params,
     },
     ...(options || {}),
+  });
+}
+
+/** 学生添加课程 /addCourse */
+export async function addCourse(key: number, options?: { [key: string]: any }) {
+  return request<IReturn<undefined>>(BASEURL + '/addCourse', {
+    method: 'POST',
+    data: {
+      method: 'add',
+      key: key,
+      ...(options || {}),
+    },
+  });
+}
+
+/** 学生删除课程 /deleteCourse */
+export async function deleteCourse(key: number, options?: { [key: string]: any }) {
+  return request<IReturn<undefined>>(BASEURL + '/deleteCourse', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      key: key,
+      ...(options || {}),
+    },
   });
 }

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { KnowledgeBaseFile } from '../tableData';
 import { NewKnowledgeBaseFileForm } from './NewForm';
 import { ITableRequest, TableList } from './TableList';
-import { FormValueType, UpdateForm } from './UpdateForm';
+import { FormValueType, UpdateFileForm, UpdateForm } from './UpdateForm';
 
 export interface IDetailDrawerProps {
   key: number; //用于请求具体数据
@@ -29,8 +29,8 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
    * */
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
-  const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseFileListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseFileListItem[]>([]);
   const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
 
   const actionRef = useRef<ActionType>();
@@ -45,7 +45,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     actionRef.current?.reload();
   }, [props.key]);
 
-  const resquest: ITableRequest = async (p, sorter, filter) => {
+  const resquest: ITableRequest<API.KnowledgeBaseFileListItem> = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
     //参数p是分页参数
     let params = { ...p, key: props.key };
@@ -60,8 +60,23 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     console.log('1', res.data);
     return res.data;
   };
-  const columns = KnowledgeBaseFile.getColumns();
-  const submitNewForm = async (value: FormValueType) => {
+  const columns = KnowledgeBaseFile.getColumns({
+    hooks: {
+      openUpdate: {
+        value: updateModalOpen,
+        set: handleUpdateModalOpen,
+      },
+      openDetail: {
+        value: showDetail,
+        set: setShowDetail,
+      },
+      setCurrentRow: {
+        value: currentRow,
+        set: setCurrentRow,
+      },
+    },
+  });
+  const submitNewForm = async (value: FormValueType<API.KnowledgeBaseFileListItem>) => {
     // console.log(props.key, fileList);
     const res = await myUploadKnowledgeBaseFile({
       options: { key: props.key },
@@ -87,10 +102,10 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
       }}
       closable={false}
     >
-      <TableList
+      <TableList<API.KnowledgeBaseFileListItem>
         component={{
           NewForm: NewKnowledgeBaseFileForm,
-          UpdateForm: UpdateForm,
+          UpdateForm: UpdateFileForm,
         }}
         hooks={{
           openCreate: {

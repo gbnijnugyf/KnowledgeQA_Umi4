@@ -48,6 +48,14 @@ declare namespace API {
     createdAt?: string; // 创建时间，项目的创建时间
     progress?: number; // 进度，通常用于表示项目的完成进度
   };
+  type KnowledgeBaseFileListItem = {
+    key: number; // 键，唯一标识
+    name:string;
+    type:string;
+    uploadAt:string;
+    status:0|1; //0表示不可见，1表示可见
+    is_solve:0|1; //0表示未解决，1表示已解决
+  };
   type loginUserParams = {
     /** The user name for login */
     username: string;
@@ -61,12 +69,11 @@ declare namespace API {
     total?: number;
     success?: boolean;
   };
-  // type myKBListItem = {
-  //   key: string; // 键，唯一标识
-  //   name: string; // 名称
-  // };
-  type myKBList = {
-    data: myKBListItem[];
+  type KBFileList = {
+    data?: KnowledgeBaseFileListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
   };
 
   type FakeCaptcha = {

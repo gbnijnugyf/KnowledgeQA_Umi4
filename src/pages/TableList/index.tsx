@@ -26,7 +26,7 @@ const TableForm: React.FC = () => {
   const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
 
   const actionRef = React.useRef<ActionType>();
-  const resquest: ITableRequest = async (p, sorter, filter) => {
+  const resquest: ITableRequest<API.KnowledgeBaseListItem> = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
     let params = { ...p };
     if (Object.keys(sorter).length !== 0) {
@@ -59,7 +59,7 @@ const TableForm: React.FC = () => {
       },
     },
   });
-  const submitNewForm = async (value: FormValueType) => {
+  const submitNewForm = async (value: FormValueType<API.KnowledgeBaseListItem>) => {
     // console.log(value, fileList);
     if (Object.keys(value).length === 0) {
       message.warning('请完整填写表单');

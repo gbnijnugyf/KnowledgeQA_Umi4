@@ -3,17 +3,17 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Input } from 'antd';
 import { stringify } from 'querystring';
 
-interface IGetColumns {
+interface IGetColumns<T> {
   hooks: {
     openUpdate: IHookFunc<boolean>;
     openDetail: IHookFunc<boolean>;
-    setCurrentRow: IHookFunc<API.KnowledgeBaseListItem | undefined>;
+    setCurrentRow: IHookFunc<T | undefined>;
   };
 }
 
 export const KnowledgeBase = {
   title: '知识库',
-  getColumns: (props: IGetColumns): ProColumns<API.KnowledgeBaseListItem>[] => {
+  getColumns: (props: IGetColumns<API.KnowledgeBaseListItem>): ProColumns<API.KnowledgeBaseListItem>[] => {
     const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
       {
         title: '名称',
@@ -87,8 +87,6 @@ export const KnowledgeBase = {
           >
             配置基本信息
           </a>,
-          // <a key="graph" >查看知识图谱</a>,
-          // <Link key="graph" to={"/welcome"}>查看知识图谱</Link>,
           <a key="graph" href={`/#/graph?${stringify({key:record.key,name:record.name})}`} target="_blank" rel="noopener noreferrer">查看知识图谱</a>,
         ],
       },
@@ -98,8 +96,8 @@ export const KnowledgeBase = {
 };
 
 export const KnowledgeBaseFile = {
-  getColumns: (): ProColumns<API.KnowledgeBaseListItem>[] => {
-    const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
+  getColumns: (props: IGetColumns<API.KnowledgeBaseFileListItem>): ProColumns<API.KnowledgeBaseFileListItem>[] => {
+    const columns: ProColumns<API.KnowledgeBaseFileListItem>[] = [
       {
         title: '文件名',
         dataIndex: 'name',
@@ -108,22 +106,38 @@ export const KnowledgeBaseFile = {
         title: '文件类型',
         dataIndex: 'type',
       },
-      // {
-      //   title: '可见性',
-      //   dataIndex: 'status',
-      //   hideInForm: true,
-      //   onFilter: true,
-      //   valueEnum: {
-      //     0: {
-      //       text: '不可见',
-      //       status: 'Default',
-      //     },
-      //     1: {
-      //       text: '可见',
-      //       status: 'success',
-      //     },
-      //   },
-      // },
+      {
+        title: '可见性',
+        dataIndex: 'status',
+        hideInForm: true,
+        onFilter: true,
+        valueEnum: {
+          0: {
+            text: '不可见',
+            status: 'Default',
+          },
+          1: {
+            text: '可见',
+            status: 'success',
+          },
+        },
+      },
+      {
+        title: '解析情况',
+        dataIndex: 'is_solve',
+        hideInForm: true,
+        onFilter: true,
+        valueEnum: {
+          0: {
+            text: '解析失败',
+            status: 'error',
+          },
+          1: {
+            text: '解析成功',
+            status: 'success',
+          },
+        },
+      },
       {
         title: '上传时间',
         sorter: true,
@@ -139,6 +153,22 @@ export const KnowledgeBaseFile = {
           }
           return defaultRender(item);
         },
+      },
+      {
+        title: '操作',
+        dataIndex: 'option',
+        valueType: 'option',
+        render: (_, record) => [
+          <a
+            key="config"
+            onClick={() => {
+              props.hooks.openUpdate.set(true);
+              props.hooks.setCurrentRow.set(record);
+            }}
+          >
+            配置基本信息
+          </a>,
+        ],
       },
     ];
     return columns;
