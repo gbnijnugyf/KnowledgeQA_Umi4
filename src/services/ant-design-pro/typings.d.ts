@@ -93,6 +93,7 @@ declare namespace API {
   type SendMessageBody = {
     text: string;
     key: number; //知识库标识
+    mode: number; //模式
   };
   type MessageType = {
     key: number;

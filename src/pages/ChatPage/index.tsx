@@ -30,6 +30,7 @@ const messageInit: API.MessageType = {
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<API.MessageType[]>([]);
   const [inputValue, setInputValue] = useState<API.MessageType>(messageInit);
+  const [modeValue, setModeValue] = useState<number>(0);
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
   const [flush, setFlush] = useState<boolean>(false);
   const [dialogs, setDialogs] = useState<API.DialogListItem[]>([]);
@@ -163,6 +164,10 @@ const ChatPage: React.FC = () => {
     const value: API.MessageType = { key: -2, sender: 'user', text: e };
     setInputValue(value);
   };
+  //模式选择处理函数
+  const handleModeChange = (value: number) => {
+    setModeValue(value);
+  }
 
   // 发送消息
   const handleSend = async () => {
@@ -175,7 +180,7 @@ const ChatPage: React.FC = () => {
       setMessages([...messages, inputValue, { key: -1, sender: 'bot', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
-          sendMessage({ key: currentDialogKey, text: inputValue.text }) as Promise<
+          sendMessage({ key: currentDialogKey, text: inputValue.text, mode:modeValue }) as Promise<
             IReturn<API.sendMessageType>
           >,
           new Promise(
@@ -316,7 +321,7 @@ const ChatPage: React.FC = () => {
                       <div
                         style={{
                           // marginTop: '10vh',
-                          marginBottom: '5px',
+                          marginBottom: '6px',
                           height: '7vh',
                           width: '100%',
                           display: 'flex',
@@ -328,6 +333,7 @@ const ChatPage: React.FC = () => {
                           recommendations={recommendations}
                           handleChange={handleChange}
                           handleSend={handleSend}
+                         handleModeChange={handleModeChange}
                         />
                       </div>
                     ) : null}

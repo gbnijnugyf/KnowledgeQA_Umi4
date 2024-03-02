@@ -6,7 +6,7 @@ import {
   RobotOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, List, Tag, Tooltip, message } from 'antd';
+import { Avatar, Button, List, Popover, Tag, Tooltip, message } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import '../index.css';
 
@@ -49,7 +49,7 @@ export function MessageList({
       id="dialogList"
       className="dialog-list"
       style={{ overflow: 'auto', paddingRight: '1vw',minHeight:"90%" }}
-      renderItem={(item, index) => {
+      renderItem={(item, _index) => {
         console.log('item:', item);
         return (
           <>
@@ -114,11 +114,15 @@ export function MessageList({
                               {item.recommend && <div style={{width:'7.5em'}}>你可能还想了解:</div>}
                               {item.recommend && (
                                 <>
-                                  {/* TODO: 可用多选卡片CheckCard优化样式 */}
                                   {item.recommend.map((recommendation: string, index) => (
+                                    <Popover
+                                    content={recommendation}
+                                    trigger="click"
+                                    placement="bottom"
+                                  >
                                     <Tag
                                       className="recommend-list"
-                                      onClick={() => handleRecommendationClick(recommendation)}
+                                      // onClick={() => handleRecommendationClick(recommendation)}
                                       color={tagColors[index % tagColors.length]}
                                     >
                                       <div
@@ -131,6 +135,7 @@ export function MessageList({
                                       </div>
                                       {recommendation}
                                     </Tag>
+                                    </Popover>
                                   ))}
                                 </>
                               )}
