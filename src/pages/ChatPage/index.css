@@ -4,6 +4,7 @@
 /* 这个规则应用于整个文档 */
 .dialog-list::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 /* 滚动条的轨道 */
@@ -64,15 +65,23 @@
   content: '';
 }
 
+.recommend-list-box ::-webkit-scrollbar{
+  display: none;
+}
+
 .recommend-list {
   /* width: fit-content; */
-  width: 50%;
-  margin: 10px 0;
-  padding: 0px 1em;
+  /* width: 50%; */
+  margin: 0.5em 0 0 0.3em;
+  height:2.6em;
+  /* padding: 0px 1em; */
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  align-items: center
 }
 
 .recommend-list:hover {

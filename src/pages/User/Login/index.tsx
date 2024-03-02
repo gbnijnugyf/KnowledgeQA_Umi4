@@ -32,7 +32,7 @@ function Page() {
       // 登录
       const userInfo = await initialState?.fetchUserInfo?.();
       console.log(userInfo);
-      const type = loginTypeS;
+      const type = (loginTypeS==='teacher'?1:0)
       const msg: IReturn<string> = await myLogin({ ...values, type });
       console.log(msg);
       if (msg.status === 1) {

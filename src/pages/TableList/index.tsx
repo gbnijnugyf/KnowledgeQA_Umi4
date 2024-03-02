@@ -3,7 +3,6 @@ import { ActionType, PageContainer } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import React, { useState } from 'react';
-import DetailDrawer from './components/DetailDrawer';
 import { NewKnowledgeBaseForm } from './components/NewForm';
 import { ITableRequest, TableList } from './components/TableList';
 import { FormValueType, UpdateForm } from './components/UpdateForm';
@@ -23,7 +22,7 @@ const TableForm: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseListItem[]>([]);
-  const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
+  const [fileList, setFileList] = useState<(File)[]>([]);
 
   const actionRef = React.useRef<ActionType>();
   const resquest: ITableRequest<API.KnowledgeBaseListItem> = async (p, sorter, filter) => {
@@ -35,7 +34,8 @@ const TableForm: React.FC = () => {
     if (Object.keys(filter).length !== 0) {
       params = { ...params, ...filter };
     }
-
+    console.log('params', typeof((params as any).updatedAt||''));
+    console.log('params', params);
     //参数p是分页参数
     const res = await myGetKnowledgeBaseList({
       ...params,

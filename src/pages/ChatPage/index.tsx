@@ -226,6 +226,8 @@ const ChatPage: React.FC = () => {
     }
   };
 
+  const CardHeight = 80;
+
   return (
     <PageContainer
       header={{
@@ -262,12 +264,14 @@ const ChatPage: React.FC = () => {
         style={{
           width: '100%',
           margin: '0',
-          height: '86vh',
+          // height: `${CardHeight}vh`,
+          height: "fit-content",
+          overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <div style={{ display: 'flex', height: '74vh' }}>
+        <div style={{ display: 'flex', height: `${CardHeight-12}vh` }}>
           <Allotment defaultSizes={[600, 2000]} >
             {/* 对话框列表 */}
             {menuDisplay === true ? (
@@ -312,6 +316,7 @@ const ChatPage: React.FC = () => {
                       <div
                         style={{
                           // marginTop: '10vh',
+                          marginBottom: '5px',
                           height: '7vh',
                           width: '100%',
                           display: 'flex',

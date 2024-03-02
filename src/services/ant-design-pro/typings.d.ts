@@ -88,7 +88,7 @@ declare namespace API {
     username?: string;
     password?: string;
     autoLogin?: boolean;
-    type?: string;
+    type?: number;
   };
   type SendMessageBody = {
     text: string;

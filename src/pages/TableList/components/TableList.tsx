@@ -59,7 +59,7 @@ export type ITableRequest<T> = (
 ) => Promise<Partial<RequestData<T>>>;
 interface ITableList<T> {
   component: {
-    NewForm?: (props: INewFormProps) => React.JSX.Element;
+    NewForm?: (props: INewFormProps<T>) => React.JSX.Element;
     UpdateForm?: (props: IUpdateFormProps<T>) => React.JSX.Element;
     DetailDrawer?: (props: IDetailDrawerProps) => React.JSX.Element;
   };
@@ -70,7 +70,7 @@ interface ITableList<T> {
     setCurrentRow?: IHookFunc<T | undefined>;
     setRowState: IHookFunc<T[]>;
     ref: React.MutableRefObject<ActionType | undefined>;
-    setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
+    setFileList?: IHookFunc<File[]>;
   };
   data: {
     title: string;

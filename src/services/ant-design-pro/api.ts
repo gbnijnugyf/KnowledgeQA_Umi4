@@ -200,13 +200,14 @@ export async function myRemoveRule(options?: { [key: string]: any }) {
 }
 
 export async function myUploadKnowledgeBaseFile(props: {
-  fileList: (string | Blob | RcFile)[];
+  fileList: (any)[];
   options?: { [key: string]: any };
 }) {
   const formData = new FormData();
   //多文件上传，formData的append方法，对于同一个key会将新添加的key/value添加到后面，不会覆盖已经存在的key
   props.fileList.forEach((file) => {
-    formData.append('files', file);
+    //originFileObj才是文件内容
+    formData.append('file', file.originFileObj);
   });
   // 如果 options 存在，将其每个属性添加到 formData 中
   if (props.options) {

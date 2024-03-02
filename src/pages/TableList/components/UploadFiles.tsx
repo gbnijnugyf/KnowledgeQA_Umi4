@@ -9,7 +9,7 @@ const { Dragger } = Upload;
 export interface IUploadFormProps {
   options?: { [key: string]: any };
   hook: {
-    setFileList: IHookFunc<(string | Blob | RcFile)[]>;
+    setFileList: IHookFunc<File[]>;
   };
 }
 
@@ -39,7 +39,7 @@ export function UploadFiles(props: IUploadFormProps) {
       style={{ width: '100%' }}
       // action={`http://localhost:8080/api/knowledgebase/${props.key}/file`}
       onChange={(info) => {
-        props.hook.setFileList.set(info.fileList as (string | Blob | RcFile)[]);
+        props.hook.setFileList.set(info.fileList as unknown as File[]);
         console.log(info);
         console.log(props.hook.setFileList.value);
         const { status } = info.file;

@@ -66,13 +66,13 @@ export const KnowledgeBase = {
         dataIndex: 'updatedAt',
         valueType: 'dateTime',
         renderFormItem: (item, { defaultRender, ...rest }, form) => {
-          const status = form.getFieldValue('status');
-          if (`${status}` === '0') {
-            return false;
-          }
-          if (`${status}` === '3') {
-            return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
-          }
+          // const status = form.getFieldValue('status');
+          // if (`${status}` === '0') {
+          //   return false;
+          // }
+          // if (`${status}` === '3') {
+          //   return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
+          // }
           return defaultRender(item);
         },
       },

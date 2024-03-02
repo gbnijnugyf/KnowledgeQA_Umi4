@@ -2,6 +2,7 @@ import { getStudentsList, myGetCourse } from '@/services/ant-design-pro/api';
 import { PageContainer, ProList } from '@ant-design/pro-components';
 import { Breadcrumb, Card, Modal, Space, Tag, message } from 'antd';
 import { useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useParams } from 'umi';
 import DetailDrawer from '../TableList/components/DetailDrawer';
 import './index.scss';
@@ -18,7 +19,10 @@ export default function CourseDetail() {
     if (courseId !== undefined) {
       myGetCourse({ key: parseInt(courseId) }).then((res) => {
         if (res.status === 1) {
-          setCourse(res.data);
+          flushSync(() => {
+            setCourse(res.data);
+          });
+          console.log(course)
         } else {
           message.error('获取课程失败');
         }
@@ -43,8 +47,7 @@ export default function CourseDetail() {
           <>该课程已不可见</>
         )}
       </div>
-
-      <DetailDrawer key={course?.key || -1} baseName={course?.name || ''} />
+      <DetailDrawer key_id={course?.key||-1} baseName={course?.name || ''} />
     </PageContainer>
   );
 }
@@ -109,7 +112,7 @@ function CourseTitle(props: { courseInfo: API.KnowledgeBaseListItem }) {
         style={{ width: '35vw', maxHeight: '50vh' }}
       >
         <ProList<API.StudentInfo>
-          style={{ maxHeight: '47vh',overflowY:'scroll',marginRight:'5%'}}
+          style={{ maxHeight: '47vh', overflowY: 'scroll', marginRight: '5%' }}
           rowKey="id"
           headerTitle={<div>《{props.courseInfo.name}》学生列表</div>}
           dataSource={studentsList}

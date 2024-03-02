@@ -10,7 +10,8 @@ import { ITableRequest, TableList } from './TableList';
 import { FormValueType, UpdateFileForm, UpdateForm } from './UpdateForm';
 
 export interface IDetailDrawerProps {
-  key: number; //用于请求具体数据
+  // key: number; //用于请求具体数据
+  key_id:number;//很神奇，key传不进数据，但是key_id可以
   baseName: string; //知识库名称
   hook?: {
     open: IHookFunc<boolean>;
@@ -18,6 +19,7 @@ export interface IDetailDrawerProps {
 }
 
 export default function DetailDrawer(props: IDetailDrawerProps) {
+  console.log('DetailDrawer', props);
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -31,10 +33,10 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.KnowledgeBaseFileListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.KnowledgeBaseFileListItem[]>([]);
-  const [fileList, setFileList] = useState<(string | Blob | RcFile)[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
 
   const actionRef = useRef<ActionType>();
-
+  // console.log(props.key)
   useEffect(() => {
     // 当 key 改变时，重新加载 ProTable 的数据
     handleModalOpen(false);
@@ -43,12 +45,12 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     setCurrentRow(undefined);
     setSelectedRows([]);
     actionRef.current?.reload();
-  }, [props.key]);
+  }, [props.key_id]);
 
   const resquest: ITableRequest<API.KnowledgeBaseFileListItem> = async (p, sorter, filter) => {
     console.log(p, sorter, filter);
     //参数p是分页参数
-    let params = { ...p, key: props.key };
+    let params = { ...p, key: props.key_id };
     if (Object.keys(sorter).length !== 0) {
       params = { ...params, ...sorter };
     }
@@ -79,7 +81,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   const submitNewForm = async (value: FormValueType<API.KnowledgeBaseFileListItem>) => {
     // console.log(props.key, fileList);
     const res = await myUploadKnowledgeBaseFile({
-      options: { key: props.key },
+      options: { key: props.key_id },
       fileList: fileList,
     });
     // console.log(res);

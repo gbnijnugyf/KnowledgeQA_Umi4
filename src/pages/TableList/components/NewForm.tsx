@@ -10,27 +10,26 @@ import {
 import { Modal } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { UploadFiles } from './UploadFiles';
-import { API } from '@/services/ant-design-pro/typings';
 
-export type FormValueType = {
+export type FormValueType<T> = {
   target?: string;
   template?: string;
   type?: string;
   time?: string;
   frequency?: string;
-} & Partial<API.KnowledgeBaseListItem>;
-export interface INewFormProps {
+} & Partial<T>;
+export interface INewFormProps<T> {
   actionRef: React.MutableRefObject<ActionType | undefined>;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit: (values: FormValueType) => Promise<void>;
+  onCancel: (flag?: boolean, formVals?: FormValueType<T>) => void;
+  onSubmit: (values: FormValueType<T>) => Promise<void>;
   hook: {
     open: IHookFunc<boolean>;
-    setFileList?: IHookFunc<(string | Blob | RcFile)[]>;
+    setFileList?: IHookFunc<File[]>;
   };
   key?: number;
 }
 
-export function NewKnowledgeBaseForm(props: INewFormProps) {
+export function NewKnowledgeBaseForm(props: INewFormProps<API.KnowledgeBaseListItem>) {
 
   return (
     <StepsForm
@@ -122,7 +121,7 @@ export function NewKnowledgeBaseForm(props: INewFormProps) {
   );
 }
 
-export function NewKnowledgeBaseFileForm(props: INewFormProps) {
+export function NewKnowledgeBaseFileForm(props: INewFormProps<API.KnowledgeBaseFileListItem>) {
   return (
     <ModalForm
       title={'上传文件'}
