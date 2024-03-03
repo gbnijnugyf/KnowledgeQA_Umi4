@@ -38,7 +38,7 @@ interface IGraphProps {
 }
 
 export function Graph(props: IGraphProps) {
-  console.log('Graph render start:', props.nodes);
+  // console.log('Graph render start:', props.nodes);
   const ref = useRef();
   const containerRef = useRef();
   const currentScale = useRef(1);
@@ -84,7 +84,7 @@ export function Graph(props: IGraphProps) {
   props.links.forEach((l: dLink_) => {
     if (hiddenNodes.has(l.source_id) || hiddenNodes.has(l.target_id)) {
       // buildLinkString(l);
-      console.log('hiddenLinks:', JSON.stringify(l));
+      // console.log('hiddenLinks:', JSON.stringify(l));
       hiddenLinks.add(JSON.stringify(l));
     }
   });
@@ -110,7 +110,7 @@ export function Graph(props: IGraphProps) {
   }
   useEffect(() => {
     const nodeHandle = props.nodes;
-    console.log('Graph render start:', nodeHandle);
+    // console.log('Graph render start:', nodeHandle);
     const linkHandle: dLink[] = props.links.map((link) => {
       return {
         source: nodeHandle.find((d: dNode) => d.id === link.source_id) ?? initNode,

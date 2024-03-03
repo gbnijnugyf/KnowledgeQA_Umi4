@@ -38,18 +38,19 @@ declare namespace API {
   };
 
   type KnowledgeBaseListItem = {
-    key?: number; // 键，唯一标识
+    key: number; // 键，唯一标识
     disabled?: boolean; // 是否禁用，通常用于控制项目是否可以操作
     href?: string; // 链接，可能是该项目的详细信息页链接
     avatar?: string; // 头像，通常是用户或项目的头像图片链接
-    name?: string; // 名称
-    owner?: string; // 所有者，可能是项目的所有者或责任人
-    desc?: string; // 描述，对项目的简短描述
+    name: string; // 名称
+    owner: string; // 所有者，可能是项目的所有者或责任人
+    desc: string; // 描述，对项目的简短描述
     callNo?: number; // 可能是呼叫号码或其他数字标识
-    status?: number; // 状态，通常用于表示项目的状态（如：进行中，已完成等）
-    updatedAt?: string; // 更新时间，最后一次更新项目的时间
-    createdAt?: string; // 创建时间，项目的创建时间
+    status: number; // 状态，通常用于表示项目的状态（如：进行中，已完成等）
+    updatedAt: string; // 更新时间，最后一次更新项目的时间
+    createdAt: string; // 创建时间，项目的创建时间
     progress?: number; // 进度，通常用于表示项目的完成进度
+    is_solve: 0 | 1; //0表示知识图谱正在生成，1表示知识图谱已生成
   };
   type KnowledgeBaseFileListItem = {
     key: number; // 键，唯一标识
@@ -107,7 +108,7 @@ declare namespace API {
   };
   type Graph = {
     nodes: dNode[];
-    links: dLink[];
+    links: dLink_[];
   };
 
   type ErrorResponse = {
