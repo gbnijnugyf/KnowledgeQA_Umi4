@@ -21,7 +21,7 @@ export function MessageInput({
     <div style={{ display: 'flex', width: '100%' }}>
       <Select
         defaultValue={0}
-        // style={{ width: 120 }}
+        style={{ marginRight:'1%' }}
         onChange={handleModeChange}
         options={[
           { value: 0, label: '普通模式' },

@@ -15,25 +15,25 @@ export type SiderTheme = 'light' | 'dark';
 //   );
 // };
 export const Question = () => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        height: 26,
-      }}
-      onClick={() => {
-        window.open('https://bing.com');
-      }}
-    >
-      <QuestionCircleOutlined />
-    </div>
-  );
+  // return (
+  //   <div
+  //     style={{
+  //       display: 'flex',
+  //       height: 26,
+  //     }}
+  //     onClick={() => {
+  //       window.open('https://bing.com');
+  //     }}
+  //   >
+  //     <QuestionCircleOutlined />
+  //   </div>
+  // );
 };
 export const SwitchTheme = () => {
   const { setInitialState } = useModel('@@initialState');
   return (
     <Space direction="vertical">
-      <Switch
+      {/* <Switch
         checkedChildren="亮色"
         unCheckedChildren="暗色"
         defaultChecked
@@ -62,7 +62,7 @@ export const SwitchTheme = () => {
             }));
           }
         }}
-      />
+      /> */}
     </Space>
   );
 };

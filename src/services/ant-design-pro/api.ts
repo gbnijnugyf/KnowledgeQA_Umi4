@@ -1,7 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import { RcFile } from 'antd/es/upload';
 import { BASEURL, IReturn } from '../plugin/globalInter';
 import token from '../plugin/token';
 
@@ -200,7 +199,7 @@ export async function myRemoveRule(options?: { [key: string]: any }) {
 }
 
 export async function myUploadKnowledgeBaseFile(props: {
-  fileList: (any)[];
+  fileList: any[];
   options?: { [key: string]: any };
 }) {
   const formData = new FormData();
@@ -372,7 +371,7 @@ export async function deleteDialog(key: number, options?: { [key: string]: any }
 export async function myGetRecommendedInput(
   params: {
     // query
-    key:number;
+    key: number;
     text: string;
   },
   options?: { [key: string]: any },
@@ -414,11 +413,46 @@ export async function deleteCourse(key: number, options?: { [key: string]: any }
 export async function getStudentsList(
   params: {
     // query
-    key:number;
+    key: number;
   },
   options?: { [key: string]: any },
 ) {
   return request<IReturn<API.StudentInfo[]>>(BASEURL + '/getStudents', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 重新加载信息 */
+export async function reloadMessage(
+  params: {
+    // query
+    key: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<API.MessageType>>(BASEURL + '/reloadMessage', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取具体推荐内容 */
+export async function getRecommend(
+  params: {
+    // query
+    key: number;
+    name: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<string>>(BASEURL + '/getRecommend', {
     method: 'GET',
     params: {
       ...params,

@@ -3,6 +3,7 @@ import {
   getHistoryMessage,
   myGetDialogs,
   myGetRecommendedInput,
+  reloadMessage,
   sendMessage,
 } from '@/services/ant-design-pro/api';
 import { IReturn } from '@/services/plugin/globalInter';
@@ -19,7 +20,7 @@ import { MessageInput } from './components/MessageInput';
 import { MessageList } from './components/MessageList';
 import { NewDialogPage } from './components/NewDialogPage';
 import { RecommendationPreview } from './components/RecommendationPreview';
-import './index.css';
+import './index.scss';
 
 const messageInit: API.MessageType = {
   key: -1,
@@ -167,20 +168,42 @@ const ChatPage: React.FC = () => {
   //模式选择处理函数
   const handleModeChange = (value: number) => {
     setModeValue(value);
-  }
+  };
+
+  //重新加载信息
+  const handleReload = async (key: number) => {
+    const res = await reloadMessage({ key: key });
+    if (res.status === 1 && res.data.sender === 'bot') {
+      console.log(res);
+      const newMessages = [...messages];
+      const index = newMessages.findIndex((message) => message.key === res.data.key);
+      if (index !== -1) {
+        // 如果找到了具有相同键的消息，替换它
+        newMessages[index] = res.data;
+      } else {
+        // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
+        const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
+        if (requestKeyIndex !== -1) {
+          newMessages.splice(requestKeyIndex + 1, 0, res.data);
+        }
+      }
+      setMessages(newMessages);
+    } else {
+      message.error('重新加载失败');
+    }
+  };
 
   // 发送消息
   const handleSend = async () => {
     if (currentDialogKey === null || currentDialogKey === -1) {
-      message.warning('请选择知识库');
+      message.warning('请选择对话');
       return;
     }
     if (inputValue.text !== '') {
-      //TODO: 有bug，加入message的消息(inputValue)需要有真实的key，而不是-1
       setMessages([...messages, inputValue, { key: -1, sender: 'bot', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
-          sendMessage({ key: currentDialogKey, text: inputValue.text, mode:modeValue }) as Promise<
+          sendMessage({ key: currentDialogKey, text: inputValue.text, mode: modeValue }) as Promise<
             IReturn<API.sendMessageType>
           >,
           new Promise(
@@ -270,14 +293,14 @@ const ChatPage: React.FC = () => {
           width: '100%',
           margin: '0',
           // height: `${CardHeight}vh`,
-          height: "fit-content",
+          height: 'fit-content',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <div style={{ display: 'flex', height: `${CardHeight-12}vh` }}>
-          <Allotment defaultSizes={[600, 2000]} >
+        <div style={{ display: 'flex', height: `${CardHeight - 12}vh` }}>
+          <Allotment defaultSizes={[600, 2000]} minSize={0}>
             {/* 对话框列表 */}
             {menuDisplay === true ? (
               // <div
@@ -293,7 +316,16 @@ const ChatPage: React.FC = () => {
             ) : // </div>
             null}
             {currentDialogKey !== -1 && currentDialogKey !== null ? (
-              <div style={{display:'flex',flexDirection:'row', marginLeft:'1vw'}}>
+              <div
+                className="chat-container"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  paddingLeft: '1vw',
+                  // background: 'radial-gradient(circle at center, #F2F2F2, white)',
+                  background: '#FAFAFA',
+                }}
+              >
                 <div
                   style={{
                     position: 'relative',
@@ -316,13 +348,16 @@ const ChatPage: React.FC = () => {
                       messageList={messages}
                       handleDeleteMessage={handleDeleteMessage}
                       handleRecommendationClick={handleRecommendationClick}
+                      handleReload={handleReload}
+                      dialog_key={currentDialogKey}
                     />
                     {currentDialogKey !== -1 && currentDialogKey !== null ? (
                       <div
                         style={{
                           // marginTop: '10vh',
-                          marginBottom: '6px',
-                          height: '7vh',
+                          // marginBottom: '2.5%',
+                          overflow: 'hidden',
+                          height: '10%',
                           width: '100%',
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -333,7 +368,7 @@ const ChatPage: React.FC = () => {
                           recommendations={recommendations}
                           handleChange={handleChange}
                           handleSend={handleSend}
-                         handleModeChange={handleModeChange}
+                          handleModeChange={handleModeChange}
                         />
                       </div>
                     ) : null}
