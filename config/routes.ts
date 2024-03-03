@@ -69,7 +69,7 @@ export default [
     name: '知识图谱',
     icon: 'RadarChartOutlined',
     path: '/knowledgeGraph',
-    access: 'studRoute',
+    access: 'graphMenuAccess',
     component: './KnowledgeGraph',
   },
   {

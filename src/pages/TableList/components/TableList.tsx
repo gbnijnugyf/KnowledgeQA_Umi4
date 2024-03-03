@@ -30,7 +30,7 @@ import type { FormValueType, IUpdateFormProps } from './UpdateForm';
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.KnowledgeBaseListItem[]) => {
+async function handleRemove<T extends Record<string, any>>(selectedRows: T[]) {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -140,7 +140,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
             </div>
             <Button
               onClick={async () => {
-                await handleRemove(props.hooks.setRowState.value);
+                await handleRemove<T>(props.hooks.setRowState.value);
                 props.hooks.setRowState.set([]);
                 props.hooks.ref.current?.reloadAndRest?.();
               }}
@@ -211,7 +211,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
       props.hooks.setCurrentRow === undefined
         ? null
         : props.component.DetailDrawer({
-            key: props.hooks.setCurrentRow?.value?.key || 0,
+            key_id: props.hooks.setCurrentRow?.value?.key || 0,
             hook: {
               open: {
                 value: props.hooks.openDetail.value,

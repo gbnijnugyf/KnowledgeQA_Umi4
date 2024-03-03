@@ -1,7 +1,7 @@
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ProColumns } from '@ant-design/pro-components';
-import { useNavigate } from '@umijs/max';
-import { Input } from 'antd';
+import { useAccess, useNavigate } from '@umijs/max';
+import { Input, message } from 'antd';
 import { stringify } from 'querystring';
 
 interface IGetColumns<T> {
@@ -14,8 +14,11 @@ interface IGetColumns<T> {
 
 export const KnowledgeBase = {
   title: '知识库',
-  getColumns: (props: IGetColumns<API.KnowledgeBaseListItem>): ProColumns<API.KnowledgeBaseListItem>[] => {
+  getColumns: (
+    props: IGetColumns<API.KnowledgeBaseListItem>,
+  ): ProColumns<API.KnowledgeBaseListItem>[] => {
     const navigate = useNavigate();
+    const access = useAccess();
     const columns: ProColumns<API.KnowledgeBaseListItem>[] = [
       {
         title: '名称',
@@ -28,7 +31,7 @@ export const KnowledgeBase = {
               onClick={() => {
                 props.hooks.setCurrentRow.set(entity);
                 props.hooks.openDetail.set(true);
-                navigate(`/admin/knowledgeBase/${entity.key}`)
+                navigate(`/admin/knowledgeBase/${entity.key}`);
               }}
             >
               {dom}
@@ -90,7 +93,27 @@ export const KnowledgeBase = {
           >
             配置基本信息
           </a>,
-          <a key="graph" href={`/#/graph?${stringify({key:record.key,name:record.name})}`} target="_blank" rel="noopener noreferrer">查看知识图谱</a>,
+           <a
+            key="graph"
+            // href={`${record.is_solve===0?'#':'#/graph?'+stringify({ key: record.key, name: record.name })}`}
+            // href={`/#/graph?${stringify({ key: record.key, name: record.name })}`}
+            onClick={(e) => {
+              if(record.is_solve === 0) {
+                e.preventDefault();
+              } else {
+                console.log('access.graphAccess()', access.graphAccess());
+                if(access.graphAccess()===true){
+                  window.open(`/#/graph?${stringify({ key: record.key, name: record.name })}`)
+                }else{
+                  message.info('请到电脑端查看知识图谱');
+                }
+              }
+            }}
+            // target="_blank"
+            rel="noopener noreferrer"
+          >
+            {record.is_solve===0?'正在生成知识图谱...':'查看知识图谱'}
+          </a>,
         ],
       },
     ];
@@ -99,7 +122,9 @@ export const KnowledgeBase = {
 };
 
 export const KnowledgeBaseFile = {
-  getColumns: (props: IGetColumns<API.KnowledgeBaseFileListItem>): ProColumns<API.KnowledgeBaseFileListItem>[] => {
+  getColumns: (
+    props: IGetColumns<API.KnowledgeBaseFileListItem>,
+  ): ProColumns<API.KnowledgeBaseFileListItem>[] => {
     const columns: ProColumns<API.KnowledgeBaseFileListItem>[] = [
       {
         title: '文件名',
@@ -138,6 +163,10 @@ export const KnowledgeBaseFile = {
           1: {
             text: '解析成功',
             status: 'success',
+          },
+          2: {
+            text: '解析中',
+            status: 'processing',
           },
         },
       },

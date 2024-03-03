@@ -66,7 +66,8 @@ export function UpdateForm(props: IUpdateFormProps<API.KnowledgeBaseListItem>) {
     <>
       <ModalForm
         title={'配置基本信息'}
-        width="25vw"
+        // width="25vw"
+        width="min-content"
         open={props.hook.open.value}
         onOpenChange={props.hook.open.set}
         initialValues={{
@@ -170,7 +171,7 @@ export function UpdateFileForm(props: IUpdateFormProps<API.KnowledgeBaseFileList
     <>
       <ModalForm
         title={'配置基本信息'}
-        width="25vw"
+        width="min-content"
         open={props.hook.open.value}
         onOpenChange={props.hook.open.set}
         initialValues={{
