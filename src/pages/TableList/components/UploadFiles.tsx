@@ -36,7 +36,7 @@ export function UploadFiles(props: IUploadFormProps) {
     <Dragger
       name="file"
       multiple={true}
-      style={{ width: '100%' }}
+      style={{ width: 'fit-content' }}
       // action={`http://localhost:8080/api/knowledgebase/${props.key}/file`}
       onChange={(info) => {
         props.hook.setFileList.set(info.fileList as unknown as File[]);

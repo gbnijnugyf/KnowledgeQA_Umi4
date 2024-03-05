@@ -1,6 +1,8 @@
 import {
   CopyOutlined,
   DeleteOutlined,
+  DislikeOutlined,
+  LikeOutlined,
   ReloadOutlined,
   RobotOutlined,
   UserOutlined,
@@ -99,6 +101,28 @@ export function MessageList({
                     icon={<DeleteOutlined />}
                     onClick={() => handleDeleteMessage(item.key)}
                   />
+                  {item.sender === 'bot' && (
+                    <>
+                    <Button
+                    id="shadow-box"
+                      style={{
+                        margin: '0 0 0 4%',
+                        padding: '5%',
+                      }}
+                      onClick={() => clickLike()}
+                      icon={<LikeOutlined  />}
+                    />
+                    <Button
+                    id="shadow-box"
+                      style={{
+                        margin: '0 0 0 4%',
+                        padding: '5%',
+                      }}
+                      onClick={() => clickLike()}
+                      icon={<DislikeOutlined />}
+                    />
+                    </>
+                  )}
                   {item.sender === 'user' && (
                     <Button
                     id="shadow-box"
@@ -124,7 +148,6 @@ export function MessageList({
                         <RecommendationCard
                           dialog_key={dialog_key}
                           item={item}
-                          clickLike={clickLike}
                         />
                       </div>
                     )}

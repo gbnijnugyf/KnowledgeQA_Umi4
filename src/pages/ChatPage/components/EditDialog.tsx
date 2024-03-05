@@ -26,7 +26,7 @@ export function EditDialogModal(props: IEditDialogModal) {
     <ModalForm
       title={'配置基本信息'}
       // width="25vw"
-      width="min-content"
+      width="fit-content"
       open={props.open.value}
       onOpenChange={props.open.set}
       initialValues={{

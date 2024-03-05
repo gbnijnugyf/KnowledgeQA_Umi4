@@ -8,7 +8,7 @@ import defaultSettings from '../config/defaultSettings';
 import { RouteItem, loginPath } from '../src/services/plugin/globalInter';
 import { SwitchTheme } from './components/RightContent';
 import { errorConfig } from './requestErrorConfig';
-import { myGetDialogs, myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { myCurrentUser as queryCurrentUser } from './services/ant-design-pro/api';
 // const isDev = process.env.NODE_ENV === 'development';
 
 /**

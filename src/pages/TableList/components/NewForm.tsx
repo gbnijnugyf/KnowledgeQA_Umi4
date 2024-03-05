@@ -126,7 +126,7 @@ export function NewKnowledgeBaseFileForm(props: INewFormProps<API.KnowledgeBaseF
     <ModalForm
       title={'上传文件'}
       // width="25vw"
-      width="min-content"
+      width="fit-content"
       open={props.hook.open.value}
       onOpenChange={props.hook.open.set}
       onFinish={props.onSubmit}

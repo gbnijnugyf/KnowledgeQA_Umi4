@@ -12,10 +12,10 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
   let graphAccess = false;
   if (/mobile/i.test(userAgent)) {
     // console.log('Mobile device');
-    message.info('知识图谱请到电脑端查看');
+    message.info({content:'知识图谱请到电脑端查看',duration:5});
   } else if (/iPad|Android|Touch/i.test(userAgent)) {
     // console.log('Tablet');
-    message.info('知识图谱请到电脑端查看');
+    message.info({content:'知识图谱请到电脑端查看',duration:5});
   } else {
     // console.log('Desktop');
     graphAccess = true;

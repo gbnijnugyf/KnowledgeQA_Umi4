@@ -1,6 +1,7 @@
-export const BASEURL = 'http://127.0.0.1:4523/m1/4024081-0-default';
-// export const BASEURL = 'http://10.79.183.86:5000';
-export const titleName = '知识库问答';
+// export const BASEURL = 'http://127.0.0.1:4523/m1/4024081-0-default';
+export const BASEURL = 'http://127.0.0.1:4523/m1/4107192-0-default';
+// export const BASEURL = 'http://10.83.35.12:5000';
+export const titleName = '智学导图';
 export const loginPath = '/user/login';
 
 export interface ILoginProps {

@@ -5,12 +5,13 @@ import { Modal, message } from 'antd';
 interface IDelDialogModal {
   open: IHookFunc<boolean>;
   flush: IHookFunc<boolean>;
-  key: number;
+  key_id: number;//又是奇怪的key不行，key_id可以
   name:string
 }
 export function DelDialogModal(props: IDelDialogModal) {
+  console.log(props)
   async function handleOk() {
-    const res = await deleteDialog(props.key);
+    const res = await deleteDialog(props.key_id);
     console.log(res);
     if (res.status === 1) {
       message.info('删除成功');

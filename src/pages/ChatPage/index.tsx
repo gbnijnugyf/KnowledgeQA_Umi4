@@ -11,7 +11,6 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import { Breadcrumb, Button, Card, message } from 'antd';
-import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { DelDialogModal } from './components/DelDialog';
 import { DialogList } from './components/DialogList';
@@ -21,6 +20,7 @@ import { MessageList } from './components/MessageList';
 import { NewDialogPage } from './components/NewDialogPage';
 import { RecommendationPreview } from './components/RecommendationPreview';
 import './index.scss';
+import { debounce } from '@/services/plugin/utils';
 
 const messageInit: API.MessageType = {
   key: -1,
@@ -232,10 +232,11 @@ const ChatPage: React.FC = () => {
           setInputValue(messageInit);
         } else {
           debounce(() => {
-            setInputValue(() => inputValue || messageInit);
+            setInputValue(messageInit);
+            // setInputValue(() => inputValue || messageInit);
             setMessages((prevMessages) => {
-              // 删除最后两条消息
-              return prevMessages.slice(0, -2);
+              // 删除最后一条消息，暂时保存用户发送的，以便重发
+              return prevMessages.slice(0, -1);
             });
           }, 1000)();
           message.error('发送失败,请重试！');
@@ -243,10 +244,11 @@ const ChatPage: React.FC = () => {
       } catch (error) {
         console.error(error);
         debounce(() => {
-          setInputValue(() => inputValue || messageInit);
+          setInputValue(messageInit);
+          // setInputValue(() => inputValue || messageInit);
           setMessages((prevMessages) => {
-            // 删除最后两条消息
-            return prevMessages.slice(0, -2);
+            // 删除最后一条消息，暂时保存用户发送的，以便重发
+            return prevMessages.slice(0, -1);
           });
         }, 1000)();
         message.error('发送失败，请重试');
@@ -400,7 +402,7 @@ const ChatPage: React.FC = () => {
         </div>
       </Card>
       <DelDialogModal
-        key={operateDialogKey.key}
+        key_id={operateDialogKey.key}
         name={operateDialogKey.name}
         open={{ set: setDeleteDialogModal, value: deleteDialogModal }}
         flush={{ set: setFlush, value: flush }}

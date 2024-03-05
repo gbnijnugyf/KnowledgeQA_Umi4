@@ -35,7 +35,6 @@ export function RecommendationPreview({
 interface IRecommendationCardProps {
   item: API.MessageType;
   dialog_key: number;
-  clickLike: () => void;
 }
 
 export function RecommendationCard(props: IRecommendationCardProps) {
