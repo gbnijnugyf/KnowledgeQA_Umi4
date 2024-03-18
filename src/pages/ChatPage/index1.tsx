@@ -9,19 +9,19 @@ import {
 import { IReturn } from '@/services/plugin/globalInter';
 import { debounce } from '@/services/plugin/utils';
 import { PageContainer } from '@ant-design/pro-components';
-import { useAccess } from '@umijs/max';
+import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
-import { Breadcrumb, Button, Card, Modal, message } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { Breadcrumb, Button, Card, message } from 'antd';
+import { useEffect, useState } from 'react';
 import { DelDialogModal } from './components/DelDialog';
 import { DialogList } from './components/DialogList';
-import { DifMode } from './components/DifMode';
 import { EditDialogModal } from './components/EditDialog';
 import { MessageInput } from './components/MessageInput';
 import { MessageList } from './components/MessageList';
 import { NewDialogPage } from './components/NewDialogPage';
 import { RecommendationPreview } from './components/RecommendationPreview';
 import './index.scss';
+import { useAccess } from '@umijs/max';
 
 const messageInit: API.MessageType = {
   key: -1,
@@ -39,7 +39,7 @@ const ChatPage: React.FC = () => {
   const [currentDialogKey, setCurrentDialogKey] = useState<number | null>(null);
   const [deleteDialogModal, setDeleteDialogModal] = useState<boolean>(false);
   const [editDialogModal, setEditDialogModal] = useState<boolean>(false);
-  const [menuDisplay, setMenuDisplay] = useState<boolean>(false);
+  const [menuDisplay, setMenuDisplay] = useState<boolean>(true);
   const [operateDialogKey, setOperateDialogKey] = useState<{ key: number; name: string }>({
     key: -1,
     name: '',
@@ -51,27 +51,17 @@ const ChatPage: React.FC = () => {
       title: '问答',
     },
   ]);
-  const msgButtomKey = useRef<number>(-1); //记录最底部信息，查看是否有修改
-  const access = useAccess();
+  const access = useAccess();//用于改变问答界面布局
 
-  //滚动到最底部
-  const scrollToBottom = (direct: boolean) => {
+
+  const scrollToBottom = () => {
     let chatBox = document.getElementById('dialogList');
-    if (chatBox && direct) {
+    if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight;
-    } else {
-      if (messages.length > 0) {
-        console.log('scrollToBottom:', messages);
-        console.log('scrollToBottom:', msgButtomKey.current);
-        if (chatBox && messages[messages.length - 1]?.key !== msgButtomKey.current) {
-          chatBox.scrollTop = chatBox.scrollHeight;
-          msgButtomKey.current = messages[messages.length - 1].key;
-        }
-      }
     }
   };
 
-  useEffect(() => scrollToBottom(false), [messages]); // 当 messages 发生变化时，滚动到底部
+  useEffect(scrollToBottom, [messages]); // 当 messages 发生变化时，滚动到底部
 
   useEffect(() => {
     myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
@@ -133,8 +123,6 @@ const ChatPage: React.FC = () => {
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
         if (res.status === 1) {
           setMessages(res.data);
-          msgButtomKey.current = res.data[res.data.length - 1].key;
-          setTimeout(()=>scrollToBottom(true));
         } else {
           message.error('获取对话失败,请重试！');
         }
@@ -300,12 +288,9 @@ const ChatPage: React.FC = () => {
               ) : (
                 <Button onClick={handleOpenMenu}>显示菜单</Button>
               )} */}
-              {selectedRecommendation !== '' && (
+              {selectedRecommendation !== '' ? (
                 <Button onClick={handleHidePreview}>关闭预览</Button>
-              )}
-              {access.isMobile() && (
-                <Button onClick={() => setMenuDisplay(true)}>查看对话列表</Button>
-              )}
+              ) : null}
             </div>
           </div>
         }
@@ -319,19 +304,10 @@ const ChatPage: React.FC = () => {
           flexDirection: 'column',
         }}
       >
-        <div style={{ display: 'flex', height: `${CardHeight - 12}vh`, justifyContent: 'center' }}>
-          <DifMode
-            dialogComponent={{
-              dialogs: dialogs,
-              currentDialogKey: currentDialogKey,
-              handleDialogClick: handleDialogClick,
-              handleDeleteDialog: handleDeleteDialog,
-              handleEditDialog: handleEditDialog,
-            }}
-            setMenuDisplay={{ value: menuDisplay, set: setMenuDisplay }}
-          >
+        <div style={{ display: 'flex', height: `${CardHeight - 12}vh` }}>
+          <Allotment defaultSizes={[600, 2000]} minSize={0}>
             {/* 对话框列表 */}
-            {/* {menuDisplay === true && (
+            {menuDisplay === true && (
               <DialogList
                 dialogs={dialogs}
                 currentDialogKey={currentDialogKey}
@@ -339,7 +315,7 @@ const ChatPage: React.FC = () => {
                 handleDeleteDialog={handleDeleteDialog}
                 handleEditDialog={handleEditDialog}
               />
-            )} */}
+            )}
             {currentDialogKey !== -1 && currentDialogKey !== null ? (
               <div
                 className="chat-container"
@@ -421,7 +397,7 @@ const ChatPage: React.FC = () => {
                 <NewDialogPage onFlush={{ set: setFlush, value: flush }} />
               </div>
             )}
-          </DifMode>
+          </Allotment>
         </div>
       </Card>
       <DelDialogModal
@@ -436,17 +412,6 @@ const ChatPage: React.FC = () => {
         open={{ set: setEditDialogModal, value: editDialogModal }}
         flush={{ set: setFlush, value: flush }}
       />
-      {access.isMobile() && (
-        <Modal open={menuDisplay} onCancel={() => setMenuDisplay(false)} footer={[]}>
-          <DialogList
-            dialogs={dialogs}
-            currentDialogKey={currentDialogKey}
-            handleDialogClick={handleDialogClick}
-            handleDeleteDialog={handleDeleteDialog}
-            handleEditDialog={handleEditDialog}
-          />
-        </Modal>
-      )}
     </PageContainer>
   );
 };

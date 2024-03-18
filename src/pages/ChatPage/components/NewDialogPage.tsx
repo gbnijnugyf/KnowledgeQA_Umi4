@@ -55,7 +55,11 @@ export function NewDialogPage(props: INewFormProps) {
   return (
     <ProForm
       onFinish={onSubmit}
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
       <h2>新建对话</h2>
 

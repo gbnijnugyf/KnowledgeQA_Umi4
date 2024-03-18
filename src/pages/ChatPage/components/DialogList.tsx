@@ -4,7 +4,7 @@ import { throttle } from 'lodash';
 import { CSSProperties, Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 
 // 定义 DialogList 组件的 props 类型
-interface DialogListProps {
+export interface DialogListProps {
   dialogs: API.DialogListItem[];
   currentDialogKey: number | null;
   handleDialogClick: (key: number) => void;
@@ -47,7 +47,7 @@ export function DialogList({
                   },
                   items: [
                     { key: 'delete', label: '删除' },
-                    { key: 'edit', label: '编辑' },
+                    // { key: 'edit', label: '编辑' },
                   ],
                 }}
                 trigger={['hover']}

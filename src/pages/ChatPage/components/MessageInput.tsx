@@ -31,7 +31,7 @@ export function MessageInput({
       />
       <AutoComplete
         placeholder="ctrl+enter发送"
-        options={recommendations?.map((rec) => ({ value: rec }))}
+        // options={recommendations?.map((rec) => ({ value: rec }))}
         value={inputValue.text}
         onChange={handleChange}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {

@@ -29,7 +29,7 @@ export function MessageList({
   dialog_key,
   handleRecommendationClick,
 }: MessageListProps) {
-  console.log('messageList:', messageList);
+  // console.log('messageList:', messageList);
   const [isHovered, setIsHovered] = useState<{ open: boolean; key: number }>({
     open: false,
     key: -1,
@@ -41,7 +41,7 @@ export function MessageList({
     message.success('感谢你的反馈');
   };
 
-  console.log('messageList:', messageList_);
+  // console.log('messageList:', messageList_);
 
   return (
     <List<API.MessageType>
@@ -50,7 +50,7 @@ export function MessageList({
       className="dialog-list"
       style={{ overflow: 'auto', paddingRight: '1vw', height: '90%' }}
       renderItem={(item, _index) => {
-        console.log('item:', item);
+        // console.log('item:', item);
         return (
           <>
             <List.Item
