@@ -274,11 +274,11 @@ const ChatPage: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            {/* <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}> */}
               <div style={{ marginRight: '1%' }}>
-                <Breadcrumb style={{ width: '20vw' }} items={breadItems} />
+                <Breadcrumb style={{}} items={breadItems} />
               </div>
-            </div>
+            {/* </div> */}
             <div>
               {/* {menuDisplay === true ? (
                 <Button onClick={handleHideMenu}>隐藏菜单</Button>

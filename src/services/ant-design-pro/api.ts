@@ -245,6 +245,7 @@ export async function getHistoryMessage(
 
 /** 发送消息 POST */
 export async function sendMessage(body: API.SendMessageBody, options?: { [key: string]: any }) {
+  // console.log(body)
   return request<IReturn<API.sendMessageType>>(BASEURL + '/sendMessage', {
     method: 'POST',
     headers: {

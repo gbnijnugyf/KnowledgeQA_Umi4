@@ -34,7 +34,7 @@ export default function CourseDetail() {
     <PageContainer
       //虽然这个写法很奇怪，但别改，有bug
       header={{
-        title: <Breadcrumb style={{ width: '20vw' }} items={breadItems} />,
+        title: <Breadcrumb style={{}} items={breadItems} />,
       }}
       breadcrumb={{}}
     >
@@ -117,7 +117,7 @@ function CourseTitle(props: { courseInfo: API.KnowledgeBaseListItem }) {
           headerTitle={<div>《{props.courseInfo.name}》学生列表</div>}
           dataSource={studentsList}
           showActions="hover"
-          onDataSourceChange={setDataSource}
+          onDataSourceChange={setStudentsList}
           metas={{
             title: {
               dataIndex: 'name',
