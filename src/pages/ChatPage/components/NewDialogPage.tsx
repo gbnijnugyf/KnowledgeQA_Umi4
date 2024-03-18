@@ -67,10 +67,11 @@ export function NewDialogPage(props: INewFormProps) {
         name="name"
         label="对话名称"
         // width="md"
+        width={200}
         rules={[
           {
             required: true,
-            message: '请输入知识库名称！',
+            message: '请输入新建对话名称！',
           },
         ]}
       />
