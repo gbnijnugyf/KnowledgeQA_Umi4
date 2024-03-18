@@ -17,14 +17,9 @@ export function CardArrayItem(props: ICardArray) {
                 hoverable
                 className="carousel-content-item"
                 cover={
-                  <div style={{ marginLeft:"5%",overflow: "hidden", height: "100%" }}>
-                    <h4>{card.name}</h4>
-                    {/* <Image
-                    className="img"
-                      alt="example"
-                    //   src=
-                    /> */}
-                  </div>
+                  // <div style={{ marginLeft:"5%",overflow: "hidden", height: "100%", textOverflow:"ellipsis" }}>
+                    <h4 style={{marginLeft:"5%",width:"80%", overflow:"hidden",whiteSpace: 'nowrap', textOverflow:"ellipsis"}}>{card.name}</h4>
+                  // </div>
                 }
                 onClick={() => {
                     props.myOnClick(card);

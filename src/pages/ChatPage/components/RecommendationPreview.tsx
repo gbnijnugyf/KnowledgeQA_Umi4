@@ -92,7 +92,7 @@ export function RecommendationCard(props: IRecommendationCardProps) {
           style={{ marginTop: '0.3em',border: '#BFBFBF 1px solid'  }}
           title={
             <div style={{ display: 'flex', justifyContent: 'space-between',alignItems: 'baseline' }}>
-              <div>{recommendTag}</div>
+              <div style={{width:"80%", overflow:"hidden", textOverflow:"ellipsis"}}>{recommendTag}</div>
               <Button
                 onClick={() => {
                   setRecommendTextBoxOpen(false);

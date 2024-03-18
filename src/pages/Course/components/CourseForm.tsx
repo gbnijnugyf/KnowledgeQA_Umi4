@@ -4,6 +4,7 @@ import { CardArrayItem } from './CourseCard';
 import { myGetCourses } from '@/services/ant-design-pro/api';
 import { convertTo2DArray } from '@/services/plugin/utils';
 import "./CourseForm.scss"
+import { useAccess } from '@umijs/max';
 
 interface ICourseForm {
   myOnClick:(course:API.KnowledgeBaseListItem)=>void
@@ -11,10 +12,11 @@ interface ICourseForm {
 
 export function CourseForm(props:ICourseForm) {
   const [cardArr, setCardArr] = useState<API.KnowledgeBaseListItem[][]>([]);
+  const aPageNum = useAccess().isMobile()? 3:5
   useEffect(() => {
     myGetCourses({ option: 1 }).then((res) => {
         if(res.status===1){
-            const courseArray = convertTo2DArray<API.KnowledgeBaseListItem>(res.data,5)
+            const courseArray = convertTo2DArray<API.KnowledgeBaseListItem>(res.data,aPageNum)
             setCardArr(courseArray)
         }else{
             message.error('获取课程列表失败')

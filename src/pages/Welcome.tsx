@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { useAccess, useModel } from '@umijs/max';
 import { Card, theme } from 'antd';
 import React from 'react';
 import welComeBg from '../../public/welcomeBg.jpg';
@@ -90,6 +90,7 @@ const InfoCard: React.FC<{
 const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
+  const access = useAccess();
   const [course, setCourse] = React.useState<API.KnowledgeBaseListItem>();
   const [addCourseModal, setAddCourseModal] = React.useState<boolean>(false);
 
@@ -97,26 +98,26 @@ const Welcome: React.FC = () => {
     setCourse(course);
     setAddCourseModal(true);
   };
-
+  const backgroundImg = access.isMobile() ? undefined : `url(${welComeBg})`;
   return (
     <PageContainer>
       <Card
         style={{
           borderRadius: 8,
         }}
-        bodyStyle={{
-          backgroundImage:
-            initialState?.settings?.navTheme === 'realDark'
-              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-        }}
+        // bodyStyle={{
+        //   backgroundImage:
+        //     initialState?.settings?.navTheme === 'realDark'
+        //       ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
+        //       : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
+        // }}
       >
         <div
           style={{
             backgroundPosition: '95% -13%',
             backgroundRepeat: 'no-repeat',
             backgroundSize: '250px auto',
-            backgroundImage: `url(${welComeBg})`,
+            backgroundImage: backgroundImg,
           }}
         >
           <div
@@ -162,7 +163,7 @@ const Welcome: React.FC = () => {
             <InfoCard index={3} title="了解我们" href="http://cst.whut.edu.cn/" desc="" />
           </div>
         </div>
-        <div style={{ marginTop: '5vh', height: '35vh', overflow: 'auto' }}>
+        <div style={{ marginTop: '5vh', height:  access.isMobile() ?'39vh':'35vh', overflow: 'auto' }}>
           <div>
             <div
               style={{
@@ -171,7 +172,7 @@ const Welcome: React.FC = () => {
               }}
             >
               加入你感兴趣的课程吧！
-              <Search myOnSeleted={myOnClick}/>
+              <Search myOnSeleted={myOnClick} />
             </div>
           </div>
           <CourseForm myOnClick={myOnClick} />
