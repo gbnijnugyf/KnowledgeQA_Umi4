@@ -8,8 +8,8 @@ const NoFoundPage: React.FC = () => (
     title="404"
     subTitle="pages.404.subTitle"
     extra={
-      <Button type="primary" onClick={() => history.push('/')}>
-        pages.404.buttonText
+      <Button type="primary" onClick={() => history.push('/welcome')}>
+        点击重新加载
       </Button>
     }
   />

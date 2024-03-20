@@ -29,6 +29,13 @@ export default [
     component: './Welcome',
   },
   {
+    path: '/introduce',
+    name: '介绍',
+    hidinMenu: true,
+    layout:false,
+    component: './Introduce',
+  },
+  {
     path: '/admin',
     name: '管理页',
     icon: 'crown',
@@ -80,7 +87,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/introduce',
   },
   {
     path: '*',

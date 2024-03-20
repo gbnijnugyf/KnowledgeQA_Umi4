@@ -37,8 +37,8 @@ const SearchInput: React.FC<{
   style: React.CSSProperties;
   onSeleted: (course: API.KnowledgeBaseListItem) => void;
 }> = (props) => {
-  const navigate = useNavigate();
-  const [data, setData] = useState<SelectProps['options']>([]);
+  //todo：可能有bug
+  const [data, setData] = useState<API.KnowledgeBaseListItem[]>([]);
   const [value, setValue] = useState<API.KnowledgeBaseListItem>();
 
   const handleSearch = (newValue: string) => {

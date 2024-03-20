@@ -7,7 +7,7 @@ import { history, useModel } from '@umijs/max';
 import { Tabs, message } from 'antd';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
-// import loginBg from '../../../../public/loginBg.mp4';
+import loginBg from '../../../../public/loginBg.mp4';
 type LoginType = 'student' | 'teacher';
 
 function Page() {
@@ -40,7 +40,8 @@ function Page() {
         token.save(msg.data);
         await fetchUserInfoHere();
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+
+        history.push(urlParams.get('redirect') || '/welcome');
         return;
       }else{
         message.error('账号或密码错误！');
@@ -63,8 +64,8 @@ function Page() {
       }}
     >
       <LoginFormPage
-        backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
-        // backgroundVideoUrl='D:/CodeProject/KnowledgeQA/KnowledgeQA/public/loginBg.mp4'
+        // backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
+        backgroundVideoUrl={loginBg}
         logo={<img alt="logo" src="/logo.webp" />}
         title={titleName}
         containerStyle={{
