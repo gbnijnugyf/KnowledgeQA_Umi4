@@ -176,7 +176,7 @@ const ChatPage: React.FC = () => {
   //重新加载信息
   const handleReload = async (key: number) => {
     const res = await reloadMessage({ key: key });
-    if (res.status === 1 && res.data.sender === 'bot') {
+    if (res.status === 1 && res.data.sender === 'assistant') {
       console.log(res);
       const newMessages = [...messages];
       const index = newMessages.findIndex((message) => message.key === res.data.key);
@@ -203,7 +203,7 @@ const ChatPage: React.FC = () => {
       return;
     }
     if (inputValue.text !== '') {
-      setMessages([...messages, inputValue, { key: -1, sender: 'bot', text: '正在生成回复...' }]);
+      setMessages([...messages, inputValue, { key: -1, sender: 'assistant', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text, mode: modeValue }) as Promise<
@@ -225,7 +225,7 @@ const ChatPage: React.FC = () => {
             // 替换最后一条消息
             prevMessages.push({
               key: res.data.reply.key,
-              sender: 'bot',
+              sender: 'assistant',
               text: res.data.reply.text,
               recommend: res.data.reply.recommend,
             });

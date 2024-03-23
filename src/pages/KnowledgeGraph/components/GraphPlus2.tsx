@@ -81,19 +81,19 @@ export function GraphEcharts(props: IGraphProps) {
       ],
     };
     // Add zoom event listener
-    chartInstance.on('graphRoam', function (params:any) {
-      const zoomLevel = params.zoom;
-      console.log('zoomLevel:', zoomLevel);
-      // const newNodes = nodes.map((node) => {
-      //   // Modify the color or visibility of the node based on the zoom level and the node's group
-      //   if (node.group <= zoomLevel) {
-      //     return { ...node, itemStyle: { color: null }, label: { show: true, formatter: node.name } };
-      //   } else {
-      //     return { ...node, symbolSize:0, label: { show: false } };
-      //   }
-      // });
-      // chartInstance.setOption({ series: [{ data: newNodes }] });
-    });
+    // chartInstance.on('graphRoam', function (params:any) {
+    //   const zoomLevel = params.zoom;
+    //   console.log('zoomLevel:', zoomLevel);
+    //   // const newNodes = nodes.map((node) => {
+    //   //   // Modify the color or visibility of the node based on the zoom level and the node's group
+    //   //   if (node.group <= zoomLevel) {
+    //   //     return { ...node, itemStyle: { color: null }, label: { show: true, formatter: node.name } };
+    //   //   } else {
+    //   //     return { ...node, symbolSize:0, label: { show: false } };
+    //   //   }
+    //   // });
+    //   // chartInstance.setOption({ series: [{ data: newNodes }] });
+    // });
     chartInstance.setOption(option);
 
     return () => {

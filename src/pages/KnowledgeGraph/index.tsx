@@ -120,15 +120,15 @@ const KnowledgeGraph: React.FC = () => {
       >
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div id="graphOutter" style={{ flex: selectedNode ? 2 : 2 }}>
-            <Graph
+            {/* <Graph
               color={color}
               nodes={graphInfo.nodes}
               links={graphInfo.links}
               select={handleNodeClick}
               width={location.pathname === '/graph' ? 1300 : 800}
               height={location.pathname === '/graph' ? 700 : 580}
-            />
-            {/* <GraphEcharts nodes={graphInfo.nodes} links={graphInfo.links} color={color} select={handleNodeClick} width={1300} height={700} /> */}
+            /> */}
+            <GraphEcharts nodes={graphInfo.nodes} links={graphInfo.links} color={color} select={handleNodeClick} width={1300} height={700} />
           </div>
           {selectedNode && (
             <div style={{ flex: 1 }}>

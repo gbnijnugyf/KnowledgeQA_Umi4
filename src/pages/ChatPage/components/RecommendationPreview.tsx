@@ -1,5 +1,5 @@
 import { getRecommend } from '@/services/ant-design-pro/api';
-import { CloseOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import { Button, Card, Tag } from 'antd';
 import { useState } from 'react';
 import '../index.scss';
@@ -52,12 +52,13 @@ export function RecommendationCard(props: IRecommendationCardProps) {
   };
   return (
     <>
-      <Card
-      id="shadow-box"
-        className="recommendation-card"
-        style={{ backgroundColor: '#EEF5FF', border: '#BFBFBF 1px solid' }}
-      >
-        {props.item.recommend && (
+      {props.item.recommend?.length !== undefined && props.item.recommend?.length > 0 && (
+        <Card
+          id="shadow-box"
+          className="recommendation-card"
+          style={{ backgroundColor: '#EEF5FF', border: '#BFBFBF 1px solid' }}
+        >
+          {/* {props.item.recommend?.length !== undefined && props.item.recommend?.length>0 && ( */}
           <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap' }}>
             您可能还想了解：
             {props.item.recommend && (
@@ -67,7 +68,7 @@ export function RecommendationCard(props: IRecommendationCardProps) {
                     className="recommend-list"
                     onClick={() => handleClickTag(recommendation)}
                     color={tagColors[index % 2]}
-                    style={{ color: 'white'}}
+                    style={{ color: 'white' }}
                   >
                     <div
                       style={{
@@ -83,16 +84,21 @@ export function RecommendationCard(props: IRecommendationCardProps) {
               </>
             )}
           </div>
-        )}
-      </Card>
+          {/* )} */}
+        </Card>
+      )}
       {recommendTextBoxOpen && (
         <Card
           className="recommendation-card"
           id="shadow-box"
-          style={{ marginTop: '0.3em',border: '#BFBFBF 1px solid'  }}
+          style={{ marginTop: '0.3em', border: '#BFBFBF 1px solid' }}
           title={
-            <div style={{ display: 'flex', justifyContent: 'space-between',alignItems: 'baseline' }}>
-              <div style={{width:"80%", overflow:"hidden", textOverflow:"ellipsis"}}>{recommendTag}</div>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}
+            >
+              <div style={{ width: '80%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {recommendTag}
+              </div>
               <Button
                 onClick={() => {
                   setRecommendTextBoxOpen(false);

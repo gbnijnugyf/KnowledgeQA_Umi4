@@ -98,7 +98,7 @@ declare namespace API {
   };
   type MessageType = {
     key: number;
-    sender: 'user' | 'bot';
+    sender: 'user' | 'assistant';
     text: string;
     recommend?: Array<string>; //推荐的知识点
   };

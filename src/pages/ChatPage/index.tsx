@@ -10,7 +10,6 @@ import { IReturn } from '@/services/plugin/globalInter';
 import { debounce } from '@/services/plugin/utils';
 import { PageContainer } from '@ant-design/pro-components';
 import { useAccess } from '@umijs/max';
-import 'allotment/dist/style.css';
 import { Breadcrumb, Button, Card, Modal, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { DelDialogModal } from './components/DelDialog';
@@ -53,7 +52,6 @@ const ChatPage: React.FC = () => {
   ]);
   const msgButtomKey = useRef<number>(-1); //记录最底部信息，查看是否有修改
   const access = useAccess();
-
   //滚动到最底部
   const scrollToBottom = (direct: boolean) => {
     let chatBox = document.getElementById('dialogList');
@@ -61,8 +59,6 @@ const ChatPage: React.FC = () => {
       chatBox.scrollTop = chatBox.scrollHeight;
     } else {
       if (messages.length > 0) {
-        console.log('scrollToBottom:', messages);
-        console.log('scrollToBottom:', msgButtomKey.current);
         if (chatBox && messages[messages.length - 1]?.key !== msgButtomKey.current) {
           chatBox.scrollTop = chatBox.scrollHeight;
           msgButtomKey.current = messages[messages.length - 1].key;
@@ -73,12 +69,14 @@ const ChatPage: React.FC = () => {
 
   useEffect(() => scrollToBottom(false), [messages]); // 当 messages 发生变化时，滚动到底部
 
-  useEffect(() => {
-    myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
-      console.log(res);
-      setRecommendations(res.data);
-    });
-  }, [inputValue]);
+  // useEffect(() => {
+  //   if (inputValue.text === '' && currentDialogKey !== -1) {
+  //     myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
+  //       console.log("123");
+  //       setRecommendations(res.data);
+  //     });
+  //   }
+  // }, [inputValue]);
 
   // 删除对话框
   const handleDeleteDialog = (key: number, name: string) => {
@@ -133,8 +131,10 @@ const ChatPage: React.FC = () => {
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
         if (res.status === 1) {
           setMessages(res.data);
-          msgButtomKey.current = res.data[res.data.length - 1].key;
-          setTimeout(()=>scrollToBottom(true));
+          if(res.data.length>0){
+            msgButtomKey.current = res.data[res.data.length - 1].key;
+          }
+          setTimeout(() => scrollToBottom(true));
         } else {
           message.error('获取对话失败,请重试！');
         }
@@ -187,9 +187,12 @@ const ChatPage: React.FC = () => {
 
   //重新加载信息
   const handleReload = async (key: number) => {
+    const hide = message.loading('正在加载信息')
     const res = await reloadMessage({ key: key });
-    if (res.status === 1 && res.data.sender === 'bot') {
+    if (res.status === 1 && res.data.sender === 'assistant') {
+      hide()
       console.log(res);
+
       const newMessages = [...messages];
       const index = newMessages.findIndex((message) => message.key === res.data.key);
       if (index !== -1) {
@@ -202,8 +205,10 @@ const ChatPage: React.FC = () => {
           newMessages.splice(requestKeyIndex + 1, 0, res.data);
         }
       }
+      message.success('加载成功')
       setMessages(newMessages);
     } else {
+      hide()
       message.error('重新加载失败');
     }
   };
@@ -215,14 +220,14 @@ const ChatPage: React.FC = () => {
       return;
     }
     if (inputValue.text !== '') {
-      setMessages([...messages, inputValue, { key: -1, sender: 'bot', text: '正在生成回复...' }]);
+      setMessages([...messages, inputValue, { key: -1, sender: 'assistant', text: '正在生成回复...' }]);
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text, mode: modeValue }) as Promise<
             IReturn<API.sendMessageType>
           >,
           new Promise(
-            (_, reject) => setTimeout(() => reject(new Error('请求超时')), 5000), // 5秒超时
+            (_, reject) => setTimeout(() => reject(new Error('请求超时')), 25000), // 25秒超时
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
@@ -237,7 +242,7 @@ const ChatPage: React.FC = () => {
             // 替换最后一条消息
             prevMessages.push({
               key: res.data.reply.key,
-              sender: 'bot',
+              sender: 'assistant',
               text: res.data.reply.text,
               recommend: res.data.reply.recommend,
             });

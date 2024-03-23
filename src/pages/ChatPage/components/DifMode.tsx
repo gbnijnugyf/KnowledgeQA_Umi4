@@ -1,6 +1,7 @@
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { useAccess } from '@umijs/max';
 import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 import { DialogList, DialogListProps } from './DialogList';
 
 interface IDifMode {

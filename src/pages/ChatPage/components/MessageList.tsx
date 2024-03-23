@@ -61,7 +61,7 @@ export function MessageList({
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
                 borderBottom: 'none',
-                alignItems: item.sender === 'bot' ? 'flex-start' : 'flex-end',
+                alignItems: item.sender === 'assistant' ? 'flex-start' : 'flex-end',
               }}
               onMouseEnter={() => setIsHovered({ open: true, key: item.key })}
               onMouseLeave={() => setIsHovered({ open: false, key: item.key })}
@@ -69,13 +69,13 @@ export function MessageList({
               <div
                 style={{
                   display: 'flex',
-                  flexDirection: item.sender === 'bot' ? 'row' : 'row-reverse',
+                  flexDirection: item.sender === 'assistant' ? 'row' : 'row-reverse',
                 }}
               >
                 <Avatar
                   shape="square"
                   style={{ backgroundColor: '#BDD7EE' }}
-                  icon={item.sender === 'bot' ? <RobotOutlined /> : <UserOutlined />}
+                  icon={item.sender === 'assistant' ? <RobotOutlined /> : <UserOutlined />}
                   className="avatar"
                 />
                 <div
@@ -101,7 +101,7 @@ export function MessageList({
                     icon={<DeleteOutlined />}
                     onClick={() => handleDeleteMessage(item.key)}
                   />
-                  {item.sender === 'bot' && (
+                  {item.sender === 'assistant' && (
                     <>
                     <Button
                     id="shadow-box"
@@ -143,7 +143,7 @@ export function MessageList({
                     {item.text}
                   </div>
                   <div style={{ marginTop: '0.3em' }}>
-                    {item.sender === 'bot' && item.recommend && (
+                    {item.sender === 'assistant' && item.recommend && (
                       <div className="recommend-list-box">
                         <RecommendationCard
                           dialog_key={dialog_key}

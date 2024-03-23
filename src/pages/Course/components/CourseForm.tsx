@@ -35,7 +35,7 @@ export function CourseForm(props:ICourseForm) {
           );
         })
       ) : (
-        <p>暂无可见文章</p>
+        <p>暂无可见课程</p>
       )}
     </Carousel></div>
   );

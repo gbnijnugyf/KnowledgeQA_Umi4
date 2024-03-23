@@ -44,7 +44,6 @@ export function NewDialogPage(props: INewFormProps) {
   const onSubmit = async (value: any) => {
     // 在这里处理提交事件
     const res = await addDialog(value);
-    console.log(res);
     if (res.status === 1) {
       message.success('创建成功');
       props.onFlush.set(!props.onFlush.value);

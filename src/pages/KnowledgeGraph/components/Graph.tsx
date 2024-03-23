@@ -210,7 +210,7 @@ export function Graph(props: IGraphProps) {
         })
         // 更新边的粗细，使用 1/scaleLevel 作为比例因子
         .attr('stroke-width', (d: dLink) => {
-          return scaleLevel > 8 ? 0 : scaleLevel > 3 ? 0.3 : 0.5;
+          return scaleLevel > 8 ? 1 : scaleLevel > 3 ? 1 : 1;
         });
     }
 
@@ -236,6 +236,7 @@ export function Graph(props: IGraphProps) {
         // 当用户放大或缩小时，调用自定义函数
         // let scaleLevel = Math.floor(event.transform.k);
         let scaleLevel = event.transform.k * 4;
+        //TODO: 尝试对updateGraphByZoom防抖or节流
         currentScale.current === scaleLevel ? null : updateGraphByZoom(scaleLevel);
       });
 
