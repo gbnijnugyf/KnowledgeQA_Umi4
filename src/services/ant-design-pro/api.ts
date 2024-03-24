@@ -188,12 +188,21 @@ export async function removeRule(options?: { [key: string]: any }) {
     },
   });
 }
-export async function myRemoveRule(options?: { [key: string]: any }) {
+export async function myRemoveBase(options?: { [key: string]: any }) {
   return request<Record<string, any>>(BASEURL + '/delKnowledgeBase', {
     method: 'POST',
     data: {
       method: 'delete',
       ...(options || {}),
+    },
+  });
+}
+export async function myRemoveBaseFile(props:{basekey:number,  [key: string]: any }) {
+  return request<Record<string, any>>(BASEURL + '/delKnowledgeBaseFile', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      ...(props || {}),
     },
   });
 }

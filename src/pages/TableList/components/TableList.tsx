@@ -1,4 +1,4 @@
-import { addRule, myRemoveRule } from '@/services/ant-design-pro/api';
+import { addRule, myRemoveBase, myRemoveBaseFile } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-components';
@@ -30,13 +30,23 @@ import type { FormValueType, IUpdateFormProps } from './UpdateForm';
  *
  * @param selectedRows
  */
-async function handleRemove<T extends Record<string, any>>(selectedRows: T[]) {
+async function handleRemove<T extends Record<string, any>>(selectedRows: T[], baseKey?:number) {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    const res = await myRemoveRule({
-      key: selectedRows.map((row) => row.key),
-    });
+    let res;
+    console.log("baseKey:",baseKey)
+    if(baseKey===undefined){
+      res = await myRemoveBase({
+        key: selectedRows.map((row) => row.key),
+      });
+    }else{
+      res = await myRemoveBaseFile({
+        basekey: baseKey,
+        key: selectedRows.map((row) => row.key),
+      });
+    }
+    
     console.log(res);
     hide();
     message.success('删除成功');
@@ -75,6 +85,7 @@ interface ITableList<T> {
   data: {
     title: string;
     columns: ProColumns<T>[];
+    baseKey?:number
   };
   request: ITableRequest<T>;
   submitNewForm?: (value: FormValueType<T>) => Promise<void>;
@@ -140,7 +151,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
             </div>
             <Button
               onClick={async () => {
-                await handleRemove<T>(props.hooks.setRowState.value);
+                await handleRemove<T>(props.hooks.setRowState.value, props.data.baseKey);
                 props.hooks.setRowState.set([]);
                 props.hooks.ref.current?.reloadAndRest?.();
               }}

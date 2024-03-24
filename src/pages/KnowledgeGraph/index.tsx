@@ -1,7 +1,7 @@
 import { myGetGraph } from '@/services/ant-design-pro/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { useLocation, useModel } from '@umijs/max';
-import { Button, Card } from 'antd';
+import { Button, Card, message } from 'antd';
 import { parse } from 'querystring';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../../../config/defaultSettings';
@@ -73,12 +73,18 @@ const KnowledgeGraph: React.FC = () => {
     //   setBaseTitle(res.data.name);
     // }
     // 获取知识图谱数据
+    const hide = message.loading('获取知识图谱中')
     myGetGraph({ key: knowledgeBaseKey }).then((res) => {
+      hide()
       console.log(res);
-      setGraphInfo({
-        nodes: res.data.nodes,
-        links: res.data.links,
-      });
+      if(res.status===1){
+        setGraphInfo({
+          nodes: res.data.nodes,
+          links: res.data.links,
+        });
+      }else{
+        message.warning('该课程知识图谱不可见')
+      }
       // setGraphInfo(res.data);
     });
   }, [knowledgeBaseKey]);

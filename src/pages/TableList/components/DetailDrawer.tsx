@@ -1,7 +1,7 @@
 import { myGetKnowledgeBaseFiles, myUploadKnowledgeBaseFile } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { ActionType } from '@ant-design/pro-components';
-import { Drawer } from 'antd';
+import { Drawer, message } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { useEffect, useRef, useState } from 'react';
 import { KnowledgeBaseFile } from '../tableData';
@@ -19,7 +19,6 @@ export interface IDetailDrawerProps {
 }
 
 export default function DetailDrawer(props: IDetailDrawerProps) {
-  console.log('DetailDrawer', props);
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -80,6 +79,10 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   });
   const submitNewForm = async (value: FormValueType<API.KnowledgeBaseFileListItem>) => {
     // console.log(props.key, fileList);
+    if(fileList.length===0){
+      message.warning('没有要上传的文件')
+      return
+    }
     const res = await myUploadKnowledgeBaseFile({
       options: { key: props.key_id },
       fileList: fileList,
@@ -136,7 +139,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
             set: setFileList,
           },
         }}
-        data={{ columns: columns, title: props.baseName }}
+        data={{ columns: columns, title: props.baseName, baseKey: props.key_id}}
         request={resquest}
         submitNewForm={submitNewForm}
       />

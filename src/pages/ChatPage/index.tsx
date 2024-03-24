@@ -2,7 +2,6 @@ import {
   deleteMessage,
   getHistoryMessage,
   myGetDialogs,
-  myGetRecommendedInput,
   reloadMessage,
   sendMessage,
 } from '@/services/ant-design-pro/api';
@@ -69,15 +68,6 @@ const ChatPage: React.FC = () => {
 
   useEffect(() => scrollToBottom(false), [messages]); // 当 messages 发生变化时，滚动到底部
 
-  // useEffect(() => {
-  //   if (inputValue.text === '' && currentDialogKey !== -1) {
-  //     myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
-  //       console.log("123");
-  //       setRecommendations(res.data);
-  //     });
-  //   }
-  // }, [inputValue]);
-
   // 删除对话框
   const handleDeleteDialog = (key: number, name: string) => {
     setOperateDialogKey({ key, name });
@@ -131,7 +121,7 @@ const ChatPage: React.FC = () => {
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
         if (res.status === 1) {
           setMessages(res.data);
-          if(res.data.length>0){
+          if (res.data.length > 0) {
             msgButtomKey.current = res.data[res.data.length - 1].key;
           }
           setTimeout(() => scrollToBottom(true));
@@ -153,12 +143,6 @@ const ChatPage: React.FC = () => {
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
-  // const handleHideMenu = () => {
-  //   setMenuDisplay(false);
-  // };
-  // const handleOpenMenu = () => {
-  //   setMenuDisplay(true);
-  // };
 
   // 删除某条消息
   const handleDeleteMessage = (key: number) => {
@@ -187,30 +171,32 @@ const ChatPage: React.FC = () => {
 
   //重新加载信息
   const handleReload = async (key: number) => {
-    const hide = message.loading('正在加载信息')
-    const res = await reloadMessage({ key: key });
-    if (res.status === 1 && res.data.sender === 'assistant') {
-      hide()
-      console.log(res);
+    const hide = message.loading('正在重新加载信息');
+    // const res = await reloadMessage({ key: key })
+    reloadMessage({ key: key }).then((res) => {
+      hide();
 
-      const newMessages = [...messages];
-      const index = newMessages.findIndex((message) => message.key === res.data.key);
-      if (index !== -1) {
-        // 如果找到了具有相同键的消息，替换它
-        newMessages[index] = res.data;
-      } else {
-        // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
-        const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
-        if (requestKeyIndex !== -1) {
-          newMessages.splice(requestKeyIndex + 1, 0, res.data);
+      if (res.status === 1 && res.data.sender === 'assistant') {
+        console.log(res);
+
+        const newMessages = [...messages];
+        const index = newMessages.findIndex((message) => message.key === res.data.key);
+        if (index !== -1) {
+          // 如果找到了具有相同键的消息，替换它
+          newMessages[index] = res.data;
+        } else {
+          // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
+          const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
+          if (requestKeyIndex !== -1) {
+            newMessages.splice(requestKeyIndex + 1, 0, res.data);
+          }
         }
+        message.success('加载成功');
+        setMessages(newMessages);
+      } else {
+        message.error('重新加载失败');
       }
-      message.success('加载成功')
-      setMessages(newMessages);
-    } else {
-      hide()
-      message.error('重新加载失败');
-    }
+    });
   };
 
   // 发送消息
@@ -220,14 +206,18 @@ const ChatPage: React.FC = () => {
       return;
     }
     if (inputValue.text !== '') {
-      setMessages([...messages, inputValue, { key: -1, sender: 'assistant', text: '正在生成回复...' }]);
+      setMessages([
+        ...messages,
+        inputValue,
+        { key: -1, sender: 'assistant', text: '正在生成回复...' },
+      ]);
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text, mode: modeValue }) as Promise<
             IReturn<API.sendMessageType>
           >,
           new Promise(
-            (_, reject) => setTimeout(() => reject(new Error('请求超时')), 25000), // 25秒超时
+            (_, reject) => setTimeout(() => reject(new Error('请求超时')), 30000), // 30秒超时
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
@@ -247,7 +237,7 @@ const ChatPage: React.FC = () => {
               recommend: res.data.reply.recommend,
             });
             setMessages(prevMessages);
-          }, 500);
+          }, 0);
           await setMessageBackFunc();
           setInputValue(messageInit);
         } else {
@@ -294,17 +284,10 @@ const ChatPage: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            {/* <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}> */}
             <div style={{ marginRight: '1%' }}>
               <Breadcrumb style={{}} items={breadItems} />
             </div>
-            {/* </div> */}
             <div>
-              {/* {menuDisplay === true ? (
-                <Button onClick={handleHideMenu}>隐藏菜单</Button>
-              ) : (
-                <Button onClick={handleOpenMenu}>显示菜单</Button>
-              )} */}
               {selectedRecommendation !== '' && (
                 <Button onClick={handleHidePreview}>关闭预览</Button>
               )}
@@ -335,16 +318,6 @@ const ChatPage: React.FC = () => {
             }}
             setMenuDisplay={{ value: menuDisplay, set: setMenuDisplay }}
           >
-            {/* 对话框列表 */}
-            {/* {menuDisplay === true && (
-              <DialogList
-                dialogs={dialogs}
-                currentDialogKey={currentDialogKey}
-                handleDialogClick={handleDialogClick}
-                handleDeleteDialog={handleDeleteDialog}
-                handleEditDialog={handleEditDialog}
-              />
-            )} */}
             {currentDialogKey !== -1 && currentDialogKey !== null ? (
               <div
                 className="chat-container"
@@ -384,8 +357,6 @@ const ChatPage: React.FC = () => {
                     {currentDialogKey !== -1 && currentDialogKey !== null ? (
                       <div
                         style={{
-                          // marginTop: '10vh',
-                          // marginBottom: '2.5%',
                           overflow: 'hidden',
                           height: '10%',
                           width: '100%',
@@ -457,3 +428,29 @@ const ChatPage: React.FC = () => {
 };
 
 export default ChatPage;
+
+/**
+ * useEffect(() => {
+  // 创建一个新的 WebSocket 连接
+  const socket = new WebSocket("ws://your-server.com/path");
+
+  // 监听 open 事件来确认连接已经打开
+  socket.addEventListener("open", (event) => {
+    // 连接打开后，发送一个消息到服务端
+    socket.send("Hello Server!");
+  });
+
+  // 监听 message 事件来接收服务端发送过来的消息
+  socket.addEventListener("message", (event) => {
+    console.log("Message from server: ", event.data);
+    // 这里你可以更新你的状态来显示新的消息
+    // setMessages((prevMessages) => [...prevMessages, event.data]);
+  });
+
+  // 在组件卸载时关闭 WebSocket 连接
+  return () => {
+    socket.close();
+  };
+}, []);
+
+ */
