@@ -8,10 +8,12 @@ import { useAccess } from '@umijs/max';
 
 interface ICourseForm {
   myOnClick:(course:API.KnowledgeBaseListItem)=>void
+  fresh:boolean
 }
 
 export function CourseForm(props:ICourseForm) {
   const [cardArr, setCardArr] = useState<API.KnowledgeBaseListItem[][]>([]);
+
   const aPageNum = useAccess().isMobile()? 3:5
   useEffect(() => {
     myGetCourses({ option: 1 }).then((res) => {
@@ -22,7 +24,7 @@ export function CourseForm(props:ICourseForm) {
             message.error('获取课程列表失败')
         }
     })
-  }, [location]);
+  }, [location,props.fresh]);
   return (
     <div>
     <Carousel className="my-carousel" autoplay={false} dotPosition={'bottom'}>

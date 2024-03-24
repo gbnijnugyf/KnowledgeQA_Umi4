@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { useAccess, useModel } from '@umijs/max';
-import { Card, theme } from 'antd';
-import React from 'react';
+import { Card, message, theme } from 'antd';
+import React, { useState } from 'react';
 import welComeBg from '../../public/welcomeBg.jpg';
 import { AddCourseDialog } from './Course/components/AddCourseDialog';
 import { CourseForm } from './Course/components/CourseForm';
@@ -91,12 +91,16 @@ const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   const access = useAccess();
-  const [course, setCourse] = React.useState<API.KnowledgeBaseListItem>();
-  const [addCourseModal, setAddCourseModal] = React.useState<boolean>(false);
-
+  const [course, setCourse] = useState<API.KnowledgeBaseListItem>();
+  const [addCourseModal, setAddCourseModal] = useState<boolean>(false);
+  const [flush, setFlush] = useState<boolean>(false);
   const myOnClick = (course: API.KnowledgeBaseListItem) => {
-    setCourse(course);
-    setAddCourseModal(true);
+    if (access.adminRoute()) {
+      message.warning('教师暂不支持添加课程');
+    } else {
+      setCourse(course);
+      setAddCourseModal(true);
+    }
   };
   const backgroundImg = access.isMobile() ? undefined : `url(${welComeBg})`;
   return (
@@ -105,12 +109,6 @@ const Welcome: React.FC = () => {
         style={{
           borderRadius: 8,
         }}
-        // bodyStyle={{
-        //   backgroundImage:
-        //     initialState?.settings?.navTheme === 'realDark'
-        //       ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-        //       : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-        // }}
       >
         <div
           style={{
@@ -163,7 +161,13 @@ const Welcome: React.FC = () => {
             <InfoCard index={3} title="了解我们" href="http://cst.whut.edu.cn/" desc="" />
           </div>
         </div>
-        <div style={{ marginTop: '5vh', height:  access.isMobile() ?'39vh':'35vh', overflow: 'auto' }}>
+        <div
+          style={{
+            marginTop: '5vh',
+            height: access.isMobile() ? '39vh' : '35vh',
+            overflow: 'auto',
+          }}
+        >
           <div>
             <div
               style={{
@@ -175,13 +179,17 @@ const Welcome: React.FC = () => {
               <Search myOnSeleted={myOnClick} />
             </div>
           </div>
-          <CourseForm myOnClick={myOnClick} />
+          <CourseForm myOnClick={myOnClick} fresh={flush}/>
         </div>
       </Card>
       <AddCourseDialog
         open={{
           value: addCourseModal,
           set: setAddCourseModal,
+        }}
+        flush={{
+          value:flush,
+          set:setFlush
         }}
         course={course}
       />

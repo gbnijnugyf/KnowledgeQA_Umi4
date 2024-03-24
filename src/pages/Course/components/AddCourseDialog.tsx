@@ -4,7 +4,7 @@ import { Button, Modal, message } from 'antd';
 
 interface IAddCourseDialog {
   open: IHookFunc<boolean>;
-  //   flush: IHookFunc<boolean>;
+    flush: IHookFunc<boolean>;
   course: API.KnowledgeBaseListItem | undefined;
 }
 export function AddCourseDialog(props: IAddCourseDialog) {
@@ -13,6 +13,7 @@ export function AddCourseDialog(props: IAddCourseDialog) {
     if (res.status === 1) {
       props.open.set(false);
       message.success('添加成功');
+      props.flush.set(!props.flush.value)
     }else{
       message.error('添加失败')
     }
