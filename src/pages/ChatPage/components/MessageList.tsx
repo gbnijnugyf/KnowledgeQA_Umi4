@@ -1,13 +1,16 @@
+import { myGetRecommendTags } from '@/services/ant-design-pro/api';
 import {
   CopyOutlined,
   DeleteOutlined,
+  DeploymentUnitOutlined,
   DislikeOutlined,
   LikeOutlined,
+  MoreOutlined,
   ReloadOutlined,
   RobotOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, List, message } from 'antd';
+import { Avatar, Button, List, Popover, message } from 'antd';
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import '../index.scss';
@@ -17,7 +20,7 @@ interface MessageListProps {
   messageList: API.MessageType[];
   handleDeleteMessage: (key: number) => void;
   handleReload: (key: number) => Promise<void>;
-  handleRecommendationClick: (recommendation: string) => void;
+  handleGetRecommend: (key: number) => void;
   dialog_key: number;
 }
 
@@ -27,7 +30,7 @@ export function MessageList({
   handleDeleteMessage,
   handleReload,
   dialog_key,
-  handleRecommendationClick,
+  handleGetRecommend,
 }: MessageListProps) {
   // console.log('messageList:', messageList);
   const [isHovered, setIsHovered] = useState<{ open: boolean; key: number }>({
@@ -42,6 +45,21 @@ export function MessageList({
   };
 
   // console.log('messageList:', messageList_);
+
+  // function handleGetRecommend(item: API.MessageType) {
+  //   const hide = message.loading('正在获取相关推荐');
+  //   myGetRecommendTags({ key: item.key }).then((res) => {
+  //     hide();
+  //     if (res.status === 1) {
+  //       item = {
+  //         ...item,
+  //         recommend: res.data,
+  //       };
+  //       console.log(item)
+  //     }
+  //   });
+  //   return item
+  // }
 
   return (
     <List<API.MessageType>
@@ -93,7 +111,7 @@ export function MessageList({
                     />
                   </CopyToClipboard>
                   <Button
-                      id="shadow-box"
+                    id="shadow-box"
                     style={{
                       margin: '0 0 0 4%',
                       padding: '5%',
@@ -103,30 +121,43 @@ export function MessageList({
                   />
                   {item.sender === 'assistant' && (
                     <>
-                    <Button
-                    id="shadow-box"
-                      style={{
-                        margin: '0 0 0 4%',
-                        padding: '5%',
-                      }}
-                      onClick={() => clickLike()}
-                      icon={<LikeOutlined  />}
-                    />
-                    <Button
-                    id="shadow-box"
-                      style={{
-                        margin: '0 0 0 4%',
-                        padding: '5%',
-                      }}
-                      onClick={() => clickLike()}
-                      icon={<DislikeOutlined />}
-                    />
+                    <Popover content="获取推荐">
+                      <Button
+                        id="shadow-box"
+                        style={{
+                          margin: '0 0 0 4%',
+                          padding: '5%',
+                        }}
+                        onClick={async () => {
+                          console.log("1:",item);
+                          handleGetRecommend(item.key)
+                          console.log("2:",item);
+                        }}
+                        icon={<DeploymentUnitOutlined />}
+                      /></Popover>
+                      <Button
+                        id="shadow-box"
+                        style={{
+                          margin: '0 0 0 4%',
+                          padding: '5%',
+                        }}
+                        onClick={() => clickLike()}
+                        icon={<LikeOutlined />}
+                      />
+                      <Button
+                        id="shadow-box"
+                        style={{
+                          margin: '0 0 0 4%',
+                          padding: '5%',
+                        }}
+                        onClick={() => clickLike()}
+                        icon={<DislikeOutlined />}
+                      />
                     </>
                   )}
                   {item.sender === 'user' && (
                     <Button
-                    id="shadow-box"
-
+                      id="shadow-box"
                       style={{
                         margin: '0 0 0 4%',
                         padding: '5%',
@@ -145,10 +176,7 @@ export function MessageList({
                   <div style={{ marginTop: '0.3em' }}>
                     {item.sender === 'assistant' && item.recommend && (
                       <div className="recommend-list-box">
-                        <RecommendationCard
-                          dialog_key={dialog_key}
-                          item={item}
-                        />
+                        <RecommendationCard dialog_key={dialog_key} item={item} />
                       </div>
                     )}
                   </div>

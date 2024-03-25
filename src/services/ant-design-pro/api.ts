@@ -332,7 +332,7 @@ export async function myGetCourse(
   });
 }
 
-/** 获取对话列表 //getDialogs */
+/** 获取对话列表 /getDialogs */
 export async function myGetDialogs(
   params: {
     // query
@@ -340,6 +340,23 @@ export async function myGetDialogs(
   options?: { [key: string]: any },
 ) {
   return request<IReturn<API.DialogListItem[]>>(BASEURL + '/getDialogs', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取对话列表 /getRecommendTags */
+export async function myGetRecommendTags(
+  params: {
+    // query
+    key:number
+  },
+  options?: { [key: string]: any },
+) {
+  return request<IReturn<string[]>>(BASEURL + '/getRecommendTags', {
     method: 'GET',
     params: {
       ...params,

@@ -1,11 +1,11 @@
-// export const BASEURL = 'http://127.0.0.1:4523/m1/4024081-0-default';
+export const BASEURL = 'http://127.0.0.1:4523/m1/4024081-0-default';
 //mock调整后数据
 // export const BASEURL = 'http://127.0.0.1:4523/m1/4107192-0-default';
 //远程apifox https or http
 // export const BASEURL = 'https://zqsongsong.top:4524/m1/4024081-0-default';
 // export const BASEURL = 'http://zqsongsong.top:4525/m1/4024081-0-default';
 //后端提供
-export const BASEURL = 'http://10.79.183.86:5000';
+// export const BASEURL = 'http://10.79.183.86:5000';
 export const titleName = '智学导图';
 export const loginPath = '/user/login';
 

@@ -2,6 +2,7 @@ import {
   deleteMessage,
   getHistoryMessage,
   myGetDialogs,
+  myGetRecommendTags,
   reloadMessage,
   sendMessage,
 } from '@/services/ant-design-pro/api';
@@ -43,6 +44,7 @@ const ChatPage: React.FC = () => {
     name: '',
   });
   const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [selectMsg, setSelectMsg] = useState<number>(-1);
   const [breadItems, setBreadItems] = useState<Array<{ title: string; path?: string }>>([
     {
       path: '/chat',
@@ -140,6 +142,24 @@ const ChatPage: React.FC = () => {
   const handleRecommendationClick = (recommendation: string) => {
     setSelectedRecommendation(recommendation);
   };
+  const handleGetRecommend = (key:number)=>{
+    const hide = message.loading('正在获取相关推荐');
+    myGetRecommendTags({key:key}).then((res)=>{
+      hide()
+      if(res.status===1){
+        const msgList = [...messages]
+        msgList.forEach((e)=>{
+          if(e.key===key){
+            e.recommend =res.data
+          }
+        })
+        setMessages(msgList)
+      }else[
+        message.error('获取失败')
+      ]
+    }).catch(()=>message.error('获取失败'))
+
+  }
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
@@ -350,7 +370,7 @@ const ChatPage: React.FC = () => {
                     <MessageList
                       messageList={messages}
                       handleDeleteMessage={handleDeleteMessage}
-                      handleRecommendationClick={handleRecommendationClick}
+                      handleGetRecommend={handleGetRecommend}
                       handleReload={handleReload}
                       dialog_key={currentDialogKey}
                     />
