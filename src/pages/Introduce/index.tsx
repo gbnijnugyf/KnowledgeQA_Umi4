@@ -79,6 +79,7 @@ const IntroduceBackground = () => {
               <video
                 controls
                 width="70%"
+                muted
                 autoPlay
                 loop
                 style={{
