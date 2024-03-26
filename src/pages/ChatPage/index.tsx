@@ -3,6 +3,7 @@ import {
   getHistoryMessage,
   myGetDialogs,
   myGetRecommendTags,
+  myGetRecommendedInput,
   reloadMessage,
   sendMessage,
 } from '@/services/ant-design-pro/api';
@@ -75,7 +76,13 @@ const ChatPage: React.FC = () => {
     setOperateDialogKey({ key, name });
     setDeleteDialogModal(true);
   };
-
+  //获取推荐输入
+  useEffect(() => {
+    myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
+      console.log(res);
+      setRecommendations(res.data);
+    });
+  }, [inputValue]);
   // 编辑对话框
   const handleEditDialog = (key: number, name: string) => {
     setOperateDialogKey({ key, name });
@@ -198,7 +205,6 @@ const ChatPage: React.FC = () => {
 
       if (res.status === 1 && res.data.sender === 'assistant') {
         console.log(res);
-
         const newMessages = [...messages];
         const index = newMessages.findIndex((message) => message.key === res.data.key);
         if (index !== -1) {

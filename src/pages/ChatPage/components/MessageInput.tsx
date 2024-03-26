@@ -21,7 +21,7 @@ export function MessageInput({
     <div style={{ display: 'flex', width: '100%' }}>
       <Select
         defaultValue={0}
-        style={{ marginRight:'1%' }}
+        style={{ marginRight: '1%' }}
         onChange={handleModeChange}
         options={[
           { value: 0, label: '普通模式' },
@@ -31,7 +31,7 @@ export function MessageInput({
       />
       <AutoComplete
         placeholder="ctrl+enter发送"
-        // options={recommendations?.map((rec) => ({ value: rec }))}
+        options={inputValue.text === '' ? recommendations?.map((rec) => ({ value: rec })) : []}
         value={inputValue.text}
         onChange={handleChange}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {

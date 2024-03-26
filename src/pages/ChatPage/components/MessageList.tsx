@@ -1,11 +1,9 @@
-import { myGetRecommendTags } from '@/services/ant-design-pro/api';
 import {
   CopyOutlined,
   DeleteOutlined,
   DeploymentUnitOutlined,
   DislikeOutlined,
   LikeOutlined,
-  MoreOutlined,
   ReloadOutlined,
   RobotOutlined,
   UserOutlined,
@@ -102,10 +100,12 @@ export function MessageList({
                 >
                   <CopyToClipboard text={item.text} onCopy={() => message.success('已复制')}>
                     <Button
+                      //TODO: 样式代码待调整
                       id="shadow-box"
                       style={{
-                        margin: '0 0 0 4%',
-                        padding: '5%',
+                        margin: '0 0 0 2.5%',
+                        padding: '4%',
+                        paddingTop: `${item.sender === 'assistant' ? '3%' : ''}`,
                       }}
                       icon={<CopyOutlined />}
                     />
@@ -113,33 +113,37 @@ export function MessageList({
                   <Button
                     id="shadow-box"
                     style={{
-                      margin: '0 0 0 4%',
-                      padding: '5%',
+                      margin: '0 0 0 2.5%',
+                      padding: '4%',
+                      paddingTop: `${item.sender === 'assistant' ? '3%' : ''}`,
                     }}
                     icon={<DeleteOutlined />}
                     onClick={() => handleDeleteMessage(item.key)}
                   />
                   {item.sender === 'assistant' && (
                     <>
-                    <Popover content="获取推荐">
+                      <Popover content="获取推荐">
+                        <Button
+                          id="shadow-box"
+                          style={{
+                            margin: '0 0 0 2.5%',
+                            padding: '4%',
+                            paddingTop: '3%',
+                          }}
+                          onClick={async () => {
+                            // console.log("1:",item);
+                            handleGetRecommend(item.key);
+                            // console.log("2:",item);
+                          }}
+                          icon={<DeploymentUnitOutlined />}
+                        />
+                      </Popover>
                       <Button
                         id="shadow-box"
                         style={{
-                          margin: '0 0 0 4%',
-                          padding: '5%',
-                        }}
-                        onClick={async () => {
-                          console.log("1:",item);
-                          handleGetRecommend(item.key)
-                          console.log("2:",item);
-                        }}
-                        icon={<DeploymentUnitOutlined />}
-                      /></Popover>
-                      <Button
-                        id="shadow-box"
-                        style={{
-                          margin: '0 0 0 4%',
-                          padding: '5%',
+                          margin: '0 0 0 2.5%',
+                          padding: '4%',
+                          paddingTop: '3%',
                         }}
                         onClick={() => clickLike()}
                         icon={<LikeOutlined />}
@@ -147,8 +151,9 @@ export function MessageList({
                       <Button
                         id="shadow-box"
                         style={{
-                          margin: '0 0 0 4%',
-                          padding: '5%',
+                          margin: '0 0 0 2.5%',
+                          padding: '4%',
+                          paddingTop: '3%',
                         }}
                         onClick={() => clickLike()}
                         icon={<DislikeOutlined />}
