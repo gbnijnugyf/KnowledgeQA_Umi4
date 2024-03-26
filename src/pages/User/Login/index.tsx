@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { flushSync } from 'react-dom';
 import loginBg from '../../../../public/loginBg.mp4';
 import loginBgImg from '../../../../public/loginBgImg.jpg';
+import "./index.scss"
 type LoginType = 'student' | 'teacher';
 
 function Page() {
@@ -67,13 +68,14 @@ function Page() {
       <LoginFormPage
         // backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
         // backgroundVideoUrl={loginBg}
-        backgroundImageUrl={loginBgImg}
+        // backgroundImageUrl={loginBgImg}
         logo={<img alt="logo" src="/logo.webp" />}
         title={titleName}
-        containerStyle={{
-          backgroundColor: 'rgba(0, 0, 0,0.65)',
-          backdropFilter: 'blur(4px)',
-        }}
+        className='login-form'
+        // containerStyle={{
+        //   backgroundColor: 'rgba(0, 0, 0,0.65)',
+        //   backdropFilter: 'blur(4px)',
+        // }}
         subTitle="问你所闻，答你所想"
         onFinish={handleSubmit}
       >

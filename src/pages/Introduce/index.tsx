@@ -43,6 +43,7 @@ import './index.scss';
 
 import ReactFullpage from '@fullpage/react-fullpage';
 import { useNavigate } from '@umijs/max';
+import { DownOutlined } from '@ant-design/icons';
 
 const IntroduceBackground = () => {
   const navigate = useNavigate();
@@ -64,13 +65,14 @@ const IntroduceBackground = () => {
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  paddingTop: '10%',
+                  paddingTop: '7%',
                 }}
               >
                 <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>智学导图</h1>
                 <Button className="try-btn" onClick={() => navigate('/welcome')}>
                   立即体验
                 </Button>
+                <div style={{color:'white',marginTop:"5%",opacity:'0.6'}}>下滑查看更多<DownOutlined /></div>
               </div>
             </div>
             <div className="section">
@@ -86,18 +88,18 @@ const IntroduceBackground = () => {
               >
                 <source src={backgroundVideo} type="video/mp4" />
               </video>
-              <div style={{
+              {/* <div style={{
                 // border:'10px red solid',
                 position:'fixed',
-                width:'15%',
-                height:'10%',
-                left:'85%',
+                width:'100%',
+                height:'7%',
+                left:'0%',
                 bottom:'-100%',
                 backgroundColor:'white',
-                zIndex:'99999999'
+                zIndex:'999999'
                 // right:0,
                 // bottom:0
-              }}></div>
+              }}></div> */}
             </div>
           </ReactFullpage.Wrapper>
         );

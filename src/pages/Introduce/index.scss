@@ -6,7 +6,6 @@
 #section1{
   background-image: url('../../../public/loginBgImg.jpg');
 }
-.fp-watermark a{
-  z-index: 0;
-  color: white;
+.fp-watermark {
+  display: none;
 }

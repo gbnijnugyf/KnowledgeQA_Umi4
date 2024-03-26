@@ -54,6 +54,7 @@
     "@ant-design/icons": "^4.8.1",
     "@ant-design/pro-components": "^2.6.48",
     "@fullpage/react-fullpage": "^0.1.42",
+    "@reduxjs/toolkit": "^2.2.2",
     "@umijs/route-utils": "^2.2.2",
     "allotment": "^1.20.0",
     "antd": "^5.13.2",

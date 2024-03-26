@@ -1,11 +1,10 @@
-import { addRule, myRemoveBase, myRemoveBaseFile } from '@/services/ant-design-pro/api';
+import { myRemoveBase, myRemoveBaseFile } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, RequestData } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { SortOrder } from 'antd/es/table/interface';
-import { RcFile } from 'antd/es/upload';
 import React from 'react';
 import { IDetailDrawerProps } from './DetailDrawer';
 import { INewFormProps } from './NewForm';
@@ -30,23 +29,23 @@ import type { FormValueType, IUpdateFormProps } from './UpdateForm';
  *
  * @param selectedRows
  */
-async function handleRemove<T extends Record<string, any>>(selectedRows: T[], baseKey?:number) {
+async function handleRemove<T extends Record<string, any>>(selectedRows: T[], baseKey?: number) {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
     let res;
-    console.log("baseKey:",baseKey)
-    if(baseKey===undefined){
+    console.log('baseKey:', baseKey);
+    if (baseKey === undefined) {
       res = await myRemoveBase({
         key: selectedRows.map((row) => row.key),
       });
-    }else{
+    } else {
       res = await myRemoveBaseFile({
         basekey: baseKey,
         key: selectedRows.map((row) => row.key),
       });
     }
-    
+
     console.log(res);
     hide();
     message.success('删除成功');
@@ -56,7 +55,7 @@ async function handleRemove<T extends Record<string, any>>(selectedRows: T[], ba
     message.error('删除失败，请重试');
     return false;
   }
-};
+}
 
 export type ITableRequest<T> = (
   params: API.PageParams & {
@@ -85,7 +84,7 @@ interface ITableList<T> {
   data: {
     title: string;
     columns: ProColumns<T>[];
-    baseKey?:number
+    baseKey?: number;
   };
   request: ITableRequest<T>;
   submitNewForm?: (value: FormValueType<T>) => Promise<void>;
@@ -132,7 +131,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
           },
         }}
       />
-      {props.hooks.setRowState.value?.length > 0 && (
+      {/* {props.hooks.setRowState.value?.length > 0 && (
         <div
           style={{
             position: 'fixed',
@@ -160,6 +159,25 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
             </Button>
           </div>
         </div>
+      )} */}
+      {props.hooks.setRowState.value?.length > 0 && (
+        <FooterToolbar>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <div>
+              选择 <a style={{ fontWeight: 600 }}>{props.hooks.setRowState.value.length}</a> 项
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <Button
+              onClick={async () => {
+                await handleRemove<T>(props.hooks.setRowState.value, props.data.baseKey);
+                props.hooks.setRowState.set([]);
+                props.hooks.ref.current?.reloadAndRest?.();
+              }}
+            >
+              删除
+            </Button>
+          </div>
+        </FooterToolbar>
       )}
       {props.component.NewForm === undefined ||
       props.hooks.openCreate === undefined ||
@@ -184,7 +202,7 @@ export function TableList<T extends Record<string, any>>(props: ITableList<T>) {
               },
             },
             //此处key仅用于已有知识库新增文件时使用
-            key: props.hooks.setCurrentRow?.value?.key
+            key: props.hooks.setCurrentRow?.value?.key,
           })}
       {props.component.UpdateForm === undefined ||
       props.hooks.openUpdate === undefined ||

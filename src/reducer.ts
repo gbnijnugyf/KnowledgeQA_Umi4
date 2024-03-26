@@ -1,9 +1,11 @@
 // reducer.js
 
-import { ADD_COURSE, SELECT_NODE } from './action';
+import { ADD_COURSE, SELECT_NODE, SET_BASEURL } from './action';
+import { BASEURL } from './services/plugin/globalInter';
 
 const initialState = {
   selectedNode: null,
+  baseUrl: BASEURL,
   // ...other state
 };
 
@@ -13,6 +15,11 @@ const reducer = (state = initialState, action: { type: any; payload: any }) => {
       return {
         ...state,
         selectedNode: action.payload,
+      };
+    case SET_BASEURL:
+      return {
+        ...state,
+        setBaseUrl: action.payload,
       };
     case ADD_COURSE:
       return {
