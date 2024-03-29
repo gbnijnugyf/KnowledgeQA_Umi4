@@ -7,6 +7,7 @@ interface MessageInputProps {
   handleChange: (e: string) => void;
   handleSend: () => void;
   handleModeChange: (e: number) => void;
+  handleFocus: (e: any) => void;
 }
 
 // MessageInput 组件
@@ -14,6 +15,7 @@ export function MessageInput({
   inputValue,
   recommendations,
   handleChange,
+  handleFocus,
   handleSend,
   handleModeChange,
 }: MessageInputProps) {
@@ -40,6 +42,7 @@ export function MessageInput({
           }
         }}
         style={{ marginRight: '8px', flex: 1 }}
+        onClick={handleFocus}
       >
         {/* <TextArea /> */}
       </AutoComplete>

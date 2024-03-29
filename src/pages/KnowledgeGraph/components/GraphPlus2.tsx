@@ -77,6 +77,13 @@ export function GraphEcharts(props: IGraphProps) {
             repulsion: 100,
             edgeLength: 5,
           },
+          edgeLabel: {
+            show: true,
+            formatter: function (params:any) {
+              // console.log('params:', params);
+              return params.data.name;
+            },
+          },
         },
       ],
     };

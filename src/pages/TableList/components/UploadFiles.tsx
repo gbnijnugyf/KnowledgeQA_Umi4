@@ -31,17 +31,35 @@ export function UploadFiles(props: IUploadFormProps) {
     );
   };
 
+  function isAcceptType(typeStr: string | undefined) {
+    return (
+      typeStr === 'application/pdf' ||
+      typeStr === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      typeStr === 'text/plain' ||
+      typeStr === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+      typeStr === 'application/vnd.ms-excel'
+    );
+  }
+
   return (
     <Dragger
-      accept={'.pdf,.docx,.txt'}
+      accept={'.pdf,.docx,.txt,.pptx,.xls'}
       name="file"
       multiple={true}
+      maxCount={10}
       style={{ width: 'fit-content' }}
       // action={`http://localhost:8080/api/knowledgebase/${props.key}/file`}
-      beforeUpload={(e)=>{
-        if (e.type !== 'application/pdf' && e.type !== 'text/plain' && e.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-          // console.log("1：", e.type)
-          message.error('不支持的文件类型')
+      beforeUpload={(e) => {
+        // 限制文件大小
+        // const isSize = e.size / 1024 / 1024;
+        // if (isSize > 20) {
+        //   message.error('文件大小不可超过20M')
+        //   return Upload.LIST_IGNORE;
+        // }
+
+        if (!isAcceptType(e.type)) {
+          console.log('1：', e.type);
+          message.error('不支持的文件类型');
           return Upload.LIST_IGNORE;
         }
       }}
@@ -50,7 +68,7 @@ export function UploadFiles(props: IUploadFormProps) {
         props.hook.setFileList.set(info.fileList as unknown as File[]);
         // console.log(info);
         // console.log(props.hook.setFileList.value);
-        if (info.file.type === 'application/pdf' || info.file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || info.file.type === 'text/plain') {
+        if (isAcceptType(info.file.type)) {
           const { status } = info.file;
           if (status !== 'uploading') {
             console.log(info.file, info.fileList);
@@ -70,7 +88,7 @@ export function UploadFiles(props: IUploadFormProps) {
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
-      <p className="ant-upload-text">点击或拖拽文件(pdf、txt、docx)至此上传</p>
+      <p className="ant-upload-text">点击或拖拽文件(pdf、txt、docx、pptx、xls)至此上传</p>
       <p className="ant-upload-hint">支持多文件上传</p>
     </Dragger>
   );

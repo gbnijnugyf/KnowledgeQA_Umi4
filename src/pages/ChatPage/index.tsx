@@ -32,6 +32,7 @@ const messageInit: API.MessageType = {
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<API.MessageType[]>([]);
   const [inputValue, setInputValue] = useState<API.MessageType>(messageInit);
+  const [focusInput, setFocusInput] = useState<boolean>(false);
   const [modeValue, setModeValue] = useState<number>(0);
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
   const [flush, setFlush] = useState<boolean>(false);
@@ -78,11 +79,13 @@ const ChatPage: React.FC = () => {
   };
   //获取推荐输入
   useEffect(() => {
-    myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
-      console.log(res);
-      setRecommendations(res.data);
-    });
-  }, [inputValue]);
+    if (focusInput===true) {
+      myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey||-1 }).then((res) => {
+        console.log(res);
+        setRecommendations(res.data);
+      });
+    }
+  }, [focusInput]);
   // 编辑对话框
   const handleEditDialog = (key: number, name: string) => {
     setOperateDialogKey({ key, name });
@@ -149,24 +152,23 @@ const ChatPage: React.FC = () => {
   const handleRecommendationClick = (recommendation: string) => {
     setSelectedRecommendation(recommendation);
   };
-  const handleGetRecommend = (key:number)=>{
+  const handleGetRecommend = (key: number) => {
     const hide = message.loading('正在获取相关推荐');
-    myGetRecommendTags({key:key}).then((res)=>{
-      hide()
-      if(res.status===1){
-        const msgList = [...messages]
-        msgList.forEach((e)=>{
-          if(e.key===key){
-            e.recommend =res.data
-          }
-        })
-        setMessages(msgList)
-      }else[
-        message.error('获取失败')
-      ]
-    }).catch(()=>message.error('获取失败'))
-
-  }
+    myGetRecommendTags({ key: key })
+      .then((res) => {
+        hide();
+        if (res.status === 1) {
+          const msgList = [...messages];
+          msgList.forEach((e) => {
+            if (e.key === key) {
+              e.recommend = res.data;
+            }
+          });
+          setMessages(msgList);
+        } else [message.error('获取失败')];
+      })
+      .catch(() => message.error('获取失败'));
+  };
   const handleHidePreview = () => {
     setSelectedRecommendation('');
   };
@@ -185,6 +187,15 @@ const ChatPage: React.FC = () => {
     });
   };
 
+  // 焦点在输入框时
+  const handleFocus = (e:any)=>{
+    const input = e.target.value;
+    if(input===''){
+      setFocusInput(true);
+    }else{
+      setFocusInput(false);
+    }
+  }
   // 输入框改变时的处理函数
   const handleChange = (e: string) => {
     console.log(e);
@@ -396,6 +407,7 @@ const ChatPage: React.FC = () => {
                           handleChange={handleChange}
                           handleSend={handleSend}
                           handleModeChange={handleModeChange}
+                          handleFocus={handleFocus}
                         />
                       </div>
                     ) : null}
