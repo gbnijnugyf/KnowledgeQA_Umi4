@@ -51,11 +51,11 @@ export function UploadFiles(props: IUploadFormProps) {
       // action={`http://localhost:8080/api/knowledgebase/${props.key}/file`}
       beforeUpload={(e) => {
         // 限制文件大小
-        // const isSize = e.size / 1024 / 1024;
-        // if (isSize > 20) {
-        //   message.error('文件大小不可超过20M')
-        //   return Upload.LIST_IGNORE;
-        // }
+        const isSize = e.size / 1024 / 1024;
+        if (isSize > 60) {
+          message.error('文件大小不可超过60M')
+          return Upload.LIST_IGNORE;
+        }
 
         if (!isAcceptType(e.type)) {
           console.log('1：', e.type);
