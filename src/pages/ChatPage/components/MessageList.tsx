@@ -110,16 +110,18 @@ export function MessageList({
                       icon={<CopyOutlined />}
                     />
                   </CopyToClipboard>
-                  <Button
-                    id="shadow-box"
-                    style={{
-                      margin: '0 0 0 2.5%',
-                      padding: '4%',
-                      paddingTop: `${item.sender === 'assistant' ? '3%' : ''}`,
-                    }}
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleDeleteMessage(item.key)}
-                  />
+                  {item.key > 0 && (
+                    <Button
+                      id="shadow-box"
+                      style={{
+                        margin: '0 0 0 2.5%',
+                        padding: '4%',
+                        paddingTop: `${item.sender === 'assistant' ? '3%' : ''}`,
+                      }}
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteMessage(item.key)}
+                    />
+                  )}
                   {item.sender === 'assistant' && (
                     <>
                       <Popover content="获取推荐">
@@ -160,7 +162,7 @@ export function MessageList({
                       />
                     </>
                   )}
-                  {item.sender === 'user' && (
+                  {item.sender === 'user' && item.key > 0 && (
                     <Button
                       id="shadow-box"
                       style={{

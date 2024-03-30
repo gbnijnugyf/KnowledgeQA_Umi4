@@ -9,7 +9,6 @@ import { SelectTtile } from '../ChatPage/components/SelectTitle';
 import { Edit } from './components/Edit';
 import { Graph, dLink, dLink_, dNode } from './components/Graph';
 import GraphEcharts from './components/GraphPlus2';
-import { GraphPlus1 } from './components/GraphPlus1';
 
 export type SelectNodeType = {
   sNode: dNode;
@@ -18,15 +17,15 @@ export type SelectNodeType = {
 };
 
 const nodesInit: dNode[] = [
-  { id: 1, name: '请选择知识库', group: 1, weight: 15 },
-  { id: 2, name: '', group: 1, weight: 15 },
-  { id: 3, name: '', group: 2, weight: 15 },
+  // { id: 1, name: '请选择知识库', group: 1, weight: 15 },
+  // { id: 2, name: '', group: 1, weight: 15 },
+  // { id: 3, name: '', group: 2, weight: 15 },
   // 更多节点...
 ];
 
 const linksInit: dLink_[] = [
-  { source_id: 1, target_id: 2, weight: 1, name: '知识关联' },
-  { source_id: 2, target_id: 3, weight: 1, name: '知识关联' },
+  // { source_id: 1, target_id: 2, weight: 1, name: '知识关联' },
+  // { source_id: 2, target_id: 3, weight: 1, name: '知识关联' },
   // 更多链接...
 ];
 
@@ -73,17 +72,17 @@ const KnowledgeGraph: React.FC = () => {
     //   setBaseTitle(res.data.name);
     // }
     // 获取知识图谱数据
-    const hide = message.loading('获取知识图谱中')
+    const hide = message.loading('获取知识图谱中');
     myGetGraph({ key: knowledgeBaseKey }).then((res) => {
-      hide()
+      hide();
       console.log(res);
-      if(res.status===1){
+      if (res.status === 1) {
         setGraphInfo({
           nodes: res.data.nodes,
           links: res.data.links,
         });
-      }else{
-        message.warning('该课程知识图谱不可见')
+      } else {
+        message.warning('该课程知识图谱不可见');
       }
       // setGraphInfo(res.data);
     });
@@ -126,15 +125,25 @@ const KnowledgeGraph: React.FC = () => {
       >
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div id="graphOutter" style={{ flex: selectedNode ? 2 : 2 }}>
-            {/* <Graph
-              color={color}
-              nodes={graphInfo.nodes}
-              links={graphInfo.links}
-              select={handleNodeClick}
-              width={location.pathname === '/graph' ? 1300 : 800}
-              height={location.pathname === '/graph' ? 700 : 580}
-            /> */}
-            <GraphEcharts nodes={graphInfo.nodes} links={graphInfo.links} color={color} select={handleNodeClick} width={1300} height={700} />
+            {graphInfo.nodes.length > 300 ? (
+              <Graph
+                color={color}
+                nodes={graphInfo.nodes}
+                links={graphInfo.links}
+                select={handleNodeClick}
+                width={location.pathname === '/graph' ? 1300 : 800}
+                height={location.pathname === '/graph' ? 700 : 580}
+              />
+            ) : (
+              <GraphEcharts
+                nodes={graphInfo.nodes}
+                links={graphInfo.links}
+                color={color}
+                select={handleNodeClick}
+                width={1300}
+                height={700}
+              />
+            )}
           </div>
           {selectedNode && (
             <div style={{ flex: 1 }}>

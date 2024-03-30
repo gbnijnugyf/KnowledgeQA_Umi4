@@ -59,6 +59,7 @@ export function GraphEcharts(props: IGraphProps) {
       // target: props.nodes.find((d: dNode) => d.id === link.target_id) ?? initNode,
       source: link.source_id,
       target: link.target_id,
+      name: link.name,
       lineStyle: { width: link.weight },
     }));
 
@@ -81,6 +82,7 @@ export function GraphEcharts(props: IGraphProps) {
             show: true,
             formatter: function (params:any) {
               // console.log('params:', params);
+              console.log('params.data:', params);
               return params.data.name;
             },
           },

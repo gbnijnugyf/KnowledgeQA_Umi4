@@ -112,7 +112,8 @@ export const KnowledgeBase = {
             // target="_blank"
             rel="noopener noreferrer"
           >
-            {record.is_solve===0?'正在生成知识图谱...':'查看知识图谱'}
+            {'查看知识图谱'}
+            {/* {record.is_solve===0?'正在生成知识图谱...':'查看知识图谱'} */}
           </a>,
         ],
       },
