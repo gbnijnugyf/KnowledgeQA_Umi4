@@ -9,10 +9,8 @@ interface IDelDialogModal {
   name:string
 }
 export function DelDialogModal(props: IDelDialogModal) {
-  console.log(props)
   async function handleOk() {
     const res = await deleteDialog(props.key_id);
-    console.log(res);
     if (res.status === 1) {
       message.info('删除成功');
       props.flush.set(!props.flush.value);

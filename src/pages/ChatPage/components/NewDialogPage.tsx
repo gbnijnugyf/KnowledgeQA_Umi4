@@ -27,7 +27,7 @@ export function NewDialogPage(props: INewFormProps) {
   // const location = useLocation();
   const fetchUserInfoHere = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    console.log(userInfo);
+    // console.log(userInfo);
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
@@ -37,9 +37,9 @@ export function NewDialogPage(props: INewFormProps) {
       });
     }
   };
-  useEffect(() => {
-    console.log('fileList:', knowledgeBaseKey);
-  }, [knowledgeBaseKey]);
+  // useEffect(() => {
+  //   console.log('fileList:', knowledgeBaseKey);
+  // }, [knowledgeBaseKey]);
 
   const onSubmit = async (value: any) => {
     // 在这里处理提交事件

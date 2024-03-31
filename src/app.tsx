@@ -25,16 +25,15 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      console.log(msg.data);
+      // console.log(msg.data);
       return { name: msg.data.name, access: msg.data.access };
       // return msg.data;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       history.push(loginPath);
     }
     return undefined;
   };
-  console.log(1);
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {

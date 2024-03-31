@@ -5,10 +5,10 @@ import { message } from "antd";
  * */
 export default function access(initialState: { currentUser?: API.CurrentUser } | undefined) {
   const { currentUser } = initialState ?? {};
-  console.log(currentUser);
+  // console.log(currentUser);
   const isAdmin = currentUser?.access === 'teacher';
   const userAgent = navigator.userAgent;
-  console.log(userAgent);
+  // console.log(userAgent);
   let graphAccess = false;
   let isMobile = false;
   if (/mobile/i.test(userAgent)) {
