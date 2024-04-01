@@ -66,6 +66,7 @@
     "electron": "^28.2.0",
     "electron-packager": "^17.1.2",
     "lodash": "^4.17.21",
+    "md-editor-rt": "^4.12.3",
     "moment": "^2.30.1",
     "omit.js": "^2.0.2",
     "querystring": "^0.2.1",
