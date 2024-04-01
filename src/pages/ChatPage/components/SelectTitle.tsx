@@ -1,5 +1,5 @@
 import { myGetCourses } from '@/services/ant-design-pro/api';
-import { Select } from 'antd';
+import { Select, message } from 'antd';
 import { useEffect, useState } from 'react';
 
 type IOption = {
@@ -38,15 +38,19 @@ export function SelectTtile<T extends number | Array<number>>(props: ISelectTtil
 
   useEffect(() => {
     myGetCourses({option:2}).then((res) => {
-      console.log(res);
-      const data: IOption[] | undefined = res.data.map((item) => {
-        const temp: IOption = {
-          value: item.key?.toString() as string,
-          label: item.name as string,
-        };
-        return temp;
-      });
-      setOptions(data);
+      // console.log(res);
+      if(res.status ===1){
+        const data: IOption[] | undefined = res.data.map((item) => {
+          const temp: IOption = {
+            value: item.key?.toString() as string,
+            label: item.name as string,
+          };
+          return temp;
+        });
+        setOptions(data);
+      }else{
+        message.error('获取课程列表失败')
+      }
     });
   }, []);
 

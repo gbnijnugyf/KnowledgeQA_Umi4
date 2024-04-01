@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import '../index.scss';
 import { RecommendationCard } from './RecommendationPreview';
+import { MdPreview } from 'md-editor-rt';
 
 interface MessageListProps {
   messageList: API.MessageType[];
@@ -178,7 +179,8 @@ export function MessageList({
               <div style={{ flexDirection: 'column', width: '80%', marginTop: '0.5%' }}>
                 <div>
                   <div className={`message-box ${item.sender}`} /*style={{ margin: '0 3% 0' }}*/>
-                    {item.text}
+                    <MdPreview modelValue={item.text} />
+                    {/* {item.text} */}
                   </div>
                   <div style={{ marginTop: '0.3em' }}>
                     {item.sender === 'assistant' && item.recommend && (
