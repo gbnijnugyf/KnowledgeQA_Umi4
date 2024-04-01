@@ -7,7 +7,7 @@ import {
   reloadMessage,
   sendMessage,
 } from '@/services/ant-design-pro/api';
-import { IReturn } from '@/services/plugin/globalInter';
+import { BASEURL, IReturn } from '@/services/plugin/globalInter';
 import { debounce } from '@/services/plugin/utils';
 import { PageContainer } from '@ant-design/pro-components';
 import { useAccess } from '@umijs/max';
@@ -47,6 +47,7 @@ const ChatPage: React.FC = () => {
   });
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [selectMsg, setSelectMsg] = useState<number>(-1);
+  const [sseMsg, setSseMsg] = useState<string>('');
   const [breadItems, setBreadItems] = useState<Array<{ title: string; path?: string }>>([
     {
       path: '/chat',
@@ -79,8 +80,8 @@ const ChatPage: React.FC = () => {
   };
   //获取推荐输入
   useEffect(() => {
-    if (focusInput===true) {
-      myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey||-1 }).then((res) => {
+    if (focusInput === true) {
+      myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
         console.log(res);
         setRecommendations(res.data);
       });
@@ -118,7 +119,6 @@ const ChatPage: React.FC = () => {
 
   // 当前对话框改变时，获取对应的对话内容
   useEffect(() => {
-    console.log('currentDialogKey:', currentDialogKey);
     const title = `${
       currentDialogKey === null || currentDialogKey === -1
         ? '新建对话'
@@ -130,7 +130,9 @@ const ChatPage: React.FC = () => {
       setSelectedRecommendation('');
       setMessages([]);
       setInputValue(messageInit);
+      const hide = message.loading('正在获取历史记录');
       getHistoryMessage({ key: currentDialogKey }).then((res) => {
+        hide();
         if (res.status === 1) {
           setMessages(res.data);
           if (res.data.length > 0) {
@@ -154,6 +156,7 @@ const ChatPage: React.FC = () => {
   };
   const handleGetRecommend = (key: number) => {
     const hide = message.loading('正在获取相关推荐');
+    console.log(key);
     myGetRecommendTags({ key: key })
       .then((res) => {
         hide();
@@ -188,14 +191,14 @@ const ChatPage: React.FC = () => {
   };
 
   // 焦点在输入框时
-  const handleFocus = (e:any)=>{
+  const handleFocus = (e: any) => {
     const input = e.target.value;
-    if(input===''){
+    if (input === '') {
       setFocusInput(true);
-    }else{
+    } else {
       setFocusInput(false);
     }
-  }
+  };
   // 输入框改变时的处理函数
   const handleChange = (e: string) => {
     console.log(e);
@@ -214,20 +217,36 @@ const ChatPage: React.FC = () => {
     reloadMessage({ key: key }).then((res) => {
       hide();
 
-      if (res.status === 1 && res.data.sender === 'assistant') {
+      if (res.status === 1 && res.data.replyKey !== undefined) {
+        const evtSource = new EventSource(BASEURL + '/sendMsgSSE');
+
         console.log(res);
         const newMessages = [...messages];
-        const index = newMessages.findIndex((message) => message.key === res.data.key);
-        if (index !== -1) {
-          // 如果找到了具有相同键的消息，替换它
-          newMessages[index] = res.data;
-        } else {
-          // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
-          const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
-          if (requestKeyIndex !== -1) {
-            newMessages.splice(requestKeyIndex + 1, 0, res.data);
+        const index = newMessages.findIndex((message) => message.key === res.data.replyKey);
+        let msg = '';
+        evtSource.onmessage = (event) => {
+          msg = msg + (event.data !== '---Key---' ? event.data : '');
+          const newMsg: API.MessageType = {
+            key: res.data.replyKey,
+            sender: 'assistant',
+            text: msg,
+          };
+          if (index !== -1) {
+            // 如果找到了具有相同键的消息，替换它
+            newMessages[index] = newMsg;
+          } else {
+            // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
+            const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
+            if (requestKeyIndex !== -1) {
+              newMessages.splice(requestKeyIndex + 1, 0, newMsg);
+            }
           }
-        }
+
+          if (event.data === '---Key---') {
+            evtSource.close();
+          }
+        };
+
         message.success('加载成功');
         setMessages(newMessages);
       } else {
@@ -243,6 +262,13 @@ const ChatPage: React.FC = () => {
       return;
     }
     if (inputValue.text !== '') {
+      // const evtSource = new EventSource('http://10.83.35.12:5000/sendMsgSSE');
+      // const evtSource = new EventSource(BASEURL + '/sendMsgSSE');
+      // evtSource.onmessage = (event) => {
+      //   console.log('event data:', event);
+      //   evtSource.close();
+      // };
+
       setMessages([
         ...messages,
         inputValue,
@@ -251,14 +277,21 @@ const ChatPage: React.FC = () => {
       try {
         const res = await Promise.race([
           sendMessage({ key: currentDialogKey, text: inputValue.text, mode: modeValue }) as Promise<
-            IReturn<API.sendMessageType>
+            IReturn<API.msgKey>
           >,
           new Promise(
             (_, reject) => setTimeout(() => reject(new Error('请求超时')), 30000), // 30秒超时
           ) as Promise<any>,
         ]);
         if (res.status === 1) {
-          const setMessageBackFunc = debounce(() => {
+          const evtSource = new EventSource(BASEURL + '/sendMsgSSE');
+          //监听消息
+          let msg = '';
+          evtSource.onmessage = (event) => {
+            // console.log('event data:', event);
+            msg = msg + (event.data !== '---Key---' ? event.data : '');
+            setSseMsg(msg);
+            console.log('msg:', msg);
             const prevMessages = [...messages];
             prevMessages.slice(0, -2);
             prevMessages.push({
@@ -268,14 +301,38 @@ const ChatPage: React.FC = () => {
             });
             // 替换最后一条消息
             prevMessages.push({
-              key: res.data.reply.key,
+              key: res.data.replyKey,
               sender: 'assistant',
-              text: res.data.reply.text,
-              recommend: res.data.reply.recommend,
+              text: msg,
+              recommend: [],
             });
+            scrollToBottom(true);
             setMessages(prevMessages);
-          }, 0);
-          await setMessageBackFunc();
+
+            if (event.data === '---Key---') {
+              evtSource.close();
+            }
+            // evtSource.close();
+          };
+          // console.log(res);
+          // const setMessageBackFunc = debounce(() => {
+          //   const prevMessages = [...messages];
+          //   prevMessages.slice(0, -2);
+          //   prevMessages.push({
+          //     key: res.data,
+          //     sender: 'user',
+          //     text: inputValue.text,
+          //   });
+          //   // 替换最后一条消息
+          //   prevMessages.push({
+          //     key: res.data.reply.key,
+          //     sender: 'assistant',
+          //     text: res.data.reply.text,
+          //     recommend: res.data.reply.recommend,
+          //   });
+          //   setMessages(prevMessages);
+          // }, 0);
+          // await setMessageBackFunc();
           setInputValue(messageInit);
         } else {
           debounce(() => {

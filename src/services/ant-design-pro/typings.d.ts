@@ -153,4 +153,5 @@ declare namespace API {
     name: string;
     Kbase: Array<number>;
   };
+  type msgKey = { userMsgKey: number; replyKey: number };
 }

@@ -253,9 +253,22 @@ export async function getHistoryMessage(
 }
 
 /** 发送消息 POST */
+// export async function sendMessage(body: API.SendMessageBody, options?: { [key: string]: any }) {
+//   // console.log(body)
+//   return request<IReturn<API.sendMessageType>>(BASEURL + '/sendMessage', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     data: body,
+//     ...(options || {}),
+//   });
+// }
+/** 发送消息 POST */
+
 export async function sendMessage(body: API.SendMessageBody, options?: { [key: string]: any }) {
   // console.log(body)
-  return request<IReturn<API.sendMessageType>>(BASEURL + '/sendMessage', {
+  return request<IReturn<API.msgKey>>(BASEURL + '/sendMessage', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -461,7 +474,7 @@ export async function reloadMessage(
   },
   options?: { [key: string]: any },
 ) {
-  return request<IReturn<API.MessageType>>(BASEURL + '/reloadMessage', {
+  return request<IReturn<API.msgKey>>(BASEURL + '/reloadMessage', {
     method: 'GET',
     params: {
       ...params,
