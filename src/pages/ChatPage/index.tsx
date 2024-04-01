@@ -214,7 +214,7 @@ const ChatPage: React.FC = () => {
   const handleReload = async (key: number) => {
     const hide = message.loading('正在重新加载信息');
     // const res = await reloadMessage({ key: key })
-    reloadMessage({ key: key }).then((res) => {
+    reloadMessage(key).then((res) => {
       hide();
 
       if (res.status === 1 && res.data.replyKey !== undefined) {
@@ -447,6 +447,7 @@ const ChatPage: React.FC = () => {
                       handleGetRecommend={handleGetRecommend}
                       handleReload={handleReload}
                       dialog_key={currentDialogKey}
+                      dialogs={dialogs}
                     />
                     {currentDialogKey !== -1 && currentDialogKey !== null ? (
                       <div

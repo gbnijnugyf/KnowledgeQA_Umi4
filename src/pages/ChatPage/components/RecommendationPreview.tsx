@@ -34,7 +34,7 @@ export function RecommendationPreview({
 
 interface IRecommendationCardProps {
   item: API.MessageType;
-  dialog_key: number;
+  base_key: number[];
 }
 
 export function RecommendationCard(props: IRecommendationCardProps) {
@@ -46,7 +46,7 @@ export function RecommendationCard(props: IRecommendationCardProps) {
   const handleClickTag = async (name: any) => {
     console.log(name);
     setRecommendTag(name);
-    const res = await getRecommend({ key: props.dialog_key, name: name });
+    const res = await getRecommend(props.base_key, name);
     setRecommendText(res.data);
     setRecommendTextBoxOpen(true);
   };

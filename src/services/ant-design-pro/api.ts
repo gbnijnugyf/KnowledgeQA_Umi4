@@ -197,7 +197,7 @@ export async function myRemoveBase(options?: { [key: string]: any }) {
     },
   });
 }
-export async function myRemoveBaseFile(props:{basekey:number,  [key: string]: any }) {
+export async function myRemoveBaseFile(props: { basekey: number; [key: string]: any }) {
   return request<Record<string, any>>(BASEURL + '/delKnowledgeBaseFile', {
     method: 'POST',
     data: {
@@ -365,7 +365,7 @@ export async function myGetDialogs(
 export async function myGetRecommendTags(
   params: {
     // query
-    key:number
+    key: number;
   },
   options?: { [key: string]: any },
 ) {
@@ -467,36 +467,55 @@ export async function getStudentsList(
 }
 
 /** 重新加载信息 */
-export async function reloadMessage(
-  params: {
-    // query
-    key: number;
-  },
-  options?: { [key: string]: any },
-) {
+// export async function reloadMessage(
+//   params: {
+//     // query
+//     key: number;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   return request<IReturn<API.msgKey>>(BASEURL + '/reloadMessage', {
+//     method: 'GET',
+//     params: {
+//       ...params,
+//     },
+//     ...(options || {}),
+//   });
+// }
+export async function reloadMessage(key: number) {
   return request<IReturn<API.msgKey>>(BASEURL + '/reloadMessage', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    data: {
+      key: key,
     },
-    ...(options || {}),
   });
 }
 
 /** 获取具体推荐内容 */
-export async function getRecommend(
-  params: {
-    // query
-    key: number;
-    name: string;
-  },
-  options?: { [key: string]: any },
-) {
+// export async function getRecommend(
+//   params: {
+//     // query
+//     key: number[];
+//     name: string;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   // 解析key数组为url params 形如key=1
+//   return request<IReturn<string>>(BASEURL + '/getRecommend', {
+//     method: 'GET',
+//     params: {
+//       ...params,
+//     },
+//     ...(options || {}),
+//   });
+// }
+export async function getRecommend(key: number[], name: string) {
+  // 解析key数组为url params 形如key=1
   return request<IReturn<string>>(BASEURL + '/getRecommend', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    data: {
+      key: key,
+      name: name,
     },
-    ...(options || {}),
   });
 }

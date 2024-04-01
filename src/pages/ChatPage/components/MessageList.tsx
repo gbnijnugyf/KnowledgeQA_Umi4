@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, List, Popover, message } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import '../index.scss';
 import { RecommendationCard } from './RecommendationPreview';
@@ -21,6 +21,7 @@ interface MessageListProps {
   handleReload: (key: number) => Promise<void>;
   handleGetRecommend: (key: number) => void;
   dialog_key: number;
+  dialogs:API.DialogListItem[]
 }
 
 // MessageList 组件
@@ -30,13 +31,21 @@ export function MessageList({
   handleReload,
   dialog_key,
   handleGetRecommend,
+  dialogs,
 }: MessageListProps) {
   // console.log('messageList:', messageList);
   const [isHovered, setIsHovered] = useState<{ open: boolean; key: number }>({
     open: false,
     key: -1,
   });
-
+  const [currentBaseKey, setCurrentDialogKey] = useState<number[]>([])
+  useEffect(()=>{
+    const currentDialog = dialogs.find(dialog=>dialog.key===dialog_key)
+    const currentKbase = currentDialog?.Kbase.map(kbase=>kbase.key)
+    if(currentKbase){
+      setCurrentDialogKey(currentKbase)
+    }
+  },[dialog_key])
   const messageList_ = messageList;
 
   const clickLike = () => {
@@ -185,7 +194,7 @@ export function MessageList({
                   <div style={{ marginTop: '0.3em' }}>
                     {item.sender === 'assistant' && item.recommend && (
                       <div className="recommend-list-box">
-                        <RecommendationCard dialog_key={dialog_key} item={item} />
+                        <RecommendationCard base_key={currentBaseKey} item={item} />
                       </div>
                     )}
                   </div>
