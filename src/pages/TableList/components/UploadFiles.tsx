@@ -81,9 +81,9 @@ export function UploadFiles(props: IUploadFormProps) {
           // else if (status === 'error') {
           //   message.error(`${info.file.name} 添加失败.`);
           // }
-          if (status === 'error') {
-            message.error(`${info.file.name} 添加失败.`);
-          }
+          // if (status === 'error') {
+          //   message.error(`${info.file.name} 添加失败.`);
+          // }
         }
       }}
       onDrop={(e) => {

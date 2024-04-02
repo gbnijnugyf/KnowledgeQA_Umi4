@@ -47,10 +47,11 @@ export function RecommendationCard(props: IRecommendationCardProps) {
     console.log(name);
     setRecommendTag(name);
     setRecommendText('正在加载，首次加载所需时间较长');
+    setRecommendTextBoxOpen(true);
     getRecommend(props.base_key, name).then((res)=>{
       if(res.status===1){
         setRecommendText(res.data);
-        setRecommendTextBoxOpen(true);
+        // setRecommendTextBoxOpen(true);
       }
     });
   };
