@@ -32,7 +32,7 @@ const messageInit: API.MessageType = {
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<API.MessageType[]>([]);
   const [inputValue, setInputValue] = useState<API.MessageType>(messageInit);
-  const [focusInput, setFocusInput] = useState<boolean>(false);
+  const [focusInput, setFocusInput] = useState<boolean>(true);
   const [modeValue, setModeValue] = useState<number>(0);
   const [selectedRecommendation, setSelectedRecommendation] = useState<string>('');
   const [flush, setFlush] = useState<boolean>(false);
@@ -80,13 +80,15 @@ const ChatPage: React.FC = () => {
   };
   //获取推荐输入
   useEffect(() => {
-    if (focusInput === true) {
+    // console.log(currentDialogKey)
+    if (focusInput === true && currentDialogKey !== null) {
       myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
         console.log(res);
         setRecommendations(res.data);
       });
+      setFocusInput(false);
     }
-  }, [focusInput]);
+  }, [focusInput, currentDialogKey]);
   // 编辑对话框
   const handleEditDialog = (key: number, name: string) => {
     setOperateDialogKey({ key, name });
@@ -215,8 +217,6 @@ const ChatPage: React.FC = () => {
     const hide = message.loading('正在重新加载信息');
     // const res = await reloadMessage({ key: key })
     reloadMessage(key).then((res) => {
-      hide();
-
       if (res.status === 1 && res.data.replyKey !== undefined) {
         const evtSource = new EventSource(BASEURL + '/sendMsgSSE');
 
@@ -234,6 +234,7 @@ const ChatPage: React.FC = () => {
           if (index !== -1) {
             // 如果找到了具有相同键的消息，替换它
             newMessages[index] = newMsg;
+            hide();
           } else {
             // 如果没有找到具有相同键的消息，找到请求key那个元素的位置并在其后面插入响应消息
             const requestKeyIndex = newMessages.findIndex((message) => message.key === key);
@@ -241,6 +242,7 @@ const ChatPage: React.FC = () => {
               newMessages.splice(requestKeyIndex + 1, 0, newMsg);
             }
           }
+          setMessages(newMessages);
 
           if (event.data === '---Key---') {
             evtSource.close();
@@ -248,7 +250,6 @@ const ChatPage: React.FC = () => {
         };
 
         message.success('加载成功');
-        setMessages(newMessages);
       } else {
         message.error('重新加载失败');
       }

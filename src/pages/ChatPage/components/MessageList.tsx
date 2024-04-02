@@ -45,7 +45,7 @@ export function MessageList({
     if(currentKbase){
       setCurrentDialogKey(currentKbase)
     }
-  },[dialog_key])
+  },[dialog_key,messageList])
   const messageList_ = messageList;
 
   const clickLike = () => {

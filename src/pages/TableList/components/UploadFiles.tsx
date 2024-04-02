@@ -73,7 +73,7 @@ export function UploadFiles(props: IUploadFormProps) {
           if (status !== 'uploading') {
             console.log(info.file, info.fileList);
           }
-          message.success(`${info.file.name} 添加成功.`);
+          // message.success(`${info.file.name} 添加成功.`);
 
           // if (status === 'done') {
           //   message.success(`${info.file.name} 添加成功.`);
@@ -81,6 +81,9 @@ export function UploadFiles(props: IUploadFormProps) {
           // else if (status === 'error') {
           //   message.error(`${info.file.name} 添加失败.`);
           // }
+          if (status === 'error') {
+            message.error(`${info.file.name} 添加失败.`);
+          }
         }
       }}
       onDrop={(e) => {

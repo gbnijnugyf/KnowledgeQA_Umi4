@@ -39,16 +39,20 @@ interface IRecommendationCardProps {
 
 export function RecommendationCard(props: IRecommendationCardProps) {
   const [recommendTextBoxOpen, setRecommendTextBoxOpen] = useState<boolean>(false);
-  const [recommendText, setRecommendText] = useState<string>('');
+  const [recommendText, setRecommendText] = useState<string>('正在加载，首次加载所需时间较长');
   const [recommendTag, setRecommendTag] = useState<string>('');
   const tagColors = ['#C0B4FA', '#86B6F6'];
 
-  const handleClickTag = async (name: any) => {
+  const handleClickTag = (name: any) => {
     console.log(name);
     setRecommendTag(name);
-    const res = await getRecommend(props.base_key, name);
-    setRecommendText(res.data);
-    setRecommendTextBoxOpen(true);
+    setRecommendText('正在加载，首次加载所需时间较长');
+    getRecommend(props.base_key, name).then((res)=>{
+      if(res.status===1){
+        setRecommendText(res.data);
+        setRecommendTextBoxOpen(true);
+      }
+    });
   };
   return (
     <>
