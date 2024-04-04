@@ -124,7 +124,7 @@ const Welcome: React.FC = () => {
               color: token.colorTextHeading,
             }}
           >
-            欢迎使用 智学导图
+            欢迎使用 学海航标
           </div>
           <p
             style={{
@@ -136,7 +136,7 @@ const Welcome: React.FC = () => {
               width: '65%',
             }}
           >
-            智学导图是一个整合了知识图谱和生成式模型的教学问答应用。
+            学海航标是一个整合了知识图谱和生成式模型的教学问答应用。
             致力于在现有问答模型的基础上，结合知识图谱，提高用户使用AI问答体验。
           </p>
           <div

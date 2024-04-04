@@ -93,10 +93,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState /*,setInitialState*/ 
       },
     ],
     links: [
-      <a key="chaoxing" href="https://www.chaoxing.com/" target="_blank" rel="noreferrer">
-        <LinkOutlined />
-        <span>超星</span>
-      </a>,
+      // <a key="chaoxing" href="https://www.chaoxing.com/" target="_blank" rel="noreferrer">
+      //   <LinkOutlined />
+      //   <span>超星</span>
+      // </a>,
     ],
     menuHeaderRender: undefined,
     // 自定义 403 页面

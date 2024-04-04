@@ -30,7 +30,7 @@ import './index.scss';
 //           paddingTop: '10%',
 //         }}
 //       >
-//         <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>智学导图</h1>
+//         <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>学海航标</h1>
 //         <Button className="try-btn" onClick={() => navigate('/welcome')}>
 //           立即体验
 //         </Button>
@@ -68,7 +68,7 @@ const IntroduceBackground = () => {
                   paddingTop: '7%',
                 }}
               >
-                <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>智学导图</h1>
+                <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>学海航标</h1>
                 <Button className="try-btn" onClick={() => navigate('/welcome')}>
                   立即体验
                 </Button>

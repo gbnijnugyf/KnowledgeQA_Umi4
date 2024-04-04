@@ -73,7 +73,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: '智学导图',
+  title: '学海航标',
   layout: {
     locale: true,
     ...defaultSettings,
