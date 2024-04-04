@@ -62,6 +62,7 @@ export function UploadFiles(props: IUploadFormProps) {
           message.error('不支持的文件类型');
           return Upload.LIST_IGNORE;
         }
+        return false
       }}
       onChange={(info) => {
         // console.log(info.fileList, info.file);
