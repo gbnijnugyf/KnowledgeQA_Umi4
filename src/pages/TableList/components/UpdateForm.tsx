@@ -50,7 +50,7 @@ export function UpdateForm(props: IUpdateFormProps<API.KnowledgeBaseListItem>) {
         key: fields.key,
         status: statusTemp,
       });
-      console.log(res);
+      // console.log(res);
       hide();
 
       message.success('配置成功');
@@ -86,7 +86,7 @@ export function UpdateForm(props: IUpdateFormProps<API.KnowledgeBaseListItem>) {
         }}
         onFinish={async (value) => {
           const value_ = { ...value, key: props.key };
-          console.log(value_);
+          // console.log(value_);
           const success = await handleUpdate(value_ as API.KnowledgeBaseListItem);
           if (success) {
             props.hook.open.set(false);
@@ -155,7 +155,7 @@ export function UpdateFileForm(props: IUpdateFormProps<API.KnowledgeBaseFileList
         key: fields.key,
         stattus: statusTemp,
       });
-      console.log(res);
+      // console.log(res);
       hide();
 
       message.success('配置成功');
@@ -180,7 +180,7 @@ export function UpdateFileForm(props: IUpdateFormProps<API.KnowledgeBaseFileList
         }}
         onFinish={async (value) => {
           const value_ = { ...value, key: props.key };
-          console.log(value_);
+          // console.log(value_);
           const success = await handleUpdate(value_ as API.KnowledgeBaseFileListItem);
           if (success) {
             props.hook.open.set(false);

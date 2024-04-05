@@ -12,7 +12,7 @@ interface IEditDialogModal {
 export function EditDialogModal(props: IEditDialogModal) {
   async function handleOk() {
     const res = await deleteDialog(props.key);
-    console.log(res);
+    // console.log(res);
     if (res.status === 1) {
       message.info('删除成功');
       props.flush.set(!props.flush.value);
@@ -34,7 +34,7 @@ export function EditDialogModal(props: IEditDialogModal) {
       }}
       onFinish={async (value) => {
         const value_ = { ...value, key: props.key };
-        console.log(value_);
+        // console.log(value_);
         // const res = await handleUpdate(value_ as API.KnowledgeBaseListItem);
         // console.log(res);
       }}

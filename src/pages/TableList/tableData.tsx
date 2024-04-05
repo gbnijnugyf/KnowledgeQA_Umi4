@@ -101,7 +101,7 @@ export const KnowledgeBase = {
               if(record.is_solve === 0) {
                 e.preventDefault();
               } else {
-                console.log('access.graphAccess()', access.graphAccess());
+                // console.log('access.graphAccess()', access.graphAccess());
                 if(access.graphAccess()===true){
                   window.open(`/#/graph?${stringify({ key: record.key, name: record.name })}`)
                 }else{

@@ -82,7 +82,7 @@ export function GraphEcharts(props: IGraphProps) {
             show: true,
             formatter: function (params:any) {
               // console.log('params:', params);
-              console.log('params.data:', params);
+              // console.log('params.data:', params);
               return params.data.name;
             },
           },

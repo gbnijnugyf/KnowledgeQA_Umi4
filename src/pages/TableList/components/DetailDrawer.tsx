@@ -46,7 +46,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
   }, [props.key_id]);
 
   const resquest: ITableRequest<API.KnowledgeBaseFileListItem> = async (p, sorter, filter) => {
-    console.log(p, sorter, filter);
+    // console.log(p, sorter, filter);
     //参数p是分页参数
     let params = { ...p, key: props.key_id };
     if (Object.keys(sorter).length !== 0) {
@@ -61,7 +61,7 @@ export default function DetailDrawer(props: IDetailDrawerProps) {
     // str = str.replace('uploadAt', 'updatedAt');
     // params = JSON.parse(str);
     const res = await myGetKnowledgeBaseFiles({ ...params });
-    console.log('1', res.data);
+    // console.log('1', res.data);
     return res.data;
   };
   const columns = KnowledgeBaseFile.getColumns({

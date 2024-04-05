@@ -83,7 +83,7 @@ const ChatPage: React.FC = () => {
     // console.log(currentDialogKey)
     if (focusInput === true && currentDialogKey !== null) {
       myGetRecommendedInput({ text: inputValue.text, key: currentDialogKey || -1 }).then((res) => {
-        console.log(res);
+        // console.log(res);
         setRecommendations(res.data);
       });
       setFocusInput(false);
@@ -158,7 +158,7 @@ const ChatPage: React.FC = () => {
   };
   const handleGetRecommend = (key: number) => {
     const hide = message.loading('正在获取相关推荐');
-    console.log(key);
+    // console.log(key);
     myGetRecommendTags({ key: key })
       .then((res) => {
         hide();
@@ -203,7 +203,7 @@ const ChatPage: React.FC = () => {
   };
   // 输入框改变时的处理函数
   const handleChange = (e: string) => {
-    console.log(e);
+    // console.log(e);
     const value: API.MessageType = { key: -2, sender: 'user', text: e };
     setInputValue(value);
   };
@@ -220,7 +220,7 @@ const ChatPage: React.FC = () => {
       if (res.status === 1 && res.data.replyKey !== undefined) {
         const evtSource = new EventSource(BASEURL + '/sendMsgSSE');
 
-        console.log(res);
+        // console.log(res);
         const newMessages = [...messages];
         const index = newMessages.findIndex((message) => message.key === res.data.replyKey);
         let msg = '';
@@ -292,7 +292,7 @@ const ChatPage: React.FC = () => {
             // console.log('event data:', event);
             msg = msg + (event.data !== '---Key---' ? event.data : '');
             setSseMsg(msg);
-            console.log('msg:', msg);
+            // console.log('msg:', msg);
             const prevMessages = [...messages];
             prevMessages.slice(0, -2);
             prevMessages.push({

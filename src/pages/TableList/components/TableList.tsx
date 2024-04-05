@@ -34,7 +34,7 @@ async function handleRemove<T extends Record<string, any>>(selectedRows: T[], ba
   if (!selectedRows) return true;
   try {
     let res;
-    console.log('baseKey:', baseKey);
+    // console.log('baseKey:', baseKey);
     if (baseKey === undefined) {
       res = await myRemoveBase({
         key: selectedRows.map((row) => row.key),
@@ -46,7 +46,7 @@ async function handleRemove<T extends Record<string, any>>(selectedRows: T[], ba
       });
     }
 
-    console.log(res);
+    // console.log(res);
     hide();
     message.success('删除成功');
     return true;

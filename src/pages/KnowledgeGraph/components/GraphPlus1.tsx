@@ -54,8 +54,8 @@ export function GraphPlus1(props: IGraphProps) {
         target: (link.target_id||-1).toString(),
       };
     })
-    console.log(testDataNodes);
-    console.log(testDataLinks);
+    // console.log(testDataNodes);
+    // console.log(testDataLinks);
     let testData = {
       nodes: testDataNodes,
       links: testDataLinks,

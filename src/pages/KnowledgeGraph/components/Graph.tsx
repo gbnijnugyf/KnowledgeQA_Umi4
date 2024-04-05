@@ -221,8 +221,8 @@ export function Graph(props: IGraphProps) {
       link.style('display', (l: dLink) => {
         const link_1: string = buildLinkString(l);
         const link_2: string = buildLinkString(l, true);
-        console.log('hiddenLinks:', hiddenLinks);
-        console.log('link_1:', link_1);
+        // console.log('hiddenLinks:', hiddenLinks);
+        // console.log('link_1:', link_1);
         return hiddenLinks.has(link_1) || hiddenLinks.has(link_2) ? 'none' : 'inline';
       }); // 根据隐藏的边设置显示或隐藏
     }
@@ -299,14 +299,14 @@ export function Graph(props: IGraphProps) {
           tNodes: [],
         };
         // 打印节点的数据
-        console.log('Node data:', d);
+        // console.log('Node data:', d);
         // 打印与节点直接连接的边的数据，以及与这些边直接连接的其他节点的数据
         link.each(function (l: dLink) {
           if (l.source === d || l.target === d) {
             selectedNode.links.push(l);
             selectedNode.tNodes.push(l.source === d ? l.target : l.source);
-            console.log('Connected link data:', l);
-            console.log('Connected node data:', l.source === d ? l.target : l.source);
+            // console.log('Connected link data:', l);
+            // console.log('Connected node data:', l.source === d ? l.target : l.source);
           }
         });
         props.select(selectedNode);
@@ -368,7 +368,7 @@ export function Graph(props: IGraphProps) {
       .on('click', function (_event: any, d: dNode) {
         // 在这里处理点击事件
         // console.log(event, d)
-        console.log(`Node ${d.id} was clicked.`);
+        // console.log(`Node ${d.id} was clicked.`);
       });
 
     // const nodeFold = container_

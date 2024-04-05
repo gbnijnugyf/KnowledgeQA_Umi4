@@ -103,7 +103,7 @@ function NodeEdit(props: {
   const [editingKey, setEditingKey] = useState('');
   const [oldName, setOldName] = useState<string>('');
   useEffect(() => {
-    console.log(props.data);
+    // console.log(props.data);
     flushSync(() => {
       setData(props.data);
     });
@@ -122,7 +122,7 @@ function NodeEdit(props: {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    console.log(record);
+    // console.log(record);
     setOldName(record.key);
     form.setFieldsValue({ classname: '', ...record });
     setEditingKey(record.key);
@@ -132,11 +132,11 @@ function NodeEdit(props: {
     setEditingKey('');
   };
   const handleDelete = (key: React.Key) => {
-    console.log(key.toString());
+    // console.log(key.toString());
   };
 
   const save = async (key: React.Key) => {
-    console.log(key);
+    // console.log(key);
     try {
       //索引key就是classname，classname唯一
       const row = (await form.validateFields()) as Item; //as key实际上不包含key，即没有索引值,从这获取更新值
@@ -148,10 +148,10 @@ function NodeEdit(props: {
       newData[index].link = row.link;
       if (index > -1) {
         const item = newData[index];
-        console.log(item);
+        // console.log(item);
       }
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
+      // console.log('Validate Failed:', errInfo);
     }
   };
 

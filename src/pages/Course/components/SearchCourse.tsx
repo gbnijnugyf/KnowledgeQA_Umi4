@@ -50,12 +50,12 @@ const SearchInput: React.FC<{
       (course: API.KnowledgeBaseListItem) => course.key === value,
     );
     if (selectedCourse !== undefined) {
-      console.log(selectedCourse);
+      // console.log(selectedCourse);
       props.onSeleted(selectedCourse);
     }
 
     if (selectedCourse !== undefined) {
-      console.log(selectedCourse);
+      // console.log(selectedCourse);
       props.onSeleted(selectedCourse);
     }
   };

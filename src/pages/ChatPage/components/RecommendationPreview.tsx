@@ -44,7 +44,7 @@ export function RecommendationCard(props: IRecommendationCardProps) {
   const tagColors = ['#C0B4FA', '#86B6F6'];
 
   const handleClickTag = (name: any) => {
-    console.log(name);
+    // console.log(name);
     setRecommendTag(name);
     setRecommendText('正在加载，首次加载所需时间较长');
     setRecommendTextBoxOpen(true);

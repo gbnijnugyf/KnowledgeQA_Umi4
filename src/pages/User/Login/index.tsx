@@ -18,7 +18,7 @@ function Page() {
   // const location = useLocation();
   const fetchUserInfoHere = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    console.log(userInfo);
+    // console.log(userInfo);
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
@@ -33,10 +33,10 @@ function Page() {
     try {
       // 登录
       const userInfo = await initialState?.fetchUserInfo?.();
-      console.log(userInfo);
+      // console.log(userInfo);
       const type = (loginTypeS==='teacher'?1:0)
       const msg: IReturn<string> = await myLogin({ ...values, type });
-      console.log(msg);
+      // console.log(msg);
       if (msg.status === 1) {
         message.success('登录成功！');
         token.save(msg.data);
@@ -48,7 +48,7 @@ function Page() {
       }else{
         message.error('账号或密码错误！');
       }
-      console.log(msg);
+      // console.log(msg);
 
       // 如果失败去设置用户错误信息
       // setUserLoginState(msg);

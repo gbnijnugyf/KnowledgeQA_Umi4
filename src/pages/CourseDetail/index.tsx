@@ -22,7 +22,7 @@ export default function CourseDetail() {
           flushSync(() => {
             setCourse(res.data);
           });
-          console.log(course)
+          // console.log(course)
         } else {
           message.error('获取课程失败');
         }
@@ -76,7 +76,7 @@ function CourseTitle(props: { courseInfo: API.KnowledgeBaseListItem }) {
         showActions="hover"
         editable={{
           onSave: async (key, record, originRow) => {
-            console.log(key, record, originRow);
+            // console.log(key, record, originRow);
             return true;
           },
         }}

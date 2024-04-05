@@ -25,7 +25,7 @@ async function GlobalAxios<T = any, D = any>(
   if (match && match.length > 1) {
     afterDoubleSlash = match[1].split('/');
   } else {
-    console.log('无法截取 // 之后的字符串');
+    // console.log('无法截取 // 之后的字符串');
   }
   if (afterDoubleSlash[1] === 'admin' && afterDoubleSlash[2] === 'main') {
     config.headers = {
@@ -33,7 +33,7 @@ async function GlobalAxios<T = any, D = any>(
       bloggerLoginCheck: localStorage.getItem('token') || '',
     };
   } else {
-    console.log('afterDoubleSlash:', afterDoubleSlash);
+    // console.log('afterDoubleSlash:', afterDoubleSlash);
     config.headers = {
       adminCheck: 'visitor',
       bloggerLoginCheck: localStorage.getItem('token') || '',
@@ -53,9 +53,9 @@ async function GlobalAxios<T = any, D = any>(
     localStorage.removeItem('token');
     // 重定向到根目录，重新登录
     let redirectpos = window.location.href;
-    console.log(redirectpos);
+    // console.log(redirectpos);
     redirectpos = redirectpos.slice(0, redirectpos.indexOf('/', 10) + 1);
-    console.log(redirectpos);
+    // console.log(redirectpos);
     window.location.href = redirectpos + 'admin/login';
   }
   return response;

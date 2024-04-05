@@ -58,7 +58,7 @@ export function UploadFiles(props: IUploadFormProps) {
         }
 
         if (!isAcceptType(e.type)) {
-          console.log('1：', e.type);
+          // console.log('1：', e.type);
           message.error('不支持的文件类型');
           return Upload.LIST_IGNORE;
         }
@@ -72,7 +72,7 @@ export function UploadFiles(props: IUploadFormProps) {
         if (isAcceptType(info.file.type)) {
           const { status } = info.file;
           if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
+            // console.log(info.file, info.fileList);
           }
           // message.success(`${info.file.name} 添加成功.`);
 

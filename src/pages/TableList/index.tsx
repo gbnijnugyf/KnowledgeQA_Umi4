@@ -25,7 +25,7 @@ const TableForm: React.FC = () => {
 
   const actionRef = React.useRef<ActionType>();
   const resquest: ITableRequest<API.KnowledgeBaseListItem> = async (p, sorter, filter) => {
-    console.log(p, sorter, filter);
+    // console.log(p, sorter, filter);
     let params = { ...p };
     if (Object.keys(sorter).length !== 0) {
       params = { ...params, ...sorter };

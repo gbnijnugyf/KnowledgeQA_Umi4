@@ -55,7 +55,7 @@ const KnowledgeGraph: React.FC = () => {
   useEffect(() => {
     const setting = initialState?.settings || defaultSettings;
     if (setting.navTheme === 'realDark') {
-      console.log('dark');
+      // console.log('dark');
       setColor('white');
     } else {
       setColor('black');
@@ -75,7 +75,7 @@ const KnowledgeGraph: React.FC = () => {
     const hide = message.loading('获取知识图谱中');
     myGetGraph({ key: knowledgeBaseKey }).then((res) => {
       hide();
-      console.log(res);
+      // console.log(res);
       if (res.status === 1) {
         setGraphInfo({
           nodes: res.data.nodes,
