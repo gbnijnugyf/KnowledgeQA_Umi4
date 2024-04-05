@@ -10,6 +10,7 @@ import {
 import { Modal } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { UploadFiles } from './UploadFiles';
+import "./NewForm.scss"
 
 export type FormValueType<T> = {
   target?: string;
