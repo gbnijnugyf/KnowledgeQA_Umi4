@@ -47,7 +47,8 @@ export function GraphEcharts(props: IGraphProps) {
       name: node.name,
       group: node.group,
       symbolSize: node.weight,
-      itemStyle: { color: node.group > 1 ? 'hidden' : null },
+      // itemStyle: { color: node.group > 1 ? 'hidden' : null },
+      itemStyle: {color:'rgb(50,108,184)'}, // 根据 group 的值设置颜色
       label: {
         show: true, // show labels
         formatter: node.name, // use node's name as label
@@ -80,6 +81,9 @@ export function GraphEcharts(props: IGraphProps) {
           },
           edgeLabel: {
             show: true,
+            textStyle: {
+              color: 'red', // 设置边的字体颜色
+            },
             formatter: function (params:any) {
               // console.log('params:', params);
               // console.log('params.data:', params);
