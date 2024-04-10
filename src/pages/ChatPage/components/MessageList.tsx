@@ -1,3 +1,4 @@
+import { dislikeMsg } from '@/services/ant-design-pro/api';
 import {
   CopyOutlined,
   DeleteOutlined,
@@ -9,11 +10,11 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, List, Popover, message } from 'antd';
+import { MdPreview } from 'md-editor-rt';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import '../index.scss';
 import { RecommendationCard } from './RecommendationPreview';
-import { MdPreview } from 'md-editor-rt';
 
 interface MessageListProps {
   messageList: API.MessageType[];
@@ -21,7 +22,7 @@ interface MessageListProps {
   handleReload: (key: number) => Promise<void>;
   handleGetRecommend: (key: number) => void;
   dialog_key: number;
-  dialogs:API.DialogListItem[]
+  dialogs: API.DialogListItem[];
 }
 
 // MessageList 组件
@@ -38,18 +39,25 @@ export function MessageList({
     open: false,
     key: -1,
   });
-  const [currentBaseKey, setCurrentDialogKey] = useState<number[]>([])
-  useEffect(()=>{
-    const currentDialog = dialogs.find(dialog=>dialog.key===dialog_key)
-    const currentKbase = currentDialog?.Kbase.map(kbase=>kbase.key)
-    if(currentKbase){
-      setCurrentDialogKey(currentKbase)
+  const [currentBaseKey, setCurrentDialogKey] = useState<number[]>([]);
+  useEffect(() => {
+    const currentDialog = dialogs.find((dialog) => dialog.key === dialog_key);
+    const currentKbase = currentDialog?.Kbase.map((kbase) => kbase.key);
+    if (currentKbase) {
+      setCurrentDialogKey(currentKbase);
     }
-  },[dialog_key,messageList])
+  }, [dialog_key, messageList]);
   const messageList_ = messageList;
 
-  const clickLike = () => {
+  const clickLike = async () => {
     message.success('感谢你的反馈');
+  };
+  const clickDisLike = async (key: number) => {
+    message.success('感谢你的反馈');
+    const res = await dislikeMsg(key);
+    if (res.status === 0) {
+      console.log('dislikeMsg:', res);
+    }
   };
 
   // console.log('messageList:', messageList_);
@@ -167,7 +175,7 @@ export function MessageList({
                           padding: '4%',
                           paddingTop: '3%',
                         }}
-                        onClick={() => clickLike()}
+                        onClick={() => clickDisLike(item.key)}
                         icon={<DislikeOutlined />}
                       />
                     </>

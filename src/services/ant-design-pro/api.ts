@@ -519,3 +519,13 @@ export async function getRecommend(key: number[], name: string) {
     },
   });
 }
+
+export async function dislikeMsg(key: number) {
+  // 解析key数组为url params 形如key=1
+  return request<IReturn<undefined>>(BASEURL + '/dislike', {
+    method: 'POST',
+    data: {
+      key: key,
+    },
+  });
+}
