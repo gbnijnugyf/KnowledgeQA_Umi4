@@ -1,7 +1,7 @@
 // import { useNavigate } from '@umijs/max';
 // import { Button } from 'antd';
 import { Button } from 'antd';
-import backgroundVideo from '../../../public/loginBg.mp4';
+// import backgroundVideo from '../../../public/loginBg.mp4';
 import backgroundImg from '../../../public/loginBgImg.jpg';
 import './index.scss';
 
@@ -30,7 +30,7 @@ import './index.scss';
 //           paddingTop: '10%',
 //         }}
 //       >
-//         <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>学海航标</h1>
+//         <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>智学导图</h1>
 //         <Button className="try-btn" onClick={() => navigate('/welcome')}>
 //           立即体验
 //         </Button>
@@ -68,7 +68,7 @@ const IntroduceBackground = () => {
                   paddingTop: '7%',
                 }}
               >
-                <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>学海航标</h1>
+                <h1 style={{ color: 'white', fontSize: '500%', fontFamily: 'serif' }}>智学导图</h1>
                 <Button className="try-btn" onClick={() => navigate('/welcome')}>
                   立即体验
                 </Button>
@@ -87,7 +87,7 @@ const IntroduceBackground = () => {
                   borderRadius: '15px',
                 }}
               >
-                <source src={backgroundVideo} type="video/mp4" />
+                {/* <source src={backgroundVideo} type="video/mp4" /> */}
               </video>
               {/* <div style={{
                 // border:'10px red solid',

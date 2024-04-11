@@ -9,7 +9,7 @@
 // export const BASEURL = 'http://10.79.183.86:5000';
 //远程服务
 export const BASEURL = 'http://39.105.13.10:5000';
-export const titleName = '学海航标';
+export const titleName = '智学导图';
 export const loginPath = '/user/login';
 export const introducePath = '/introduce';
 
@@ -22,7 +22,7 @@ export interface ILoginProps {
 export interface IReturn<T = any> {
   data: T;
   status: number;
-  msg: string;
+  msg: string;        
 }
 
 export interface IHookFunc<T> {
