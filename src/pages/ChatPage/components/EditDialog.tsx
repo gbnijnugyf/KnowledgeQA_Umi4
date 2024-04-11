@@ -1,17 +1,18 @@
 import { deleteDialog } from '@/services/ant-design-pro/api';
 import { IHookFunc } from '@/services/plugin/globalInter';
-import { ModalForm, ProFormText } from '@ant-design/pro-components';
-import { message } from 'antd';
+import { ModalForm } from '@ant-design/pro-components';
+import { Modal, message } from 'antd';
 
 interface IEditDialogModal {
   open: IHookFunc<boolean>;
   flush: IHookFunc<boolean>;
-  key: number;
+  key_id: number;
   name: string;
+  dialogs: API.DialogListItem[];
 }
 export function EditDialogModal(props: IEditDialogModal) {
   async function handleOk() {
-    const res = await deleteDialog(props.key);
+    const res = await deleteDialog(props.key_id);
     // console.log(res);
     if (res.status === 1) {
       message.info('删除成功');
@@ -21,26 +22,33 @@ export function EditDialogModal(props: IEditDialogModal) {
       message.error('删除失败');
     }
   }
-
+  const dialog = props.dialogs.find((dialog) => dialog.key === props.key_id);
   return (
-    <ModalForm
-      title={'配置基本信息'}
+    <Modal
+      // title={'配置基本信息'}
+      title={'关联知识库'}
       // width="25vw"
+      className='edit-modal'
       width="fit-content"
       open={props.open.value}
-      onOpenChange={props.open.set}
-      initialValues={{
-        name: props.name,
-      }}
-      onFinish={async (value) => {
-        const value_ = { ...value, key: props.key };
-        // console.log(value_);
-        // const res = await handleUpdate(value_ as API.KnowledgeBaseListItem);
-        // console.log(res);
-      }}
-      modalProps={{ destroyOnClose: true }}
+      onCancel={()=>props.open.set(false)}
+      // onOpenChange={props.open.set}
+      // initialValues={{
+      //   name: props.name,
+      // }}
+      footer={[]}
+      // onFinish={async (value) => {
+      //   const value_ = { ...value, key: props.key_id };
+      //   // console.log(value_);
+      //   // const res = await handleUpdate(value_ as API.KnowledgeBaseListItem);
+      //   // console.log(res);
+      // }}
+      // modalProps={{ destroyOnClose: true }}
     >
-      <ProFormText
+      {(dialog !==undefined && dialog?.Kbase.length>0)? dialog?.Kbase.map((kbase) => (
+        <div>{kbase.name}</div>
+      )):<p>暂无关联知识库，请勿使用该对话</p>}
+      {/* <ProFormText
         rules={[
           {
             required: true,
@@ -50,7 +58,7 @@ export function EditDialogModal(props: IEditDialogModal) {
         width="md"
         name="name"
         label="名称"
-      />
-    </ModalForm>
+      /> */}
+    </Modal>
   );
 }

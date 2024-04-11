@@ -47,7 +47,7 @@ export function DialogList({
                   },
                   items: [
                     { key: 'delete', label: '删除' },
-                    // { key: 'edit', label: '编辑' },
+                    { key: 'edit', label: '查看关联课程' },
                   ],
                 }}
                 trigger={['hover']}

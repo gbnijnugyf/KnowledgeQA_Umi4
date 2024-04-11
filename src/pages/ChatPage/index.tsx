@@ -63,6 +63,7 @@ const ChatPage: React.FC = () => {
       chatBox.scrollTop = chatBox.scrollHeight;
     } else {
       if (messages.length > 0) {
+        // 当底部信息没有被修改时，滚动到底部
         if (chatBox && messages[messages.length - 1]?.key !== msgButtomKey.current) {
           chatBox.scrollTop = chatBox.scrollHeight;
           msgButtomKey.current = messages[messages.length - 1].key;
@@ -504,7 +505,8 @@ const ChatPage: React.FC = () => {
         flush={{ set: setFlush, value: flush }}
       />
       <EditDialogModal
-        key={operateDialogKey.key}
+        dialogs={dialogs}
+        key_id={operateDialogKey.key}
         name={operateDialogKey.name}
         open={{ set: setEditDialogModal, value: editDialogModal }}
         flush={{ set: setFlush, value: flush }}
