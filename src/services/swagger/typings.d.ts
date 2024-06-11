@@ -1,4 +1,4 @@
-declare namespace API {
+declare namespace API_2 {
   type ApiResponse = {
     code?: number;
     type?: string;
@@ -49,13 +49,6 @@ declare namespace API {
   type getUserByNameParams = {
     /** The name that needs to be fetched. Use user1 for testing.  */
     username: string;
-  };
-
-  type loginUserParams = {
-    /** The user name for login */
-    username: string;
-    /** The password for login in clear text */
-    password: string;
   };
 
   type Order = {

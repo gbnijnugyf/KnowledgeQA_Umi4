@@ -1,0 +1,162 @@
+/* .dialog-list::-webkit-scrollbar {
+  display: none;
+} */
+/* 这个规则应用于整个文档 */
+// .chat-container *{
+//   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+
+// }
+.dialog-list::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* 滚动条的轨道 */
+.dialog-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 滚动条的滑块 */
+.dialog-list::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* 滚动条的滑块：鼠标悬浮 */
+.dialog-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.message-box {
+  box-shadow: 0.1px 0.1px 0.1px 0.1px rgba(0,0,0,0.1);
+  // width: 80%;
+  position: relative;
+  margin: 20px; /* 增加外边距以容纳箭头 */
+  padding: 10px;
+  color: black; /*避免暗色主题下文字不可见*/
+  background-color: white;
+  border: #BFBFBF 1px solid;
+  border-radius: 10px;
+}
+
+.message-box.user {
+  // margin: 0 1vw 0 0;
+  margin: 0;
+  background-color: #EEF5FF; /* 用户消息框的背景色 */
+}
+.message-box.assistant {
+  margin: 0;
+
+  // margin: 0 0 0 1vw;
+}
+#shadow-box{
+  box-shadow: 0.1px 0.1px 0.1px 0.1px rgba(0,0,0,0.1);
+}
+.avatar {
+  box-shadow: 0.1px 0.1px 0.1px 0.1px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  align-self: flex-start; /* 将头像移到顶部 */
+  margin-top: 0.25%;
+}
+.button-hidden {
+  opacity: 0;
+  display: flex;
+  justify-content:space-around;
+  transition: opacity 0.5s ease-in-out;
+}
+.button-hidden.assistant{
+  margin: 0 0 0 2.5%;
+}
+.button-hidden.user{
+  margin: 0 7% 0 0;
+}
+.button-hidden:hover {
+  opacity: 1;
+}
+// .message-box.user::before {
+//   position: absolute;
+//   top: 9px;
+//   right: -22px; /* 将箭头移动到框的外部，比::after元素稍微偏移一点 */
+//   width: 0;
+//   height: 0;
+//   border: 11px solid transparent; /* 比::after元素稍微大一点 */
+//   border-left-color: #a4a4a4; /* 边框的颜色 */
+//   content: '';
+//   z-index: 1; /* 确保这个元素在::after元素之上 */
+// }
+// .message-box.user::after {
+//   position: absolute;
+//   top: 10px;
+//   right: -20px; /* 将箭头移动到框的外部 */
+//   width: 0;
+//   height: 0;
+//   border: 10px solid transparent;
+//   border-left-color: #bbe1fa; /* 用户消息箭头的颜色 */
+//   content: '';
+//   z-index: 2;
+// }
+
+// .message-box.bot::after {
+//   position: absolute;
+//   top: 10px;
+//   left: -20px; /* 将箭头移动到框的外部 */
+//   width: 0;
+//   height: 0;
+//   border: 10px solid transparent;
+//   border-right-color: #f0f0f0;
+//   content: '';
+//   z-index: 2;
+// }
+// .message-box.bot::before {
+//   position: absolute;
+//   top: 9px;
+//   left: -22px; /* 将箭头移动到框的外部 */
+//   width: 0;
+//   height: 0;
+//   border: 11px solid transparent;
+//   border-right-color: #a4a4a4;
+//   content: '';
+//   z-index: 1;
+// }
+
+.recommend-list-box ::-webkit-scrollbar {
+  display: none;
+}
+
+.recommend-list {
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  // height: 2.6em;
+  /* width: fit-content; */
+  /* width: 50%; */
+  margin: 0.5em 0 0 0.3em;
+  /* padding: 0px 1em; */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.recommend-list:hover {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+}
+
+.recommendation-card {
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+
+  .ant-card-head {
+    min-height: 0;
+    // line-height: 100%;
+    padding: 0 1% 0 1%;
+    border: none;
+  }
+  .ant-card-body {
+    padding: 0 0.5em 0.5em 0.5em;
+    overflow-x: hidden;
+  }
+}
+
+.edit-modal .ant-modal-close{
+  display: none;
+}

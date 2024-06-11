@@ -1,7 +1,11 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import { Card, theme } from 'antd';
-import React from 'react';
+import { useAccess, useModel } from '@umijs/max';
+import { Card, message, theme } from 'antd';
+import React, { useState } from 'react';
+import welComeBg from '../../public/welcomeBg.jpg';
+import { AddCourseDialog } from './Course/components/AddCourseDialog';
+import { CourseForm } from './Course/components/CourseForm';
+import { Search } from './Course/components/SearchCourse';
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -86,35 +90,41 @@ const InfoCard: React.FC<{
 const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
+  const access = useAccess();
+  const [course, setCourse] = useState<API.KnowledgeBaseListItem>();
+  const [addCourseModal, setAddCourseModal] = useState<boolean>(false);
+  const [flush, setFlush] = useState<boolean>(false);
+  const myOnClick = (course: API.KnowledgeBaseListItem) => {
+    if (access.adminRoute()) {
+      message.warning('教师暂不支持添加课程');
+    } else {
+      setCourse(course);
+      setAddCourseModal(true);
+    }
+  };
+  const backgroundImg = access.isMobile() ? undefined : `url(${welComeBg})`;
   return (
     <PageContainer>
       <Card
         style={{
           borderRadius: 8,
         }}
-        bodyStyle={{
-          backgroundImage:
-            initialState?.settings?.navTheme === 'realDark'
-              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-        }}
       >
         <div
           style={{
-            backgroundPosition: '100% -30%',
+            backgroundPosition: '95% -13%',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: '274px auto',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
+            backgroundSize: '250px auto',
+            backgroundImage: backgroundImg,
           }}
         >
           <div
             style={{
-              fontSize: '20px',
+              fontSize: '150%',
               color: token.colorTextHeading,
             }}
           >
-            欢迎使用 Ant Design Pro
+            欢迎使用 智学导图
           </div>
           <p
             style={{
@@ -126,8 +136,8 @@ const Welcome: React.FC = () => {
               width: '65%',
             }}
           >
-            Ant Design Pro 是一个整合了 umi，Ant Design 和 ProComponents
-            的脚手架方案。致力于在设计规范和基础组件的基础上，继续向上构建，提炼出典型模板/业务组件/配套设计资源，进一步提升企业级中后台产品设计研发过程中的『用户』和『设计者』的体验。
+            智学导图是一个整合了知识图谱和生成式模型的教学问答应用。
+            致力于在现有问答模型的基础上，结合知识图谱，提高用户使用AI问答体验。
           </p>
           <div
             style={{
@@ -138,25 +148,51 @@ const Welcome: React.FC = () => {
           >
             <InfoCard
               index={1}
-              href="https://umijs.org/docs/introduce/introduce"
-              title="了解 umi"
-              desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"
+              href="https://baike.baidu.com/item/%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F/9641943"
+              title="了解问答系统"
+              desc="问答系统(Question Answering System, QA)是信息检索系统的一种高级形式，它能用准确、简洁的自然语言回答用户用自然语言提出的问题。"
             />
             <InfoCard
               index={2}
-              title="了解 ant design"
-              href="https://ant.design"
-              desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"
+              title="了解知识图谱"
+              href="https://zh.wikipedia.org/wiki/%E7%9F%A5%E8%AD%98%E5%9C%96%E8%AD%9C"
+              desc="知识图谱（英语：Knowledge Graph），是结构化的语义知识库，用于以符号形式描述物理世界中的概念及其相互关系。"
             />
-            <InfoCard
-              index={3}
-              title="了解 Pro Components"
-              href="https://procomponents.ant.design"
-              desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"
-            />
+            <InfoCard index={3} title="了解我们" href="http://cst.whut.edu.cn/" desc="" />
           </div>
         </div>
+        <div
+          style={{
+            marginTop: '5vh',
+            height: access.isMobile() ? '39vh' : '35vh',
+            overflow: 'auto',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: '150%',
+                color: token.colorTextHeading,
+              }}
+            >
+              加入你感兴趣的课程吧！
+              <Search myOnSeleted={myOnClick} />
+            </div>
+          </div>
+          <CourseForm myOnClick={myOnClick} fresh={flush}/>
+        </div>
       </Card>
+      <AddCourseDialog
+        open={{
+          value: addCourseModal,
+          set: setAddCourseModal,
+        }}
+        flush={{
+          value:flush,
+          set:setFlush
+        }}
+        course={course}
+      />
     </PageContainer>
   );
 };

@@ -6,6 +6,7 @@ declare module '*.sass';
 declare module '*.svg';
 declare module '*.png';
 declare module '*.jpg';
+declare module '*.mp4';//新增可引入文件类型
 declare module '*.jpeg';
 declare module '*.gif';
 declare module '*.bmp';

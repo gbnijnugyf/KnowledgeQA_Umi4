@@ -24,36 +24,70 @@ export default [
   },
   {
     path: '/welcome',
-    name: 'welcome',
+    name: '欢迎',
     icon: 'smile',
     component: './Welcome',
   },
   {
+    path: '/introduce',
+    name: '介绍',
+    hidinMenu: true,
+    layout:false,
+    component: './Introduce',
+  },
+  {
     path: '/admin',
-    name: 'admin',
+    name: '管理页',
     icon: 'crown',
-    access: 'canAdmin',
+    access: 'adminRoute',
     routes: [
       {
         path: '/admin',
-        redirect: '/admin/sub-page',
+        redirect: '/admin/knowledgeBase',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/admin/knowledgeBase',
+        name: '课程管理',
+        component: './TableList',
+        routes: [
+          //具体课程
+          // {
+          //   path: '/admin/knowledgeBase/:courseId',
+          //   name: '课程详情',
+          //   component: './CourseDetail',
+          //   hidinMenu: true,
+          // },
+        ]
       },
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/admin/knowledgeBase/:courseId',
+    component: './CourseDetail',
+    hidinMenu: true,
+  },
+  {
+    name: '问答',
+    icon: 'RobotOutlined',
+    path: '/chat',
+    component: './ChatPage',
+  },
+  {
+    name: '知识图谱',
+    icon: 'RadarChartOutlined',
+    path: '/knowledgeGraph',
+    access: 'graphMenuAccess',
+    component: './KnowledgeGraph',
+  },
+  {
+    path: '/graph',
+    component: './KnowledgeGraph',
+    hidinMenu: true,
+    layout: false,
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/introduce',
   },
   {
     path: '*',

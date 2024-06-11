@@ -1,7 +1,8 @@
-import { outLogin } from '@/services/ant-design-pro/api';
+import { myOutLogin } from '@/services/ant-design-pro/api';
+import token from '@/services/plugin/token';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import { createStyles } from 'antd-style';
 import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
@@ -43,19 +44,27 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
    * 退出登录，并且将当前的 url 保存
    */
   const loginOut = async () => {
-    await outLogin();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: pathname + search,
-        }),
+    const res = await myOutLogin();
+    if (res.status === 1) {
+      token.remove();
+      const { search, pathname } = window.location;
+      const urlParams = new URL(window.location.href).searchParams;
+      /** 此方法会跳转到 redirect 参数所在的位置 */
+      const redirect = urlParams.get('redirect');
+      // Note: There may be security issues, please note
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        history.replace({
+          pathname: '/user/login',
+          search: stringify({
+            redirect: pathname + search,
+          }),
+        });
+      }
+    }else{
+      flushSync(() => {
+        setInitialState((s) => ({ ...s, currentUser: currentUser }));
       });
+      message.error('退出失败');
     }
   };
   const { styles } = useStyles();
@@ -131,6 +140,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
         onClick: onMenuClick,
         items: menuItems,
       }}
+      overlayStyle={{width:"auto"}} // 头像下拉框宽度 
     >
       {children}
     </HeaderDropdown>

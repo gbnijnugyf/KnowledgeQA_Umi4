@@ -1,4 +1,5 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
+import { titleName } from '../src/services/plugin/globalInter';
 
 /**
  * @name
@@ -15,9 +16,10 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
+  title: titleName,
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  // logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://p0.itc.cn/q_70/images03/20210620/494fffcf06554d8fb5b25dd460cbad06.png',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式
